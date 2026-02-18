@@ -1,5 +1,5 @@
 ---
-title: Show API version details
+title: Get user
 excerpt: test some api
 api:
   file: openapi.json
