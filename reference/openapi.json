@@ -188,5 +188,12 @@
         }
       }
     }
-  }
+  },
+  "servers": [
+    {
+      "url": "https://example.com"
+    }
+  ],
+  "components": {},
+  "x-readme": {}
 }
