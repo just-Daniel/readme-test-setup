@@ -87,7 +87,7 @@
         }
       }
     },
-    "/v2": {
+    "/v2/test/{userId}": {
       "get": {
         "operationId": "getVersionDetailsv2",
         "summary": "Show API version details",
@@ -185,7 +185,18 @@
               }
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "some user ID"
+          }
+        ]
       }
     }
   },
