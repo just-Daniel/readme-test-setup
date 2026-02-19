@@ -4,6 +4,12 @@
     "title": "Simple API overview",
     "version": "2.0.0"
   },
+  "servers": [
+    {
+      "url": "https://first.com/",
+      "description": "Fisrt server url"
+    }
+  ],
   "paths": {
     "/": {
       "get": {
@@ -87,7 +93,7 @@
         }
       }
     },
-    "/v2/test/{userId}": {
+    "/v2": {
       "get": {
         "operationId": "getVersionDetailsv2",
         "summary": "Show API version details",
@@ -185,26 +191,35 @@
               }
             }
           }
-        },
-        "parameters": [
-          {
-            "in": "path",
-            "name": "userId",
-            "schema": {
-              "type": "string"
-            },
-            "required": true,
-            "description": "some user ID"
+        }
+      }
+    },
+    "/v3": {
+      "post": {
+        "operationId": "postTest",
+        "summary": "List API POST",
+        "description": "new request",
+        "responses": {
+          "200": {
+            "description": "Successful response"
           }
-        ]
+        },
+        "tags": [
+          "post-query"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "email": "user@readme.com"
+                }
+              }
+            }
+          }
+        }
       }
     }
-  },
-  "servers": [
-    {
-      "url": "https://example.com"
-    }
-  ],
-  "components": {},
-  "x-readme": {}
+  }
 }
