@@ -8,6 +8,10 @@
     {
       "url": "https://first.com/",
       "description": "Fisrt server url"
+    },
+    {
+      "url": "https://second.com/",
+      "description": "Fisrt server url"
     }
   ],
   "paths": {
