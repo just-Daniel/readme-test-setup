@@ -18,7 +18,7 @@
         "summary": "List all repports",
         "operationId": "listReports",
         "tags": [
-          "report Export"
+          "report_Export"
         ],
         "parameters": [
           {
@@ -67,7 +67,7 @@
         "summary": "Create a report",
         "operationId": "createReports",
         "tags": [
-          "report Export"
+          "report_Export"
         ],
         "responses": {
           "201": {
@@ -91,7 +91,7 @@
         "summary": "Info for a specific report",
         "operationId": "showReportById",
         "tags": [
-          "report Export"
+          "report_Export"
         ],
         "parameters": [
           {
