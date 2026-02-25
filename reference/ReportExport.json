@@ -85,48 +85,6 @@
           }
         }
       }
-    },
-    "/reports/{reportId}": {
-      "get": {
-        "summary": "Info for a specific report",
-        "operationId": "showReportById",
-        "tags": [
-          "Report Export"
-        ],
-        "parameters": [
-          {
-            "name": "reportId",
-            "in": "path",
-            "required": true,
-            "description": "The id of the report to retrieve",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Expected response to a valid request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Report"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
     }
   },
   "components": {
