@@ -1,4 +1,0 @@
----
-title: getModuleForOffline
-hidden: false
----

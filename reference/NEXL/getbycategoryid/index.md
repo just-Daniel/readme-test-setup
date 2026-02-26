@@ -1,4 +1,0 @@
----
-title: getByCategoryID
-hidden: false
----

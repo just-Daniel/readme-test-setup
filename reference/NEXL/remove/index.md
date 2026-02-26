@@ -1,4 +1,0 @@
----
-title: remove
-hidden: false
----

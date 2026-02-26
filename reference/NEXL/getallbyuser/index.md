@@ -1,4 +1,0 @@
----
-title: getAllByUser
-hidden: false
----

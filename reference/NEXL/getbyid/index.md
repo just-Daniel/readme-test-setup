@@ -1,4 +1,0 @@
----
-title: getByID
-hidden: false
----

@@ -1,4 +1,0 @@
----
-title: getByAuthorID
-hidden: false
----

@@ -1,4 +1,0 @@
----
-title: getByUserID
-hidden: false
----

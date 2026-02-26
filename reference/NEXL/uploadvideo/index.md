@@ -1,4 +1,0 @@
----
-title: uploadVideo
-hidden: false
----

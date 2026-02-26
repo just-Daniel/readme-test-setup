@@ -1,4 +1,0 @@
----
-title: getQuiz
-hidden: false
----

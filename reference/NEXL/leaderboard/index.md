@@ -1,4 +1,0 @@
----
-title: leaderboard
-hidden: false
----
