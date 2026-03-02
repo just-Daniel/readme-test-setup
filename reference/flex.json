@@ -279,6 +279,14 @@
             {
               "title": "Tag event for adding or removing tags",
               "$ref": "#/components/schemas/TagEvent"
+            },
+            {
+              "title": "2-Tag event for adding or removing tags",
+              "$ref": "#/components/schemas/TagEvent2"
+            },
+            {
+              "title": "3-Tag event for adding or removing tags",
+              "$ref": "#/components/schemas/TagEvent3"
             }
           ],
           "discriminator": {
