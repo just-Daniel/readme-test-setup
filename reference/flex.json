@@ -172,6 +172,94 @@
           }
         ]
       },
+      "TagEvent2": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CustomerEventBase"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type_id": {
+                "type": "integer",
+                "enum": [
+                  51
+                ]
+              },
+              "name": {
+                "type": "string",
+                "description": "TagEvent2"
+              }
+            }
+          }
+        ]
+      },
+      "TagEvent3": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CustomerEventBase"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type_id": {
+                "type": "integer",
+                "enum": [
+                  53
+                ]
+              },
+              "name": {
+                "type": "string",
+                "description": "TagEvent3"
+              }
+            }
+          }
+        ]
+      },
+      "TagEvent4": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CustomerEventBase"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type_id": {
+                "type": "integer",
+                "enum": [
+                  54
+                ]
+              },
+              "name": {
+                "type": "string",
+                "description": "TagEvent4"
+              }
+            }
+          }
+        ]
+      },
+      "TagEvent5": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CustomerEventBase"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type_id": {
+                "type": "integer",
+                "enum": [
+                  55
+                ]
+              },
+              "name": {
+                "type": "string",
+                "description": "TagEvent5"
+              }
+            }
+          }
+        ]
+      },
       "CustomerEvents": {
         "type": "array",
         "items": {
