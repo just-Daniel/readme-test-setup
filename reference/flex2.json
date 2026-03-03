@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Flex2",
+    "title": "Flex222",
     "description": "The NEW 2 Flex Ingestion API",
     "version": "1.0.0"
   },
@@ -44,7 +44,7 @@
         ]
       }
     },
-    "/user2": {
+    "/user333": {
       "get": {
         "responses": {
           "200": {
