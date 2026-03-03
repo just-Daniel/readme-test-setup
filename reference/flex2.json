@@ -11,7 +11,7 @@
     }
   ],
   "paths": {
-    "/ingest/v2/customers/events": {
+    "/ingest/v3/customers/events": {
       "post": {
         "tags": [
           "Customers"
@@ -44,7 +44,7 @@
         ]
       }
     },
-    "/user333": {
+    "/user": {
       "get": {
         "responses": {
           "200": {
