@@ -11,7 +11,7 @@
     }
   ],
   "paths": {
-    "/ingest/v3/customers/events": {
+    "/ingest/v0/customers/events": {
       "post": {
         "tags": [
           "Customers"
