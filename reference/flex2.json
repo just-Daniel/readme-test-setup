@@ -43,6 +43,15 @@
           }
         ]
       }
+    },
+    "/user": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
     }
   },
   "components": {
