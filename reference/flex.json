@@ -11,12 +11,12 @@
     }
   ],
   "paths": {
-    "/ingest/v2/customers/events": {
+    "/ingest/v1/customers/events": {
       "post": {
         "tags": [
           "Customers"
         ],
-        "summary": "Ingests customer events",
+        "summary": "Customer events",
         "description": "Ingests events related to customer activity.",
         "requestBody": {
           "description": "An array of customer records to synchronise",
