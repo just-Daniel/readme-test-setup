@@ -1,4 +1,0 @@
----
-title: OpenAPI
-hidden: false
----
