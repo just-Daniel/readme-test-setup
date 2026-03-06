@@ -1,0 +1,182 @@
+openapi: 3.1.0
+info:
+  title: IN-APP PAYMENTS_NEW
+  description: Samsung TV inapp connector
+  version: 1.0.0
+  contact:
+    name: Cleeng
+    url: https://cleeng.com
+servers:
+  - url: https://inapp.api.sandbox.cleeng.com/samsung-tv
+    description: Sandbox
+security:
+  - sec0: []
+paths:
+  /purchase-validation:
+    post:
+      operationId: samsung-tv
+      summary: Samsung TV
+      parameters:
+        - name: JWT or X-Publisher-Token
+          in: header
+          description: >-
+            Use either a JWT or X-Publisher-Token header authorization,
+            depending on how you integrate with Cleeng (directly or through
+            middleware).
+          required: true
+          schema:
+            type: string
+        - name: Correlation-id
+          in: header
+          description: >-
+            Internal identification number of the process. If not provided, it
+            will be generated and returned in a response body. Format: uuid.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - cleengCustomerId
+                - samsungInvoiceId
+                - samsungCustomId
+                - countryCode
+              properties:
+                cleengCustomerId:
+                  type: number
+                  description: Customer identifier at Cleeng.
+                samsungInvoiceId:
+                  type: string
+                  description: >-
+                    Invoice identifier - invoiceId field from Samsung purchase
+                    process. It is used as basis for purchase validation in
+                    Cleeng.
+                samsungCustomId:
+                  type: string
+                  description: The identification number of a customer from Samsung system.
+                countryCode:
+                  type: string
+                  example: DE
+                  description: Country code retrieved from TV.
+                ipAddress:
+                  type: string
+                  description: Customer's IP address.
+      responses:
+        '202':
+          description: Endpoint to check purchases
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+  /purchase-status:
+    get:
+      operationId: check-samsung-tv-purchase-status
+      summary: Check Samsung TV purchase status
+      parameters:
+        - name: Authorization
+          in: header
+          description: JWT header authorization is required.
+          required: true
+          schema:
+            type: string
+        - name: correlationId
+          in: query
+          description: >-
+            Internal identification number of the process. Generated during the
+            initial purchase validation and returned via response body and
+            inappPurchaseValidationSucceeded event.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum:
+                      - pending
+                      - success
+                      - failure
+                required:
+                  - status
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+components:
+  securitySchemes:
+    sec0:
+      type: apiKey
+      in: header
+      name: Authorization
+      x-bearer-format: bearer
+  schemas:
+    GenericError:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+    GenericResponse:
+      description: Response might be both a success or a rejection message
+      type: object
+      required:
+        - message
+        - data
+      properties:
+        message:
+          type: string
+          example: Receipt accepted for processing
+        data:
+          type: object
+          required:
+            - correlationId
+          properties:
+            correlationId:
+              type: string
+              format: uuid
+              example: e45211af-6360-4ff9-9a97-3f2392fe355e
+              description: >-
+                The process ID, if not passed in request will be generated and
+                returned
