@@ -1,7 +1,0 @@
----
-title: Register Apple SK2 purchase
-api:
-  file: storekit2-api.yml
-  operationId: register-apple-sk2-purchase
-hidden: false
----
