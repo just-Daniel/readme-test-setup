@@ -1,5 +1,5 @@
 ---
-title: Customer events
+title: Customer events-
 deprecated: false
 hidden: false
 metadata:
