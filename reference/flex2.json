@@ -11,7 +11,7 @@
     }
   ],
   "paths": {
-    "/ingest/v0/customers/events": {
+    "/ingest/v0/customers/events/2": {
       "post": {
         "summary": "Customer events",
         "description": "Ingests events related to customer activity.",
