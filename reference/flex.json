@@ -13,6 +13,7 @@
   "paths": {
     "/ingest/v0/customers/events": {
       "post": {
+        "operationId": "flex",
         "summary": "Customer events",
         "description": "Ingests events related to customer activity.",
         "requestBody": {
