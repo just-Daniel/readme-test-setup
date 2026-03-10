@@ -13,9 +13,6 @@
   "paths": {
     "/ingest/v0/customers/events": {
       "post": {
-        "tags": [
-          "Customers"
-        ],
         "summary": "Customer events",
         "description": "Ingests events related to customer activity.",
         "requestBody": {
