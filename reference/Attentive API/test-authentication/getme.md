@@ -5,6 +5,6 @@ excerpt: >-
   the Attentive product.
 api:
   file: new-test.json
-  operationId: getMeV2
+  operationId: getMe
 hidden: false
 ---
