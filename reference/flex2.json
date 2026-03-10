@@ -41,15 +41,7 @@
         ]
       }
     },
-    "/user": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    }
+    "/user": {}
   },
   "components": {
     "schemas": {
