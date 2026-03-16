@@ -1,0 +1,14 @@
+- addtagtopoolprospect
+- resetsearch
+- deleteprospectsfrompool
+- getprospectsforpool
+- deletesearch
+- createnewprospectpool
+- uploadcsvdata
+- uploadcsvdatanylas
+- syncpoolprospectssalesnav
+- getprospectpooltags
+- getpoolprospectmanagerfilters
+- getprospectpoolmanagers
+- getprospectsforpoolfilters
+- getprospectsforpoolexport

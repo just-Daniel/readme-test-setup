@@ -1,0 +1,6 @@
+- updateusergptpreferences
+- updategptfollowupmessages
+- getmessagetemplates
+- getgptresponse
+- createcampaignfromsalesgpt
+- getgptuserpreferences

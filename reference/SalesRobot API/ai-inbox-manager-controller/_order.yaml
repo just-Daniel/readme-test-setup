@@ -1,0 +1,11 @@
+- getcustomersops
+- addcustomersop
+- updatesop
+- deletesop
+- togglesoppublicstatus
+- generatesop
+- generateaireply
+- getautotaggingstatus
+- updateautotaggingstatus
+- getsopcontent
+- getaigeneratedreply
