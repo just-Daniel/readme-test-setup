@@ -5,7 +5,7 @@ excerpt: |
   Used by the Mini Mart website chat widget to answer questions about
   products, hours, orders, and store info.
 api:
-  file: openapi.json
+  file: openapi2.json
   operationId: sendChatMessage
 hidden: false
 ---
