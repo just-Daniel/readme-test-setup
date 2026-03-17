@@ -1,7 +1,0 @@
----
-title: /api/ai-inbox/auto-tagging
-api:
-  file: openapi.json
-  operationId: getAutoTaggingStatus
-hidden: false
----
