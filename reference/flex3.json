@@ -13,7 +13,7 @@
   "paths": {
     "/ingest/v0/customers/events/3": {
       "post": {
-        "operationId": "flex",
+        "operationId": "flex333",
         "summary": "Customer events",
         "description": "Ingests events related to customer activity.",
         "requestBody": {
@@ -47,17 +47,13 @@
     "schemas": {
       "CustomerEventBase": {
         "type": "object",
-        "required": [
-          "type_id"
-        ],
+        "required": ["type_id"],
         "properties": {
           "country": {
             "type": "string",
             "pattern": "ISO 3166-1 alpha-2 code",
             "description": "country code",
-            "examples": [
-              "ZA"
-            ]
+            "examples": ["ZA"]
           },
           "type_id": {
             "type": "integer",
@@ -78,9 +74,7 @@
           },
           {
             "type": "object",
-            "required": [
-              "type_id"
-            ],
+            "required": ["type_id"],
             "properties": {
               "type_id": {
                 "type": "integer",
@@ -103,9 +97,7 @@
           },
           {
             "type": "object",
-            "required": [
-              "type_id"
-            ],
+            "required": ["type_id"],
             "properties": {
               "type_id": {
                 "type": "integer",
