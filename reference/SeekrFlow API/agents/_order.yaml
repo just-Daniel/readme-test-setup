@@ -1,7 +1,0 @@
-- list_agents_v1_flow_agents__get
-- get_agent_by_id_v1_flow_agents__agent_id__get
-- delete_v1_flow_agents__agent_id__delete
-- create_v1_flow_agents_create_post
-- update_v1_flow_agents__agent_id__update_put
-- promote_v1_flow_agents__agent_id__promote_put
-- demote_v1_flow_agents__agent_id__demote_put
