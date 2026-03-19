@@ -1,0 +1,7 @@
+- listsessions
+- getsession
+- deletesession
+- updatesessionstatus
+- listtenantsessions
+- listusersessions
+- admingroupchallenge

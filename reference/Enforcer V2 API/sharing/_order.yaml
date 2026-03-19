@@ -1,0 +1,10 @@
+- createsharingintent
+- checkaccess
+- listsharingintents
+- listmyshares
+- getresourcesharingintents
+- revokeallsharingintents
+- listsharedwithme
+- getsharingintent
+- revokesharingintent
+- updatesharingintent

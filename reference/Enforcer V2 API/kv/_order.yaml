@@ -1,0 +1,12 @@
+- kvdelete
+- kvexists
+- kvget
+- kvincrement
+- kvlist
+- kvmdelete
+- kvmget
+- kvmset
+- kvset
+- kvstats
+- kvsetttl
+- kvgetttl

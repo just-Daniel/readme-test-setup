@@ -1,0 +1,10 @@
+- searchcontacts
+- createcontact
+- deletecontacts
+- importcontacts
+- lookupusersforcontact
+- resolveuserbyaddress
+- listnoncontactusers
+- getcontact
+- updatecontact
+- deletecontact

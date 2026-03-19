@@ -1,0 +1,7 @@
+- get_api-v1-enforcer-terms
+- post_api-v1-enforcer-terms-accept
+- get_api-v1-enforcer-terms-current-type
+- post_api-v1-enforcer-terms-revoke
+- post_api-v1-enforcer-terms-revoke-type
+- get_api-v1-enforcer-terms-status
+- get_api-v1-enforcer-terms-id

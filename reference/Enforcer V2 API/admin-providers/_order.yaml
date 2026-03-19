@@ -1,0 +1,7 @@
+- get_api-v1-enforcer-admin-providers
+- post_api-v1-enforcer-admin-providers
+- get_api-v1-enforcer-admin-providers-id
+- put_api-v1-enforcer-admin-providers-id
+- delete_api-v1-enforcer-admin-providers-id
+- get_api-v1-enforcer-admin-tenants-tenant-id-providers
+- post_api-v1-enforcer-admin-tenants-tenant-id-providers

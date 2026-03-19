@@ -1,0 +1,15 @@
+- listgroups
+- creategroup
+- getusergroupbyid
+- listusergroups
+- admingetusergroups
+- addusertomultiplegroups
+- getgroupbyid
+- updategroup
+- deletegroup
+- getusersnotingroup
+- getusersingroup
+- addusertogroup
+- removeallusersfromgroup
+- removeuserfromgroup
+- adminremoveuserfromallgroups

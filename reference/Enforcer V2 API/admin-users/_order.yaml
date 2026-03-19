@@ -1,0 +1,9 @@
+- inviteuser
+- admincreateuser
+- adminresolveuser
+- verifycontact
+- admindeleteuser
+- adminactivateuser
+- admindeactivateuser
+- adminupdateuserrole
+- adminupdateusertenant

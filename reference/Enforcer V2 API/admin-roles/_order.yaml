@@ -1,0 +1,5 @@
+- listroles
+- createrole
+- getrolebyid
+- updaterole
+- deleterole

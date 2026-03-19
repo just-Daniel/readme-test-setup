@@ -1,0 +1,5 @@
+- createtenantsecret
+- validatetenantsecret
+- updatetenantsecret
+- deletetenantsecret
+- listtenantsecrets

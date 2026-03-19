@@ -1,0 +1,9 @@
+- listaccountgroups
+- addaccounttogroup
+- removeaccountfromgroup
+- batchaddaccounttogroups
+- getaccountgroupbyid
+- listaccountsingroup
+- removeallaccountsfromgroup
+- getusergroups
+- removeuserfromallgroups

@@ -1,0 +1,10 @@
+- listusers
+- getaccountdetail
+- updateprofile
+- claimprivyid
+- getmygroups
+- getpreferences
+- updatepreferences
+- syncprivy
+- getuserinfo
+- getuserpublicview
