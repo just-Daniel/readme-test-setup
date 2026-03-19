@@ -23,12 +23,12 @@ jobs:
             --slug=flex.json \
             --title="Flex API"
 
-          npx rdme@v10 openapi upload ./reference/flex2`.json \
+          npx rdme@v10 openapi upload ./reference/flex2.json \
             --key=${{ secrets.README_API_KEY }} \
             --slug=flex2.json \
             --title="Flex2 API"
 
-          npx rdme@v10 openapi upload ./reference/flex3`.json \
+          npx rdme@v10 openapi upload ./reference/flex3.json \
             --key=${{ secrets.README_API_KEY }} \
             --slug=flex3.json \
             --title="Flex3 API"
