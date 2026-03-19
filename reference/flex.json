@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Flex-new-test",
+    "title": "Flex API",
     "description": "The NEW Flex Ingestion API",
     "version": "1.0.0"
   },
