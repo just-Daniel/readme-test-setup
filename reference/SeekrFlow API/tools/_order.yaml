@@ -1,0 +1,7 @@
+- create_tool_v1_flow_tools_post
+- list_tools_v1_flow_tools_get
+- get_tool_v1_flow_tools__tool_id__get
+- update_tool_v1_flow_tools__tool_id__put
+- delete_tool_v1_flow_tools__tool_id__delete
+- get_agents_for_tool_v1_flow_tools__tool_id__agents_get
+- duplicate_tool_v1_flow_tools__tool_id__duplicate_post
