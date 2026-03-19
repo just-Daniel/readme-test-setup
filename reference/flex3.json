@@ -47,13 +47,17 @@
     "schemas": {
       "CustomerEventBase": {
         "type": "object",
-        "required": ["type_id"],
+        "required": [
+          "type_id"
+        ],
         "properties": {
           "country": {
             "type": "string",
             "pattern": "ISO 3166-1 alpha-2 code",
             "description": "country code",
-            "examples": ["ZA"]
+            "examples": [
+              "ZA"
+            ]
           },
           "type_id": {
             "type": "integer",
@@ -74,7 +78,9 @@
           },
           {
             "type": "object",
-            "required": ["type_id"],
+            "required": [
+              "type_id"
+            ],
             "properties": {
               "type_id": {
                 "type": "integer",
@@ -97,7 +103,9 @@
           },
           {
             "type": "object",
-            "required": ["type_id"],
+            "required": [
+              "type_id"
+            ],
             "properties": {
               "type_id": {
                 "type": "integer",
