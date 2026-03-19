@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "FLEX NEW-TEST_new",
+    "title": "Flex3 API",
     "description": "The NEW 2 Flex Ingestion API",
     "version": "1.0.0"
   },
@@ -62,7 +62,12 @@
           "type_id": {
             "type": "integer",
             "description": "Event type",
-            "enum": [1, 2, 20, 50]
+            "enum": [
+              1,
+              2,
+              20,
+              50
+            ]
           }
         }
       },
@@ -79,7 +84,9 @@
             "properties": {
               "type_id": {
                 "type": "integer",
-                "enum": [1]
+                "enum": [
+                  1
+                ]
               },
               "name": {
                 "type": "string",
@@ -102,9 +109,11 @@
             "properties": {
               "type_id": {
                 "type": "integer",
-                "enum": [2]
+                "enum": [
+                  2
+                ]
               },
-             "name": {
+              "name": {
                 "type": "string",
                 "description": "OptInEvent"
               }
@@ -122,11 +131,17 @@
             "properties": {
               "type_id": {
                 "type": "integer",
-                "enum": [20]
+                "enum": [
+                  20
+                ]
               },
               "channel": {
                 "type": "integer",
-                "enum": [1, 2, 3],
+                "enum": [
+                  1,
+                  2,
+                  3
+                ],
                 "description": "1 - WhatsApp, 2 - SMS, 3 - Email"
               }
             }
@@ -143,7 +158,9 @@
             "properties": {
               "type_id": {
                 "type": "integer",
-                "enum": [50]
+                "enum": [
+                  50
+                ]
               },
               "name": {
                 "type": "string",
@@ -163,7 +180,9 @@
             "properties": {
               "type_id": {
                 "type": "integer",
-                "enum": [51]
+                "enum": [
+                  51
+                ]
               },
               "name": {
                 "type": "string",
@@ -183,7 +202,9 @@
             "properties": {
               "type_id": {
                 "type": "integer",
-                "enum": [53]
+                "enum": [
+                  53
+                ]
               },
               "name": {
                 "type": "string",
@@ -203,7 +224,9 @@
             "properties": {
               "type_id": {
                 "type": "integer",
-                "enum": [54]
+                "enum": [
+                  54
+                ]
               },
               "name": {
                 "type": "string",
@@ -223,7 +246,9 @@
             "properties": {
               "type_id": {
                 "type": "integer",
-                "enum": [55]
+                "enum": [
+                  55
+                ]
               },
               "name": {
                 "type": "string",
