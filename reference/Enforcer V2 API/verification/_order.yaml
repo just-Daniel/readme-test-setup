@@ -1,9 +1,0 @@
-- verifyemailconfirm
-- verifyemailviaprivy
-- verifyemailsend
-- verifyphoneconfirm
-- verifyphoneviaprivy
-- verifyphonesend
-- initiategroupchallenge
-- get_api-v1-enforcer-verification-sessions
-- get_api-v1-enforcer-verification-sessions-session-id

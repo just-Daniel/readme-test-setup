@@ -1,4 +1,0 @@
----
-title: Tenant
-hidden: false
----

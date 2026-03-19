@@ -1,4 +1,0 @@
----
-title: Verification
-hidden: false
----

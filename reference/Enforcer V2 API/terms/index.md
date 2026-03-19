@@ -1,4 +1,0 @@
----
-title: Terms
-hidden: false
----
