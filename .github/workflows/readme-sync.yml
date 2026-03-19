@@ -1,0 +1,19 @@
+name: Test OpenAPI Sync Conflict
+on:
+  push:
+    branches:
+      - v1.0
+
+jobs:
+  rdme-openapi-upload:
+    if: github.actor != 'readme-sync[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+      - name: Upload OpenAPI to ReadMe
+        run: |
+          npx rdme@v10 openapi upload ./reference/test.json \
+            --key=${{ secrets.README_API_KEY }} \
+            --slug=test.json \
+            --title="Test API"
