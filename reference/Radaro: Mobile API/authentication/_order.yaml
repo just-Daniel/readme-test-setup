@@ -1,0 +1,12 @@
+- getauthenticationtype
+- loginv2
+- loginv3
+- loginv4
+- loginsaml
+- 2faverifycode
+- 2faresendcode
+- auth0login
+- appleauth0login
+- logout
+- resetpassword
+- changepassword
