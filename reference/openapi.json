@@ -1,0 +1,942 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenAPI Document on Azure Functions",
+    "description": "This is the OpenAPI Document on Azure Functions",
+    "version": "1.0.0"
+  },
+  "host": "masteryapi.azurewebsites.net",
+  "basePath": "/api",
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/orderForm/{orderFormId}": {
+      "get": {
+        "tags": [
+          "Vtex Order"
+        ],
+        "operationId": "GetOrderForm",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "orderFormId",
+            "description": "ID da order",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/apiResponse_vtexOrderFormResponseDto"
+            }
+          },
+          "400": {
+            "description": "Invalid layout",
+            "schema": {
+              "$ref": "#/definitions/apiResponse_object"
+            },
+            "x-ms-summary": "Bad Request"
+          },
+          "401": {
+            "description": "Key not valid",
+            "schema": {
+              "$ref": "#/definitions/apiResponse_object"
+            },
+            "x-ms-summary": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "token": []
+          }
+        ]
+      }
+    },
+    "/orderForm": {
+      "get": {
+        "tags": [
+          "Vtex Order"
+        ],
+        "operationId": "GetOrderFormList",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/apiResponse_list1"
+            }
+          },
+          "400": {
+            "description": "Invalid layout",
+            "schema": {
+              "$ref": "#/definitions/apiResponse_object"
+            },
+            "x-ms-summary": "Bad Request"
+          },
+          "401": {
+            "description": "Key not valid",
+            "schema": {
+              "$ref": "#/definitions/apiResponse_object"
+            },
+            "x-ms-summary": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "token": []
+          }
+        ]
+      }
+    },
+    "/order": {
+      "post": {
+        "tags": [
+          "Vtex Order"
+        ],
+        "operationId": "VtexOrderForm",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "VTEX order form payload",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/vtexOrderFormDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/vtexOrderItemsDto"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Layout",
+            "x-ms-summary": "The response"
+          },
+          "401": {
+            "description": "Key not valid",
+            "x-ms-summary": "The response"
+          }
+        },
+        "security": [
+          {
+            "token": []
+          }
+        ]
+      }
+    },
+    "/sku/{skuId}": {
+      "get": {
+        "tags": [
+          "Vtex Catalog"
+        ],
+        "operationId": "GetSku",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "skuId",
+            "description": "ID do sku",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/apiResponse_skuResponseDto"
+            }
+          },
+          "400": {
+            "description": "Invalid layout",
+            "schema": {
+              "$ref": "#/definitions/apiResponse_object"
+            },
+            "x-ms-summary": "Bad Request"
+          },
+          "401": {
+            "description": "Key not valid",
+            "schema": {
+              "$ref": "#/definitions/apiResponse_object"
+            },
+            "x-ms-summary": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "token": []
+          }
+        ]
+      }
+    },
+    "/sku": {
+      "get": {
+        "tags": [
+          "Vtex Catalog"
+        ],
+        "operationId": "GetSkuList",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/apiResponse_list1"
+            }
+          },
+          "400": {
+            "description": "Invalid layout",
+            "schema": {
+              "$ref": "#/definitions/apiResponse_object"
+            },
+            "x-ms-summary": "Bad Request"
+          },
+          "401": {
+            "description": "Key not valid",
+            "schema": {
+              "$ref": "#/definitions/apiResponse_object"
+            },
+            "x-ms-summary": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "token": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Vtex Catalog"
+        ],
+        "operationId": "PostSku",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "VTEX sku",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/skuDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/apiResponse_skuResponseDto"
+            }
+          },
+          "400": {
+            "description": "Invalid layout",
+            "schema": {
+              "$ref": "#/definitions/apiResponse_object"
+            },
+            "x-ms-summary": "Bad Request"
+          },
+          "401": {
+            "description": "Key not valid",
+            "schema": {
+              "$ref": "#/definitions/apiResponse_object"
+            },
+            "x-ms-summary": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "token": []
+          }
+        ]
+      }
+    },
+    "/skuLoad": {
+      "post": {
+        "tags": [
+          "Vtex Catalog"
+        ],
+        "operationId": "PostSkuLoad",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/apiResponse_string"
+            }
+          },
+          "400": {
+            "description": "Invalid layout",
+            "schema": {
+              "$ref": "#/definitions/apiResponse_object"
+            },
+            "x-ms-summary": "Bad Request"
+          },
+          "401": {
+            "description": "Key not valid",
+            "schema": {
+              "$ref": "#/definitions/apiResponse_object"
+            },
+            "x-ms-summary": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "token": []
+          }
+        ]
+      }
+    },
+    "/Company/{cnpj}": {
+      "get": {
+        "tags": [
+          "Company"
+        ],
+        "operationId": "GetCompany",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "cnpj",
+            "description": "CNPJ do cliente",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/apiResponse_companyResponseDto"
+            }
+          },
+          "400": {
+            "description": "Invalid layout",
+            "schema": {
+              "$ref": "#/definitions/apiResponse_object"
+            },
+            "x-ms-summary": "Bad Request"
+          },
+          "401": {
+            "description": "Key not valid",
+            "schema": {
+              "$ref": "#/definitions/apiResponse_object"
+            },
+            "x-ms-summary": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "token": []
+          }
+        ]
+      }
+    },
+    "/Company": {
+      "get": {
+        "tags": [
+          "Company"
+        ],
+        "operationId": "GetCompanyList",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/apiResponse_list1"
+            }
+          },
+          "400": {
+            "description": "Invalid layout",
+            "schema": {
+              "$ref": "#/definitions/apiResponse_object"
+            },
+            "x-ms-summary": "Bad Request"
+          },
+          "401": {
+            "description": "Key not valid",
+            "schema": {
+              "$ref": "#/definitions/apiResponse_object"
+            },
+            "x-ms-summary": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "token": []
+          }
+        ]
+      }
+    },
+    "/company": {
+      "post": {
+        "tags": [
+          "Company"
+        ],
+        "operationId": "PostCompany",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Activity values:\n1 = Atacadista\n2 = Distribuidor\n3 = Fabricante\n4 = Varejista",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/companyDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/apiResponse_companyResponseDto"
+            }
+          },
+          "400": {
+            "description": "Invalid layout",
+            "schema": {
+              "$ref": "#/definitions/apiResponse_object"
+            },
+            "x-ms-summary": "Bad Request"
+          },
+          "401": {
+            "description": "Key not valid",
+            "schema": {
+              "$ref": "#/definitions/apiResponse_object"
+            },
+            "x-ms-summary": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "token": []
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "apiResponse_companyResponseDto": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "data": {
+          "$ref": "#/definitions/companyResponseDto"
+        }
+      }
+    },
+    "apiResponse_list1": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/vtexOrderFormResponseDto"
+          }
+        }
+      }
+    },
+    "apiResponse_object": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "data": {
+          "type": "object"
+        }
+      }
+    },
+    "apiResponse_skuResponseDto": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "data": {
+          "$ref": "#/definitions/skuResponseDto"
+        }
+      }
+    },
+    "apiResponse_string": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "data": {
+          "type": "string"
+        }
+      }
+    },
+    "apiResponse_vtexOrderFormResponseDto": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "data": {
+          "$ref": "#/definitions/vtexOrderFormResponseDto"
+        }
+      }
+    },
+    "clientDataVtexOrderFormDto": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "corporateDocument": {
+          "type": "string"
+        }
+      }
+    },
+    "clientDataVtexOrderFormResponseDto": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "clientProfileData": {
+          "type": "string"
+        },
+        "regimeTributario": {
+          "type": "string"
+        }
+      }
+    },
+    "companyDto": {
+      "type": "object",
+      "properties": {
+        "cnpj": {
+          "type": "string"
+        },
+        "activity": {
+          "format": "int32",
+          "default": 1,
+          "enum": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "type": "integer"
+        },
+        "state": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "accountVtex": {
+          "type": "string"
+        },
+        "vtexKey": {
+          "type": "string"
+        },
+        "vtexToken": {
+          "type": "string"
+        },
+        "vtexImportCatalog": {
+          "type": "boolean"
+        }
+      }
+    },
+    "companyResponseDto": {
+      "type": "object",
+      "properties": {
+        "cnpj": {
+          "type": "string"
+        },
+        "regimeTributario": {
+          "type": "string"
+        },
+        "activity": {
+          "format": "int32",
+          "default": 1,
+          "enum": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "type": "integer"
+        },
+        "state": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "accountVtex": {
+          "type": "string"
+        },
+        "vtexKey": {
+          "type": "string"
+        },
+        "vtexToken": {
+          "type": "string"
+        },
+        "vtexImportCatalog": {
+          "type": "boolean"
+        }
+      }
+    },
+    "itemVtexOrderFormDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "sku": {
+          "type": "string"
+        },
+        "ean": {
+          "type": "string"
+        },
+        "refId": {
+          "type": "string"
+        }
+      }
+    },
+    "itemVtexOrderFormResponseDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "sku": {
+          "type": "string"
+        },
+        "ean": {
+          "type": "string"
+        },
+        "refId": {
+          "type": "string"
+        },
+        "ncm": {
+          "type": "string"
+        },
+        "taxes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/taxesDto"
+          }
+        }
+      }
+    },
+    "shippingDestinationVtexOrderFormDto": {
+      "type": "object",
+      "properties": {
+        "country": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "neighborhood": {
+          "type": "string"
+        },
+        "postalCode": {
+          "type": "string"
+        },
+        "street": {
+          "type": "string"
+        }
+      }
+    },
+    "skuDto": {
+      "required": [
+        "skuId",
+        "ncm",
+        "name"
+      ],
+      "type": "object",
+      "properties": {
+        "skuId": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "ncm": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "name": {
+          "minLength": 1,
+          "type": "string"
+        }
+      }
+    },
+    "skuResponseDto": {
+      "required": [
+        "cnpj",
+        "skuId",
+        "skuName",
+        "ncm"
+      ],
+      "type": "object",
+      "properties": {
+        "cnpj": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "skuId": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "skuName": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "ncm": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "taxes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/taxesDto"
+          }
+        }
+      }
+    },
+    "taxesDto": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "value": {
+          "format": "double",
+          "type": "number"
+        },
+        "observation": {
+          "type": "string"
+        }
+      }
+    },
+    "vtexOrderFormDto": {
+      "required": [
+        "orderFormId",
+        "items",
+        "shippingDestination",
+        "clientData",
+        "createdAt"
+      ],
+      "type": "object",
+      "properties": {
+        "orderFormId": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/itemVtexOrderFormDto"
+          }
+        },
+        "shippingDestination": {
+          "$ref": "#/definitions/shippingDestinationVtexOrderFormDto"
+        },
+        "clientData": {
+          "$ref": "#/definitions/clientDataVtexOrderFormDto"
+        },
+        "createdAt": {
+          "format": "date-time",
+          "minLength": 1,
+          "type": "string"
+        }
+      }
+    },
+    "vtexOrderFormResponseDto": {
+      "required": [
+        "orderFormId",
+        "items",
+        "shippingDestination",
+        "clientData",
+        "createdAt"
+      ],
+      "type": "object",
+      "properties": {
+        "orderFormId": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/itemVtexOrderFormResponseDto"
+          }
+        },
+        "shippingDestination": {
+          "$ref": "#/definitions/shippingDestinationVtexOrderFormDto"
+        },
+        "clientData": {
+          "$ref": "#/definitions/clientDataVtexOrderFormResponseDto"
+        },
+        "createdAt": {
+          "format": "date-time",
+          "minLength": 1,
+          "type": "string"
+        }
+      }
+    },
+    "vtexOrderItemsDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "taxes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/vtexTaxDto"
+          }
+        }
+      }
+    },
+    "vtexTaxDto": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "value": {
+          "format": "double",
+          "type": "number"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "token": {
+      "type": "apiKey",
+      "name": "token",
+      "in": "header"
+    }
+  }
+}
