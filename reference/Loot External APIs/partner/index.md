@@ -1,4 +1,0 @@
----
-title: Partner
-hidden: false
----
