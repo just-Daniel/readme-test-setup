@@ -1,4 +1,0 @@
----
-title: AggregatedOrders
-hidden: false
----

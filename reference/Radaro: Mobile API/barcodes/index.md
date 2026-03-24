@@ -1,4 +1,0 @@
----
-title: Barcodes
-hidden: false
----
