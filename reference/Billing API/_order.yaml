@@ -3,11 +3,11 @@
 - sunset
 - billing-groups
 - orders
+- invoices
 - plans-and-options
 - contracts
 - usages
 - billable-items
-- invoices
 - price-adaptations
 - customers
 - orders-deprecated
