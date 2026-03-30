@@ -1,0 +1,7 @@
+- migrateentity
+- migrateall
+- getallmigrations
+- getmigrationsbyentity
+- getnotcompletedmigrations
+- slowdownmigration
+- requesttermination

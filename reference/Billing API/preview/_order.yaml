@@ -1,0 +1,10 @@
+- queryplanchange
+- createplanchange
+- deleteplanchange
+- retrieveplanchange
+- retrieveplanchangeconfiguration
+- querymigrationpaths
+- createmigrationpath
+- deletemigrationpath
+- retrievemigrationpath
+- updatemigrationpath

@@ -1,0 +1,9 @@
+- querypriceadaptation
+- createpriceadaptation
+- deletepriceadaptation
+- retrievepriceadaptation
+- querypriceadaptationvalue
+- createpriceadaptationvalue
+- deletepriceadaptationvalue
+- retrievepriceadaptationvalue
+- updatepriceadaptationvalue
