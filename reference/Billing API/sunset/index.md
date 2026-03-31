@@ -1,4 +1,0 @@
----
-title: sunset
-hidden: false
----
