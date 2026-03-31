@@ -10,6 +10,12 @@
     },
     {
       "name": "preview-second"
+    },
+    {
+      "name": "some-other-tag"
+    },
+    {
+      "name": "another-tag"
     }
   ],
   "paths": {
