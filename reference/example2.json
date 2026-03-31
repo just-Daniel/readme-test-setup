@@ -129,10 +129,10 @@
       },
       "post": {
         "tags": [
-          "some-other-tag"
+          "another-tag"
         ],
-        "summary": "Create some-other-tag item",
-        "operationId": "createSomeOtherTagItem",
+        "summary": "Create another-tag item",
+        "operationId": "createAnotherTagItem",
         "requestBody": {
           "required": true,
           "content": {
