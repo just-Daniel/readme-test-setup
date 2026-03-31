@@ -52,7 +52,7 @@
       },
       "post": {
         "tags": [
-          "preview"
+          "preview-second"
         ],
         "summary": "Create preview item",
         "operationId": "createPreviewItem",
@@ -99,10 +99,10 @@
     "/example2/preview-second/items": {
       "get": {
         "tags": [
-          "preview-second"
+          "some-other-tag"
         ],
-        "summary": "Get preview-second items",
-        "operationId": "getPreviewSecondItems",
+        "summary": "Get some-other-tag items",
+        "operationId": "getSomeOtherTagItems",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -129,10 +129,10 @@
       },
       "post": {
         "tags": [
-          "preview-second"
+          "some-other-tag"
         ],
-        "summary": "Create preview-second item",
-        "operationId": "createPreviewSecondItem",
+        "summary": "Create some-other-tag item",
+        "operationId": "createSomeOtherTagItem",
         "requestBody": {
           "required": true,
           "content": {
