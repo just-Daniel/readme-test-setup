@@ -1,0 +1,460 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "MultiSafepay-style Deep-Path $ref Reproduction",
+    "description": "Minimal reproduction of self-refs, circular cross-refs, and deep-path $refs that break tools like ReadMe.io.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.example.com/v1"
+    }
+  ],
+  "paths": {
+    "/orders": {
+      "post": {
+        "operationId": "createOrder",
+        "summary": "Create an order",
+        "tags": [
+          "Orders"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "type",
+                  "currency",
+                  "amount"
+                ],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "redirect",
+                      "direct",
+                      "paymentlink"
+                    ],
+                    "description": "The order type"
+                  },
+                  "order_id": {
+                    "type": "string",
+                    "description": "Merchant order identifier"
+                  },
+                  "currency": {
+                    "type": "string",
+                    "example": "EUR",
+                    "description": "ISO 4217 currency code"
+                  },
+                  "amount": {
+                    "type": "integer",
+                    "description": "Amount in cents"
+                  },
+                  "gateway": {
+                    "type": "string",
+                    "description": "Payment gateway identifier"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Order description"
+                  },
+                  "payment_options": {
+                    "type": "object",
+                    "properties": {
+                      "notification_url": {
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      "redirect_url": {
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      "cancel_url": {
+                        "type": "string",
+                        "format": "uri"
+                      }
+                    }
+                  },
+                  "customer": {
+                    "type": "object",
+                    "properties": {
+                      "first_name": {
+                        "type": "string"
+                      },
+                      "last_name": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string",
+                        "format": "email"
+                      },
+                      "locale": {
+                        "type": "string",
+                        "example": "en_US"
+                      }
+                    }
+                  },
+                  "shopping_cart": {
+                    "type": "object",
+                    "properties": {
+                      "items": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "unit_price": {
+                              "type": "integer"
+                            },
+                            "quantity": {
+                              "type": "integer"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Order created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "order_id": {
+                          "$ref": "#/paths/~1orders/post/requestBody/content/application~1json/schema/properties/order_id"
+                        },
+                        "type": {
+                          "$ref": "#/paths/~1orders/post/requestBody/content/application~1json/schema/properties/type"
+                        },
+                        "currency": {
+                          "$ref": "#/paths/~1orders/post/requestBody/content/application~1json/schema/properties/currency"
+                        },
+                        "amount": {
+                          "$ref": "#/paths/~1orders/post/requestBody/content/application~1json/schema/properties/amount"
+                        },
+                        "gateway": {
+                          "$ref": "#/paths/~1orders/post/requestBody/content/application~1json/schema/properties/gateway"
+                        },
+                        "description": {
+                          "$ref": "#/paths/~1orders/post/requestBody/content/application~1json/schema/properties/description"
+                        },
+                        "customer": {
+                          "$ref": "#/paths/~1orders/post/requestBody/content/application~1json/schema/properties/customer"
+                        },
+                        "payment_options": {
+                          "$ref": "#/paths/~1orders/post/requestBody/content/application~1json/schema/properties/payment_options"
+                        },
+                        "shopping_cart": {
+                          "$ref": "#/paths/~1orders/post/requestBody/content/application~1json/schema/properties/shopping_cart"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "initialized",
+                            "completed",
+                            "declined",
+                            "void",
+                            "expired"
+                          ]
+                        },
+                        "created": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "payment_url": {
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "transaction_id": {
+                          "$ref": "#/paths/~1transactions/get/responses/200/content/application~1json/schema/properties/data/properties/items/items/properties/transaction_id"
+                        },
+                        "related_transactions": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/paths/~1transactions/get/responses/200/content/application~1json/schema/properties/data/properties/items/items"
+                          }
+                        },
+                        "order_details": {
+                          "$ref": "#/paths/~1orders~1%7Bid%7D/get/responses/200/content/application~1json/schema/properties/data"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/{id}": {
+      "get": {
+        "operationId": "getOrder",
+        "summary": "Get order details",
+        "tags": [
+          "Orders"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "order_id": {
+                          "$ref": "#/paths/~1orders/post/requestBody/content/application~1json/schema/properties/order_id"
+                        },
+                        "type": {
+                          "$ref": "#/paths/~1orders/post/requestBody/content/application~1json/schema/properties/type"
+                        },
+                        "currency": {
+                          "$ref": "#/paths/~1orders/post/requestBody/content/application~1json/schema/properties/currency"
+                        },
+                        "amount": {
+                          "$ref": "#/paths/~1orders/post/requestBody/content/application~1json/schema/properties/amount"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "initialized",
+                            "completed",
+                            "declined",
+                            "void",
+                            "expired"
+                          ]
+                        },
+                        "transactions": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/paths/~1transactions/get/responses/200/content/application~1json/schema/properties/data/properties/items/items"
+                          }
+                        },
+                        "created": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Order not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transactions": {
+      "get": {
+        "operationId": "listTransactions",
+        "summary": "List transactions",
+        "tags": [
+          "Transactions"
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "query",
+            "schema": {
+              "$ref": "#/paths/~1orders/post/requestBody/content/application~1json/schema/properties/order_id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Transaction list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "transaction_id": {
+                                "type": "string",
+                                "description": "Unique transaction identifier"
+                              },
+                              "order_id": {
+                                "$ref": "#/paths/~1orders/post/requestBody/content/application~1json/schema/properties/order_id"
+                              },
+                              "currency": {
+                                "$ref": "#/paths/~1orders/post/requestBody/content/application~1json/schema/properties/currency"
+                              },
+                              "amount": {
+                                "$ref": "#/paths/~1orders/post/requestBody/content/application~1json/schema/properties/amount"
+                              },
+                              "status": {
+                                "type": "string",
+                                "enum": [
+                                  "initialized",
+                                  "completed",
+                                  "refunded",
+                                  "void"
+                                ]
+                              },
+                              "gateway": {
+                                "$ref": "#/paths/~1orders/post/requestBody/content/application~1json/schema/properties/gateway"
+                              },
+                              "order_details": {
+                                "$ref": "#/paths/~1orders~1%7Bid%7D/get/responses/200/content/application~1json/schema/properties/data"
+                              },
+                              "created": {
+                                "type": "string",
+                                "format": "date-time"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/gateways": {
+      "get": {
+        "operationId": "listGateways",
+        "summary": "List available payment gateways",
+        "tags": [
+          "Gateways"
+        ],
+        "responses": {
+          "200": {
+            "description": "Gateway list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "$ref": "#/paths/~1orders/post/requestBody/content/application~1json/schema/properties/gateway"
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "allowed_currencies": {
+                            "type": "array",
+                            "items": {
+                              "$ref": "#/paths/~1orders/post/requestBody/content/application~1json/schema/properties/currency"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ValidationErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": false
+          },
+          "error_code": {
+            "type": "integer",
+            "example": 1006
+          },
+          "error_info": {
+            "type": "string",
+            "example": "Validation failed"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "ApiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "api_key"
+      }
+    }
+  },
+  "security": [
+    {
+      "ApiKey": []
+    }
+  ]
+}
