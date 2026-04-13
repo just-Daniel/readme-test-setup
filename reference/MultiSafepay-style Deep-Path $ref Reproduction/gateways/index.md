@@ -1,4 +1,0 @@
----
-title: Gateways
-hidden: false
----
