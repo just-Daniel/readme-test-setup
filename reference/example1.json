@@ -25,7 +25,7 @@
           "preview"
         ],
         "summary": "Get preview items",
-        "operationId": "getPreviewItems",
+        "operationId": "getPreviewItemsExample1",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -55,7 +55,7 @@
           "preview-second"
         ],
         "summary": "Create preview-second item",
-        "operationId": "createPreviewSecondItem",
+        "operationId": "createPreviewSecondItemExample1",
         "requestBody": {
           "required": true,
           "content": {
@@ -102,7 +102,7 @@
           "some-other-tag"
         ],
         "summary": "Get some-other-tag items",
-        "operationId": "getSomeOtherTagItems",
+        "operationId": "getSomeOtherTagItemsExample1",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -132,7 +132,7 @@
           "another-tag"
         ],
         "summary": "Create another-tag item",
-        "operationId": "createAnotherTagItem",
+        "operationId": "createAnotherTagItemExample1",
         "requestBody": {
           "required": true,
           "content": {
@@ -171,18 +171,6 @@
             }
           }
         }
-      }
-    },
-    "/new-endpoint": {
-      "get": {
-        "description": "",
-        "operationId": "",
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "parameters": []
       }
     }
   }
