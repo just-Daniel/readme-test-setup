@@ -23,6 +23,7 @@
   ],
   "security": [
     {
+      "Signature": [],
       "X-Auth-Code": []
     }
   ],
@@ -35,11 +36,6 @@
         "summary": "Confirmation webhook",
         "description": "Sent by Smartpayz to confirm that a new transaction has been created. The merchant should respond with the merchant transaction id assigned to the transaction.\n\nThis webhook is skipped only when BOTH of the following conditions are true:\n1. `merchantTransactionId` was provided in the original `POST /api/v2/sessions` request, AND\n2. The 'skip confirmation' feature is enabled for the merchant.\n\nOtherwise the webhook is sent on every transaction. Failed deliveries are retried automatically.\n\nThe merchant must respond with a 2xx; otherwise the transaction will not continue in Smartpayz.",
         "operationId": "confirmation",
-        "security": [
-          {
-            "Signature": []
-          }
-        ],
         "parameters": [
           {
             "name": "Signature",
@@ -84,11 +80,6 @@
         "summary": "Notification webhook",
         "description": "Sent by Smartpayz to notify the merchant about a transaction status update. The response body is not inspected; only the HTTP status code matters: a 2xx response acknowledges the delivery, anything else schedules a retry.",
         "operationId": "notification",
-        "security": [
-          {
-            "Signature": []
-          }
-        ],
         "parameters": [
           {
             "name": "Signature",
