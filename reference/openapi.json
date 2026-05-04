@@ -30,6 +30,11 @@
         "summary": "Confirmation webhook",
         "description": "Sent by Smartpayz to confirm that a new transaction has been created. The merchant should respond with the merchant transaction id assigned to the transaction.\n\nThis webhook is skipped only when BOTH of the following conditions are true:\n1. `merchantTransactionId` was provided in the original `POST /api/v2/sessions` request, AND\n2. The 'skip confirmation' feature is enabled for the merchant.\n\nOtherwise the webhook is sent on every transaction. Failed deliveries are retried automatically.\n\nThe merchant must respond with a 2xx; otherwise the transaction will not continue in Smartpayz.",
         "operationId": "confirmation",
+        "security": [
+          {
+            "Signature": []
+          }
+        ],
         "parameters": [
           {
             "name": "Signature",
@@ -42,9 +47,299 @@
             "example": "5d41402abc4b2a76b9719d911017c592ab8562ec7b0122c79fc29dc3b8b515d5"
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MerchantConfirmationClientRequestDtoV2"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
-            "description": "The merchant has successfully recorded the transaction and returned its merchant transaction id."
+            "description": "The merchant has successfully recorded the transaction and returned its merchant transaction id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MerchantConfirmationClientResponseDtoV2"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "notification": {
+      "post": {
+        "x-tags": [
+          "Webhooks"
+        ],
+        "summary": "Notification webhook",
+        "description": "Sent by Smartpayz to notify the merchant about a transaction status update. The response body is not inspected; only the HTTP status code matters: a 2xx response acknowledges the delivery, anything else schedules a retry.",
+        "operationId": "notification",
+        "security": [
+          {
+            "Signature": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "HMAC-SHA256 signature of the raw request body, signed with the merchant secret key and hex-encoded.",
+            "example": "5d41402abc4b2a76b9719d911017c592ab8562ec7b0122c79fc29dc3b8b515d5"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MerchantNotificationClientRequestDtoV2"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The merchant acknowledges the notification. Any response body is ignored.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationResponseDtoV2"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/api/v2/sessions": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Create cashier session",
+        "description": "Creates a new cashier session for the given merchant and customer, and returns a link that directs the customer to our cashier UI with the available payment methods. You can read more about the parameters carried in the returned link in [Redirect URL parameters](https://docs.smartpayz.com/docs/redirect-url).",
+        "operationId": "createCashierSession",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CashierRequestDtoV2"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Cashier session successfully created. The response contains the link to which the customer should be redirected; see [Redirect URL parameters](https://docs.smartpayz.com/docs/redirect-url) for the meaning of every query parameter included in that link.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CashierResponseDtoV2"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/v2/transactions/{transactionId}/approve": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Approve transaction",
+        "description": "Approves a withdrawal transaction that is awaiting the merchant's review. The merchant may optionally override the amount actually paid out and the fee charged to the customer.",
+        "operationId": "approveTransaction",
+        "parameters": [
+          {
+            "name": "transactionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "f74f2325-23b2-4bad-8acd-8e526fccb68d"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransactionApproveRequestDtoV2"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The approval was accepted and is being processed."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/v2/transactions/{transactionId}/reject": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Reject transaction",
+        "description": "Rejects a withdrawal transaction that is awaiting the merchant's review.",
+        "operationId": "rejectTransaction",
+        "parameters": [
+          {
+            "name": "transactionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "f74f2325-23b2-4bad-8acd-8e526fccb68d"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransactionRejectRequestDtoV2"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The rejection was accepted and is being processed."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/v2/transactions/{transactionId}/cancel": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Cancel transaction",
+        "description": "Cancels a withdrawal transaction that is awaiting the merchant's review.",
+        "operationId": "cancelTransaction",
+        "parameters": [
+          {
+            "name": "transactionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "f74f2325-23b2-4bad-8acd-8e526fccb68d"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransactionCancelRequestDtoV2"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The cancellation was accepted and is being processed."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/v2/transactions": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Get transactions",
+        "description": "Looks up transactions by either Smartpayz transaction id or merchant transaction id. Exactly one of `transactionId` or `merchantTransactionId` must be provided.\n\nLookup by `transactionId` returns at most one transaction; lookup by `merchantTransactionId` may return multiple, since a single merchant transaction id can map to several Smartpayz transactions. The response is always an array.",
+        "operationId": "getTransactions",
+        "parameters": [
+          {
+            "name": "transactionId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Smartpayz transaction id. Mutually exclusive with `merchantTransactionId`.",
+            "example": "f74f2325-23b2-4bad-8acd-8e526fccb68d"
+          },
+          {
+            "name": "merchantTransactionId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "description": "Transaction id in the merchant system. Mutually exclusive with `transactionId`.",
+            "example": "7450991705589122925"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lookup succeeded. Returns the list of matching transactions (possibly empty).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TransactionInfoResponseDtoV2"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
           }
         }
       }
