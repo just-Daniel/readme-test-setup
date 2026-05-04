@@ -64,6 +64,20 @@
           }
         }
       }
+    },
+    "securitySchemes": {
+      "Signature": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Signature",
+        "description": "HMAC-SHA256 signature of the raw request body, signed with the merchant secret key and hex-encoded. The same `Signature` header is also sent by Smartpayz on outgoing webhook requests so the merchant can verify them. See [Signature Calculation](https://docs.smartpayz.com/docs/request-signature) for the full algorithm."
+      },
+      "X-Auth-Code": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-Auth-Code",
+        "description": "Authentication code that identifies the merchant and authorises the request. Required on every endpoint."
+      }
     }
   }
 }
