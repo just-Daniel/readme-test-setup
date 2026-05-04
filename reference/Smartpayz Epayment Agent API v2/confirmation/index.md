@@ -1,4 +1,0 @@
----
-title: confirmation
-hidden: false
----
