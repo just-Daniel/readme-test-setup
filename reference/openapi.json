@@ -48,16 +48,6 @@
             "example": "5d41402abc4b2a76b9719d911017c592ab8562ec7b0122c79fc29dc3b8b515d5"
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/MerchantConfirmationClientRequestDtoV2"
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "200": {
             "description": "The merchant has successfully recorded the transaction and returned its merchant transaction id."
