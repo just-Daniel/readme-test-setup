@@ -1,0 +1,1285 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Smartpayz Epayment Agent API v2",
+    "version": "2.0.0",
+    "description": "Smartpayz Epayment Agent API. Use these endpoints to open the cashier for your customer, manage withdrawals and look up transactions. JSON property names and URL paths use camelCase. Every request must include two headers: `Signature` (HMAC-SHA256 of the raw request body, signed with your merchant secret and hex-encoded) and `X-Auth-Code` (your merchant authentication code). See [Signature Calculation](https://docs.smartpayz.com/docs/request-signature) for the full algorithm."
+  },
+  "tags": [
+    {
+      "name": "Endpoints",
+      "description": "REST endpoints called by the merchant."
+    },
+    {
+      "name": "Webhooks",
+      "description": "Calls sent from Smartpayz to the URLs configured by the merchant."
+    }
+  ],
+  "servers": [
+    {
+      "url": "https://epayment-agent-api.dev.smartpayz.tech",
+      "description": "Development environment"
+    }
+  ],
+  "security": [
+    {
+      "Signature": [],
+      "X-Auth-Code": []
+    }
+  ],
+  "webhooks": {
+    "confirmation": {
+      "post": {
+        "x-tags": [
+          "Webhooks"
+        ],
+        "summary": "Confirmation webhook",
+        "description": "Sent by Smartpayz to confirm that a new transaction has been created. The merchant should respond with the merchant transaction id assigned to the transaction.\n\nThis webhook is skipped only when BOTH of the following conditions are true:\n1. `merchantTransactionId` was provided in the original `POST /api/v2/sessions` request, AND\n2. The 'skip confirmation' feature is enabled for the merchant.\n\nOtherwise the webhook is sent on every transaction. Failed deliveries are retried automatically.\n\nThe merchant must respond with a 2xx; otherwise the transaction will not continue in Smartpayz.",
+        "operationId": "confirmation",
+        "parameters": [
+          {
+            "name": "Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "HMAC-SHA256 signature of the raw request body, signed with the merchant secret key and hex-encoded.",
+            "example": "5d41402abc4b2a76b9719d911017c592ab8562ec7b0122c79fc29dc3b8b515d5"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The merchant has successfully recorded the transaction and returned its merchant transaction id."
+          }
+        }
+      }
+    },
+    "notification": {
+      "post": {
+        "x-tags": [
+          "Webhooks"
+        ],
+        "summary": "Notification webhook",
+        "description": "Sent by Smartpayz to notify the merchant about a transaction status update. The response body is not inspected; only the HTTP status code matters: a 2xx response acknowledges the delivery, anything else schedules a retry.",
+        "operationId": "notification",
+        "security": [
+          {
+            "Signature": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "HMAC-SHA256 signature of the raw request body, signed with the merchant secret key and hex-encoded.",
+            "example": "5d41402abc4b2a76b9719d911017c592ab8562ec7b0122c79fc29dc3b8b515d5"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MerchantNotificationClientRequestDtoV2"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The merchant acknowledges the notification. Any response body is ignored.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationResponseDtoV2"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/api/v2/sessions": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Create cashier session",
+        "description": "Creates a new cashier session for the given merchant and customer, and returns a link that directs the customer to our cashier UI with the available payment methods. You can read more about the parameters carried in the returned link in [Redirect URL parameters](https://docs.smartpayz.com/docs/redirect-url).",
+        "operationId": "createCashierSession",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CashierRequestDtoV2"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Cashier session successfully created. The response contains the link to which the customer should be redirected; see [Redirect URL parameters](https://docs.smartpayz.com/docs/redirect-url) for the meaning of every query parameter included in that link.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CashierResponseDtoV2"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/v2/transactions/{transactionId}/approve": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Approve transaction",
+        "description": "Approves a withdrawal transaction that is awaiting the merchant's review. The merchant may optionally override the amount actually paid out and the fee charged to the customer.",
+        "operationId": "approveTransaction",
+        "parameters": [
+          {
+            "name": "transactionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "f74f2325-23b2-4bad-8acd-8e526fccb68d"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransactionApproveRequestDtoV2"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The approval was accepted and is being processed."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/v2/transactions/{transactionId}/reject": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Reject transaction",
+        "description": "Rejects a withdrawal transaction that is awaiting the merchant's review.",
+        "operationId": "rejectTransaction",
+        "parameters": [
+          {
+            "name": "transactionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "f74f2325-23b2-4bad-8acd-8e526fccb68d"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransactionRejectRequestDtoV2"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The rejection was accepted and is being processed."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/v2/transactions/{transactionId}/cancel": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Cancel transaction",
+        "description": "Cancels a withdrawal transaction that is awaiting the merchant's review.",
+        "operationId": "cancelTransaction",
+        "parameters": [
+          {
+            "name": "transactionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "f74f2325-23b2-4bad-8acd-8e526fccb68d"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransactionCancelRequestDtoV2"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The cancellation was accepted and is being processed."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/v2/transactions": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Get transactions",
+        "description": "Looks up transactions by either Smartpayz transaction id or merchant transaction id. Exactly one of `transactionId` or `merchantTransactionId` must be provided.\n\nLookup by `transactionId` returns at most one transaction; lookup by `merchantTransactionId` may return multiple, since a single merchant transaction id can map to several Smartpayz transactions. The response is always an array.",
+        "operationId": "getTransactions",
+        "parameters": [
+          {
+            "name": "transactionId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Smartpayz transaction id. Mutually exclusive with `merchantTransactionId`.",
+            "example": "f74f2325-23b2-4bad-8acd-8e526fccb68d"
+          },
+          {
+            "name": "merchantTransactionId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "description": "Transaction id in the merchant system. Mutually exclusive with `transactionId`.",
+            "example": "7450991705589122925"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lookup succeeded. Returns the list of matching transactions (possibly empty).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TransactionInfoResponseDtoV2"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CashierRequestDtoV2": {
+        "type": "object",
+        "required": [
+          "customer",
+          "intent",
+          "returnUrl",
+          "timestamp"
+        ],
+        "properties": {
+          "timestamp": {
+            "description": "Time at which the merchant generated the request, in milliseconds since the Unix epoch (UTC).",
+            "type": "integer",
+            "minimum": 0,
+            "example": 1737119302000
+          },
+          "intent": {
+            "description": "Type of transaction the customer is about to perform.",
+            "type": "string",
+            "enum": [
+              "DEPOSIT",
+              "WITHDRAWAL"
+            ],
+            "example": "DEPOSIT"
+          },
+          "amount": {
+            "description": "Amount to be prefilled on the cashier UI by default. The customer can change it before submitting the payment.",
+            "type": "number",
+            "example": 20,
+            "nullable": true
+          },
+          "returnUrl": {
+            "description": "URL the customer will be redirected to after seeing the cashier status page. Must be a well-formed URL.",
+            "type": "string",
+            "pattern": "(^$)|(^(?:http(s)?:\\/\\/)[\\w.\\-]+(?:\\.[\\w\\.\\-]+)+[\\w\\-\\._~:/?#\\\\@!\\$&'\\(\\)\\*\\+,;=.\\[\\]]+$)",
+            "example": "https://example.com"
+          },
+          "locale": {
+            "description": "Locale used to render the cashier UI, in `ll_CC` format (`ll` = ISO-639 language code, `CC` = ISO-3166 country code). Defaults to `en_GB` when omitted.",
+            "type": "string",
+            "pattern": "^[a-z]{2}_[A-Z]{2}$",
+            "default": "en_GB",
+            "example": "en_GB",
+            "nullable": true
+          },
+          "metadata": {
+            "description": "Custom key/value map attached to the transaction. The provided values are used by the Smartpayz dynamic payment flow feature.",
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "nullable": true,
+            "example": {
+              "device": "mobile",
+              "profile": "5"
+            }
+          },
+          "merchantTransactionId": {
+            "description": "Merchant's own identifier for this transaction. When this value is provided **and** the 'skip confirmation' feature is enabled for the merchant, the confirmation webhook is not sent and Smartpayz stores this value as the merchant transaction id directly.",
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true,
+            "example": "7450991705589122925"
+          },
+          "customer": {
+            "$ref": "#/components/schemas/CashierCustomerRequestDtoV2",
+            "description": "Customer details used to personalise the cashier session."
+          },
+          "paymentAccounts": {
+            "description": "Optional list of payment accounts already known by the merchant for this customer (for example, previously used PIX keys). Accounts are grouped by payment-method type, and several accounts of the same type may be passed. See the [Payment Accounts reference](https://docs.smartpayz.com/docs/payment-accounts) for the list of supported codes.",
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/PaymentAccountTypeV2"
+            },
+            "example": [
+              {
+                "type": "PIX",
+                "accounts": [
+                  {
+                    "type": "EMAIL",
+                    "value": "albert.einstein@gmail.com"
+                  },
+                  {
+                    "type": "EMAIL",
+                    "value": "a.einstein@example.com"
+                  }
+                ]
+              }
+            ]
+          },
+          "campaigns": {
+            "description": "List of bonus campaigns available to the customer. The campaign chosen by the customer is sent back to the merchant in the confirmation webhook.",
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/CampaignV2"
+            }
+          },
+          "fees": {
+            "$ref": "#/components/schemas/FeesV2",
+            "description": "Withdrawal-specific optional field. The fee defined here is only displayed to the customer in the cashier UI; the actual fee charged is the one provided by the merchant when approving the transaction.",
+            "nullable": true
+          }
+        }
+      },
+      "CashierCustomerRequestDtoV2": {
+        "type": "object",
+        "required": [
+          "id",
+          "country",
+          "currency"
+        ],
+        "properties": {
+          "id": {
+            "description": "Customer identifier in the merchant system.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "example": "123456"
+          },
+          "firstName": {
+            "description": "Customer's first name.",
+            "type": "string",
+            "maxLength": 255,
+            "example": "Albert",
+            "nullable": true
+          },
+          "lastName": {
+            "description": "Customer's last name.",
+            "type": "string",
+            "maxLength": 255,
+            "example": "Einstein",
+            "nullable": true
+          },
+          "email": {
+            "description": "Customer's email address.",
+            "type": "string",
+            "format": "email",
+            "minLength": 1,
+            "maxLength": 255,
+            "example": "albert.einstein@gmail.com",
+            "nullable": true
+          },
+          "phone": {
+            "description": "Customer's phone number in international format.",
+            "type": "string",
+            "maxLength": 255,
+            "example": "+491701234567",
+            "nullable": true
+          },
+          "dob": {
+            "description": "Customer's date of birth in `yyyy-MM-dd` format. Values in any other format are rejected.",
+            "type": "string",
+            "format": "date",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "example": "1979-03-14",
+            "nullable": true
+          },
+          "country": {
+            "description": "Customer's country, as an ISO-3166 alpha-2 code.",
+            "type": "string",
+            "example": "DE"
+          },
+          "currency": {
+            "description": "Currency the customer transacts in, as an ISO-4217 alpha-3 code.",
+            "type": "string",
+            "example": "EUR"
+          },
+          "state": {
+            "description": "Customer's state or region.",
+            "type": "string",
+            "maxLength": 255,
+            "example": "Bavaria",
+            "nullable": true
+          },
+          "city": {
+            "description": "Customer's city.",
+            "type": "string",
+            "maxLength": 255,
+            "example": "Munich",
+            "nullable": true
+          },
+          "address": {
+            "description": "Customer's street address.",
+            "type": "string",
+            "maxLength": 255,
+            "example": "Marienplatz 1",
+            "nullable": true
+          },
+          "zip": {
+            "description": "Customer's postal/ZIP code.",
+            "type": "string",
+            "maxLength": 255,
+            "example": "80331",
+            "nullable": true
+          },
+          "tags": {
+            "description": "Free-form tags attached to the customer (for example merchant-specific segmentation labels).",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "kycStatus": {
+            "description": "Result of the merchant's KYC verification for this customer.",
+            "type": "string",
+            "enum": [
+              "NOT_VERIFIED",
+              "PARTIALLY_VERIFIED",
+              "VERIFIED"
+            ],
+            "nullable": true,
+            "example": "VERIFIED"
+          },
+          "identities": {
+            "description": "Identity documents associated with the customer. The expected fields depend on the country and document type; see the [Identities reference](https://docs.smartpayz.com/docs/identities) for the supported shapes.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "description": "Type of identity document.",
+                  "example": "CPF"
+                },
+                "cpf": {
+                  "type": "string",
+                  "description": "Brazilian CPF number."
+                }
+              },
+              "required": [
+                "type"
+              ]
+            },
+            "nullable": true
+          }
+        }
+      },
+      "PaymentAccountTypeV2": {
+        "type": "object",
+        "description": "Group of pre-known payment accounts of the same payment method belonging to the customer.",
+        "required": [
+          "type",
+          "accounts"
+        ],
+        "properties": {
+          "type": {
+            "description": "Payment method these accounts belong to (for example `PIX`, `CARD`). See the [Payment Accounts reference](https://docs.smartpayz.com/docs/payment-accounts) for the list of supported values.",
+            "type": "string",
+            "minLength": 1,
+            "example": "PIX"
+          },
+          "accounts": {
+            "description": "Accounts belonging to this payment method. At least one account is required, and several accounts of the same payment method are allowed.",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/PaymentAccountEntryV2"
+            }
+          }
+        }
+      },
+      "PaymentAccountEntryV2": {
+        "type": "object",
+        "description": "A single payment account already known by the merchant for this customer.",
+        "required": [
+          "type",
+          "value"
+        ],
+        "properties": {
+          "type": {
+            "description": "Sub-type of the account within the payment method (for example `EMAIL`, `PHONE` or `CPF` for PIX). See the [Payment Accounts reference](https://docs.smartpayz.com/docs/payment-accounts) for supported values.",
+            "type": "string",
+            "minLength": 1,
+            "example": "EMAIL"
+          },
+          "value": {
+            "description": "Value of the account, matching the chosen sub-type (for example the email address or phone number).",
+            "type": "string",
+            "minLength": 1,
+            "example": "albert.einstein@gmail.com"
+          }
+        }
+      },
+      "CampaignV2": {
+        "type": "object",
+        "description": "A single bonus campaign offered to the customer in the cashier UI.",
+        "properties": {
+          "bonusSystem": {
+            "type": "string",
+            "description": "Identifier of the bonus system the campaign belongs to.",
+            "example": "campaign-system"
+          },
+          "bonusData": {
+            "type": "string",
+            "description": "Opaque payload defined by the bonus system. Stored as-is and forwarded back to the merchant in the confirmation webhook."
+          },
+          "title": {
+            "type": "string",
+            "description": "Title shown to the customer in the cashier UI.",
+            "example": "Welcome bonus"
+          },
+          "description": {
+            "type": "string",
+            "description": "Longer description of the campaign shown to the customer in the cashier UI.",
+            "example": "100% match up to 100 EUR"
+          },
+          "selected": {
+            "type": "boolean",
+            "description": "When `true`, the campaign is pre-selected in the cashier UI.",
+            "example": false
+          }
+        }
+      },
+      "FeesV2": {
+        "type": "object",
+        "description": "Fee configuration displayed to the customer for this transaction.",
+        "required": [
+          "rules"
+        ],
+        "properties": {
+          "rules": {
+            "description": "List of fee rules, one of which will apply depending on the transaction amount. At least one rule is required.",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/FeeRuleV2"
+            },
+            "example": [
+              {
+                "id": "default",
+                "minAmount": 0,
+                "maxAmount": 1000,
+                "feeMinAmount": 0.5,
+                "feeMaxAmount": 25,
+                "staticFeeAmount": 0,
+                "feePercent": 2.5,
+                "feeType": "PERCENT_RANGED_FEE"
+              }
+            ]
+          }
+        }
+      },
+      "FeeRuleV2": {
+        "type": "object",
+        "description": "A single fee rule applied to transaction amounts in the `[minAmount, maxAmount]` range. All numeric fields are non-negative.",
+        "required": [
+          "id",
+          "feeType"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique identifier of this rule.",
+            "example": "default"
+          },
+          "minAmount": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Lower transaction-amount bound (inclusive) for which this rule applies.",
+            "example": 0
+          },
+          "maxAmount": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Upper transaction-amount bound (inclusive) for which this rule applies.",
+            "example": 1000
+          },
+          "feeMinAmount": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Minimum fee amount that can result from applying this rule.",
+            "example": 0.5
+          },
+          "feeMaxAmount": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Maximum fee amount that can result from applying this rule.",
+            "example": 25
+          },
+          "staticFeeAmount": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Flat fee component, used by the `STATIC_FEE` strategy and by combined strategies.",
+            "example": 0
+          },
+          "feePercent": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Percentage fee component, used by the `PERCENT_*` strategies.",
+            "example": 2.5
+          },
+          "feeType": {
+            "$ref": "#/components/schemas/FeeTypeEnumV2"
+          }
+        }
+      },
+      "FeeTypeEnumV2": {
+        "type": "string",
+        "description": "Strategy used to compute the fee from the transaction amount.",
+        "enum": [
+          "STATIC_FEE",
+          "PERCENT_FEE",
+          "PERCENT_MIN_FEE",
+          "PERCENT_RANGED_FEE"
+        ]
+      },
+      "CashierResponseDtoV2": {
+        "type": "object",
+        "properties": {
+          "redirectUrl": {
+            "description": "URL the customer should be redirected to in order to open the cashier UI.",
+            "type": "string",
+            "example": "https://epayment-cashier-ui.dev.smartpayz.tech?intent=deposit&amount=20&sid=e5dd2080-d5c6-482c-8fea-a3e8a5bceb4f&dir=ltr&live_chat=true"
+          }
+        }
+      },
+      "TransactionApproveRequestDtoV2": {
+        "type": "object",
+        "description": "Body for the approve action. `transactionId` is required and must match the value in the URL path; including it in the body ensures the transaction id is covered by the `Signature` header.",
+        "required": [
+          "transactionId"
+        ],
+        "properties": {
+          "transactionId": {
+            "description": "Smartpayz transaction id. Must match the `{transactionId}` value in the URL path.",
+            "type": "string",
+            "format": "uuid",
+            "example": "f74f2325-23b2-4bad-8acd-8e526fccb68d"
+          },
+          "comment": {
+            "description": "Free-form note describing the reason for the approval. Stored alongside the transaction for the merchant's reference.",
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true,
+            "example": "Approved"
+          },
+          "feeAmount": {
+            "description": "Fee the merchant wants to charge the customer for this withdrawal, in the transaction currency. When omitted, no fee is applied.",
+            "type": "number",
+            "minimum": 0,
+            "nullable": true,
+            "example": 10
+          },
+          "approvedAmount": {
+            "description": "Final amount the merchant wants to pay out to the customer, in the transaction currency. When omitted, the original transaction amount is used.",
+            "type": "number",
+            "minimum": 0,
+            "nullable": true,
+            "example": 50
+          }
+        }
+      },
+      "TransactionRejectRequestDtoV2": {
+        "type": "object",
+        "description": "Body for the reject action. `transactionId` is required and must match the value in the URL path; including it in the body ensures the transaction id is covered by the `Signature` header.",
+        "required": [
+          "transactionId"
+        ],
+        "properties": {
+          "transactionId": {
+            "description": "Smartpayz transaction id. Must match the `{transactionId}` value in the URL path.",
+            "type": "string",
+            "format": "uuid",
+            "example": "f74f2325-23b2-4bad-8acd-8e526fccb68d"
+          },
+          "comment": {
+            "description": "Free-form note describing the reason for the rejection. Stored alongside the transaction for the merchant's reference.",
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true,
+            "example": "Rejected by merchant compliance team"
+          }
+        }
+      },
+      "TransactionCancelRequestDtoV2": {
+        "type": "object",
+        "description": "Body for the cancel action. `transactionId` is required and must match the value in the URL path; including it in the body ensures the transaction id is covered by the `Signature` header.",
+        "required": [
+          "transactionId"
+        ],
+        "properties": {
+          "transactionId": {
+            "description": "Smartpayz transaction id. Must match the `{transactionId}` value in the URL path.",
+            "type": "string",
+            "format": "uuid",
+            "example": "f74f2325-23b2-4bad-8acd-8e526fccb68d"
+          },
+          "comment": {
+            "description": "Free-form note describing the reason for the cancellation. Stored alongside the transaction for the merchant's reference.",
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true,
+            "example": "Cancelled at customer request"
+          }
+        }
+      },
+      "TransactionInfoResponseDtoV2": {
+        "type": "object",
+        "properties": {
+          "intent": {
+            "description": "Type of transaction.",
+            "type": "string",
+            "enum": [
+              "DEPOSIT",
+              "WITHDRAWAL"
+            ],
+            "example": "DEPOSIT"
+          },
+          "transactionId": {
+            "description": "Smartpayz transaction id.",
+            "type": "string",
+            "format": "uuid",
+            "example": "f74f2325-23b2-4bad-8acd-8e526fccb68d"
+          },
+          "amount": {
+            "description": "Transaction amount, in the transaction currency.",
+            "type": "number",
+            "minimum": 0,
+            "nullable": true,
+            "example": 20
+          },
+          "feeAmount": {
+            "description": "Fee amount charged to the customer for this transaction, in the transaction currency.",
+            "type": "number",
+            "minimum": 0,
+            "nullable": true,
+            "example": 10
+          },
+          "approvedAmount": {
+            "description": "Amount actually approved/paid out for this transaction, in the transaction currency.",
+            "type": "number",
+            "minimum": 0,
+            "nullable": true,
+            "example": 50
+          },
+          "currency": {
+            "description": "Currency the transaction was created in, as an ISO-4217 alpha-3 code.",
+            "type": "string",
+            "example": "EUR"
+          },
+          "merchantCustomerId": {
+            "description": "Customer identifier in the merchant system.",
+            "type": "string",
+            "example": "123456"
+          },
+          "method": {
+            "description": "Payment method used for this transaction.",
+            "type": "string",
+            "example": "CARD"
+          },
+          "ipAddress": {
+            "description": "Customer's IP address captured at the time the cashier session was created.",
+            "type": "string",
+            "example": "127.0.0.1"
+          },
+          "merchantTransactionId": {
+            "description": "Transaction identifier in the merchant system.",
+            "type": "string",
+            "example": "7450991705589122925"
+          },
+          "status": {
+            "description": "Current status of the transaction. See the [Transaction statuses reference](https://docs.smartpayz.com/docs/transaction-statuses) for the full list of values.",
+            "type": "string",
+            "example": "PENDING"
+          },
+          "failureReason": {
+            "description": "Short code describing why the transaction failed, intended for internal merchant use rather than for display to the customer.",
+            "type": "string",
+            "example": "PSP_FAILED"
+          },
+          "publicError": {
+            "description": "Customer-facing error code that can be displayed in the merchant UI.",
+            "type": "string",
+            "example": "PSP_ERROR"
+          },
+          "pspErrorMessage": {
+            "description": "Raw error message returned by the payment provider, when available.",
+            "type": "string",
+            "example": "Card Blocked"
+          },
+          "pspErrorCode": {
+            "description": "Raw error code returned by the payment provider, when available.",
+            "type": "string",
+            "example": "CARD_BLOCKED"
+          },
+          "timestamp": {
+            "description": "Time at which the transaction was created, in milliseconds since the Unix epoch (UTC).",
+            "type": "integer",
+            "minimum": 0,
+            "example": 1737119302000
+          },
+          "metadata": {
+            "description": "Custom key/value map attached to the transaction. The provided values are used by the Smartpayz dynamic payment flow feature.",
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "nullable": true,
+            "example": {
+              "device": "mobile",
+              "profile": "5"
+            }
+          }
+        }
+      },
+      "MerchantConfirmationClientRequestDtoV2": {
+        "type": "object",
+        "required": [
+          "intent",
+          "transactionId",
+          "amount",
+          "currency",
+          "merchantCustomerId",
+          "method"
+        ],
+        "properties": {
+          "intent": {
+            "description": "Type of transaction.",
+            "type": "string",
+            "enum": [
+              "DEPOSIT",
+              "WITHDRAWAL"
+            ],
+            "example": "DEPOSIT"
+          },
+          "transactionId": {
+            "description": "Smartpayz transaction id.",
+            "type": "string",
+            "format": "uuid",
+            "example": "f74f2325-23b2-4bad-8acd-8e526fccb68d"
+          },
+          "amount": {
+            "description": "Transaction amount, in the transaction currency.",
+            "type": "number",
+            "minimum": 0,
+            "example": 20
+          },
+          "currency": {
+            "description": "Currency the transaction was created in, as an ISO-4217 alpha-3 code.",
+            "type": "string",
+            "example": "EUR"
+          },
+          "merchantCustomerId": {
+            "description": "Customer identifier in the merchant system, as originally provided in the cashier request.",
+            "type": "string",
+            "example": "123456"
+          },
+          "method": {
+            "description": "Payment method used for this transaction.",
+            "type": "string",
+            "example": "CARD"
+          },
+          "ipAddress": {
+            "description": "Customer's IP address captured at the time the cashier session was created.",
+            "type": "string",
+            "nullable": true,
+            "example": "127.0.0.1"
+          },
+          "metadata": {
+            "description": "Custom key/value map attached to the transaction. The provided values are used by the Smartpayz dynamic payment flow feature.",
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "nullable": true,
+            "example": {
+              "device": "mobile",
+              "profile": "5"
+            }
+          },
+          "bonus": {
+            "$ref": "#/components/schemas/BonusRequestDtoV2",
+            "description": "Bonus campaign chosen by the customer for this transaction, when applicable.",
+            "nullable": true
+          }
+        }
+      },
+      "MerchantConfirmationClientResponseDtoV2": {
+        "type": "object",
+        "description": "Body the merchant must return when handling the confirmation webhook. Only `merchantTransactionId` is required; the other fields are optional and ignored by Smartpayz.",
+        "required": [
+          "merchantTransactionId"
+        ],
+        "properties": {
+          "merchantTransactionId": {
+            "type": "string",
+            "description": "Merchant transaction id assigned to this transaction in the merchant system.",
+            "example": "7450991705589122925"
+          },
+          "message": {
+            "type": "string",
+            "description": "Optional informational message returned by the merchant.",
+            "example": "new_transaction_created"
+          },
+          "status": {
+            "type": "string",
+            "description": "Optional status string returned by the merchant. Ignored by Smartpayz.",
+            "example": "success"
+          }
+        }
+      },
+      "BonusRequestDtoV2": {
+        "type": "object",
+        "description": "Bonus campaign information sent back to the merchant, matching the campaign the customer selected in the cashier UI.",
+        "properties": {
+          "bonusSystem": {
+            "type": "string",
+            "description": "Identifier of the bonus system the campaign belongs to.",
+            "example": "campaign-system"
+          },
+          "bonusData": {
+            "type": "string",
+            "description": "Opaque payload defined by the bonus system, forwarded as-is from the cashier request."
+          },
+          "bonusCode": {
+            "type": "string",
+            "description": "Bonus or promo code associated with the campaign.",
+            "example": "WELCOME20"
+          }
+        }
+      },
+      "MerchantNotificationClientRequestDtoV2": {
+        "type": "object",
+        "required": [
+          "intent",
+          "transactionId",
+          "amount",
+          "currency",
+          "merchantCustomerId",
+          "method",
+          "status"
+        ],
+        "properties": {
+          "intent": {
+            "description": "Type of transaction.",
+            "type": "string",
+            "enum": [
+              "DEPOSIT",
+              "WITHDRAWAL"
+            ],
+            "example": "DEPOSIT"
+          },
+          "transactionId": {
+            "description": "Smartpayz transaction id.",
+            "type": "string",
+            "format": "uuid",
+            "example": "f74f2325-23b2-4bad-8acd-8e526fccb68d"
+          },
+          "amount": {
+            "description": "Transaction amount, in the transaction currency.",
+            "type": "number",
+            "minimum": 0,
+            "example": 20
+          },
+          "feeAmount": {
+            "description": "Fee amount charged to the customer for this transaction, in the transaction currency.",
+            "type": "number",
+            "minimum": 0,
+            "nullable": true,
+            "example": 10
+          },
+          "approvedAmount": {
+            "description": "Amount actually approved/paid out for this transaction, in the transaction currency.",
+            "type": "number",
+            "minimum": 0,
+            "nullable": true,
+            "example": 50
+          },
+          "currency": {
+            "description": "Currency the transaction was created in, as an ISO-4217 alpha-3 code.",
+            "type": "string",
+            "example": "EUR"
+          },
+          "merchantCustomerId": {
+            "description": "Customer identifier in the merchant system, as originally provided in the cashier request.",
+            "type": "string",
+            "example": "123456"
+          },
+          "method": {
+            "description": "Payment method used for this transaction.",
+            "type": "string",
+            "example": "CARD"
+          },
+          "ipAddress": {
+            "description": "Customer's IP address captured at the time the cashier session was created.",
+            "type": "string",
+            "nullable": true,
+            "example": "127.0.0.1"
+          },
+          "merchantTransactionId": {
+            "description": "Transaction identifier in the merchant system.",
+            "type": "string",
+            "nullable": true,
+            "example": "7450991705589122925"
+          },
+          "status": {
+            "description": "Current status of the transaction. See the [Transaction statuses reference](https://docs.smartpayz.com/docs/transaction-statuses) for the full list of values.",
+            "type": "string",
+            "example": "SUCCESS"
+          },
+          "failureReason": {
+            "description": "Short code describing why the transaction failed, intended for internal merchant use rather than for display to the customer.",
+            "type": "string",
+            "nullable": true,
+            "example": "PSP_FAILED"
+          },
+          "publicError": {
+            "description": "Customer-facing error code that can be displayed in the merchant UI.",
+            "type": "string",
+            "nullable": true,
+            "example": "PSP_ERROR"
+          },
+          "publicErrorMessage": {
+            "description": "Human-readable error message that can be displayed to the customer.",
+            "type": "string",
+            "nullable": true,
+            "example": "Card Blocked"
+          },
+          "pspErrorMessage": {
+            "description": "Raw error message returned by the payment provider, when available.",
+            "type": "string",
+            "nullable": true,
+            "example": "Card Blocked"
+          },
+          "pspErrorCode": {
+            "description": "Raw error code returned by the payment provider, when available.",
+            "type": "string",
+            "nullable": true,
+            "example": "CARD_BLOCKED"
+          },
+          "timestamp": {
+            "description": "Time at which the status update occurred, in milliseconds since the Unix epoch (UTC).",
+            "type": "integer",
+            "minimum": 0,
+            "example": 1737119302000
+          },
+          "metadata": {
+            "description": "Custom key/value map attached to the transaction. The provided values are used by the Smartpayz dynamic payment flow feature.",
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "nullable": true,
+            "example": {
+              "device": "mobile",
+              "profile": "5"
+            }
+          }
+        }
+      },
+      "NotificationResponseDtoV2": {
+        "type": "object",
+        "description": "Example body the merchant may return when handling the notification webhook. The body is not inspected by Smartpayz; only the HTTP status code is used to acknowledge the delivery.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Optional status string returned by the merchant. Ignored by Smartpayz.",
+            "example": "success"
+          },
+          "message": {
+            "type": "string",
+            "description": "Optional informational message returned by the merchant. Ignored by Smartpayz.",
+            "example": "transaction_updated"
+          },
+          "merchantTransactionId": {
+            "type": "string",
+            "description": "Optional merchant transaction id returned by the merchant. Ignored by Smartpayz.",
+            "example": "7450991705589122925"
+          }
+        }
+      },
+      "ErrorResponseDto": {
+        "type": "object",
+        "description": "Standard error envelope returned by Smartpayz on failed requests.",
+        "properties": {
+          "timestamp": {
+            "description": "Time at which the error response was generated, in milliseconds since the Unix epoch (UTC).",
+            "type": "integer",
+            "minimum": 0,
+            "example": 1737119302000
+          },
+          "message": {
+            "description": "Human-readable description of the error.",
+            "type": "string",
+            "example": "Something went wrong"
+          },
+          "code": {
+            "description": "Machine-readable error code. See the [Error codes reference](https://docs.smartpayz.com/docs/error-codes) for the full list.",
+            "type": "string",
+            "example": "MERCHANT_NOT_FOUND"
+          },
+          "traceId": {
+            "description": "Internal trace identifier, useful when contacting Smartpayz support about a specific request.",
+            "type": "string",
+            "example": "58146151781202"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Signature": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Signature",
+        "description": "HMAC-SHA256 signature of the raw request body, signed with the merchant secret key and hex-encoded. The same `Signature` header is also sent by Smartpayz on outgoing webhook requests so the merchant can verify them. See [Signature Calculation](https://docs.smartpayz.com/docs/request-signature) for the full algorithm."
+      },
+      "X-Auth-Code": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-Auth-Code",
+        "description": "Authentication code that identifies the merchant and authorises the request. Required on every endpoint."
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "The request was rejected because of an invalid format or a validation error. The `message` field contains the human-readable details of the failure. See the [Error codes reference](https://docs.smartpayz.com/docs/error-codes) for the full list of possible `code` values.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponseDto"
+            },
+            "example": {
+              "timestamp": 1776857981202,
+              "code": "BAD_REQUEST",
+              "message": "Validation failed for one or more fields in the request body.",
+              "traceId": "69e8b37de12acbe1a225d5a7d181ba8e"
+            }
+          }
+        }
+      },
+      "ServerError": {
+        "description": "An unexpected error occurred while processing the request. See the [Error codes reference](https://docs.smartpayz.com/docs/error-codes) for the full list of possible `code` values.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponseDto"
+            },
+            "example": {
+              "timestamp": 1776857981202,
+              "code": "MERCHANT_NOT_FOUND",
+              "message": "Merchant not found.",
+              "traceId": "69e8b37de12acbe1a225d5a7d181ba8e"
+            }
+          }
+        }
+      }
+    }
+  }
+}
