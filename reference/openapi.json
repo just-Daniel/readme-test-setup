@@ -21,6 +21,12 @@
       "description": "Development environment"
     }
   ],
+  "security": [
+    {
+      "Signature": [],
+      "X-Auth-Code": []
+    }
+  ],
   "webhooks": {
     "confirmation": {
       "post": {
