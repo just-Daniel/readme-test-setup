@@ -6,7 +6,8 @@
   },
   "security": [
     {
-      "Signature": []
+      "Signature": [],
+      "X-Auth-Code": []
     }
   ],
   "webhooks": {
