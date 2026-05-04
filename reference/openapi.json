@@ -54,55 +54,6 @@
           }
         }
       }
-    },
-    "notification": {
-      "post": {
-        "x-tags": [
-          "Webhooks"
-        ],
-        "summary": "Notification webhook",
-        "description": "Sent by Smartpayz to notify the merchant about a transaction status update. The response body is not inspected; only the HTTP status code matters: a 2xx response acknowledges the delivery, anything else schedules a retry.",
-        "operationId": "notification",
-        "security": [
-          {
-            "Signature": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "Signature",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "HMAC-SHA256 signature of the raw request body, signed with the merchant secret key and hex-encoded.",
-            "example": "5d41402abc4b2a76b9719d911017c592ab8562ec7b0122c79fc29dc3b8b515d5"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/MerchantNotificationClientRequestDtoV2"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "The merchant acknowledges the notification. Any response body is ignored.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotificationResponseDtoV2"
-                }
-              }
-            }
-          }
-        }
-      }
     }
   },
   "components": {
