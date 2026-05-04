@@ -1,0 +1,21 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Webhook Example",
+    "version": "1.0.0"
+  },
+  "webhooks": {
+    "newPet": {
+      "post": {
+        "summary": "New pet added",
+        "description": "This webhook is triggered when a new pet is added to the store.",
+        "operationId": "newPetWebhook",
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        }
+      }
+    }
+  }
+}
