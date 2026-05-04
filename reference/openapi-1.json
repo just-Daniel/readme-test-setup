@@ -12,6 +12,18 @@
   "webhooks": {
     "newPet": {
       "post": {
+        "parameters": [
+          {
+            "name": "Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "HMAC-SHA256 signature of the raw request body, signed with the merchant secret key and hex-encoded.",
+            "example": "5d41402abc4b2a76b9719d911017c592ab8562ec7b0122c79fc29dc3b8b515d5"
+          }
+        ],
         "requestBody": {
           "description": "Information about a new pet in the system",
           "content": {
