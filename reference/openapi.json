@@ -23,7 +23,6 @@
   ],
   "security": [
     {
-      "Signature": [],
       "X-Auth-Code": []
     }
   ],
