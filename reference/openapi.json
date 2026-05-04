@@ -140,6 +140,12 @@
           },
           "required": true
         },
+        "security": [
+          {
+            "Signature": [],
+            "X-Auth-Code": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Cashier session successfully created. The response contains the link to which the customer should be redirected; see [Redirect URL parameters](https://docs.smartpayz.com/docs/redirect-url) for the meaning of every query parameter included in that link.",
@@ -162,6 +168,12 @@
     },
     "/api/v2/transactions/{transactionId}/approve": {
       "post": {
+        "security": [
+          {
+            "Signature": [],
+            "X-Auth-Code": []
+          }
+        ],
         "tags": [
           "Endpoints"
         ],
@@ -205,6 +217,12 @@
     },
     "/api/v2/transactions/{transactionId}/reject": {
       "post": {
+        "security": [
+          {
+            "Signature": [],
+            "X-Auth-Code": []
+          }
+        ],
         "tags": [
           "Endpoints"
         ],
@@ -248,6 +266,12 @@
     },
     "/api/v2/transactions/{transactionId}/cancel": {
       "post": {
+        "security": [
+          {
+            "Signature": [],
+            "X-Auth-Code": []
+          }
+        ],
         "tags": [
           "Endpoints"
         ],
@@ -291,6 +315,12 @@
     },
     "/api/v2/transactions": {
       "get": {
+        "security": [
+          {
+            "Signature": [],
+            "X-Auth-Code": []
+          }
+        ],
         "tags": [
           "Endpoints"
         ],
