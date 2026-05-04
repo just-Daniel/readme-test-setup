@@ -60,14 +60,7 @@
         },
         "responses": {
           "200": {
-            "description": "The merchant has successfully recorded the transaction and returned its merchant transaction id.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MerchantConfirmationClientResponseDtoV2"
-                }
-              }
-            }
+            "description": "The merchant has successfully recorded the transaction and returned its merchant transaction id."
           }
         }
       }
