@@ -1,0 +1,11 @@
+- createexposures
+- searchexposurebyid
+- deleteexposure
+- archiveexposure
+- moveexposure
+- exposurebulkedit
+- updateexposuremetrics
+- deregisterdatabase
+- searchexposures
+- updateexposuretags
+- upgradeexposure

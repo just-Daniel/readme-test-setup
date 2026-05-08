@@ -1,0 +1,10 @@
+- searchaggregateportfolios
+- createaggregateportfolio
+- getaggregateportfoliobyid
+- updateaggregateportfolio
+- deleteaggregateportfolio
+- getaggregateportfoliometrics
+- updateaggregateportfoliometrics
+- getaggregateportfoliotreaties
+- getcountriesbyaggregateportfolio
+- searchaggregateexposures

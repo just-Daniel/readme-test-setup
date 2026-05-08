@@ -1,0 +1,6 @@
+- searchexposuresets
+- createexposureset
+- getexposuresetbyid
+- updateexposureset
+- deleteexposureset
+- archiveexposureset
