@@ -1,0 +1,9 @@
+- searchportfolios-1
+- createportfolio-1
+- getportfolio-1
+- deleteportfolio-1
+- updateportfolio-1
+- getportfoliometrics-1
+- updateportfoliometrics-1
+- managefilteredaccounts-1
+- manageportfolioaccounts-1

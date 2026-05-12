@@ -1,0 +1,14 @@
+- gettreatiesbyfilters-1
+- createtreaty-1
+- gettreaty-1
+- updatetreaty-1
+- deletetreaty-1
+- getexposurecount-1
+- createtreatylob-1
+- gettreatylob-1
+- deletetreatylob-1
+- getlossoccurrences-1
+- createlossoccurrence-1
+- getlossoccurrence-1
+- updatelossoccurrence-1
+- deletelossoccurrence-1
