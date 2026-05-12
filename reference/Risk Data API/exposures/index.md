@@ -1,4 +1,0 @@
----
-title: Exposures
-hidden: false
----
