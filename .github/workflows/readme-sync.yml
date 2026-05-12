@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Upload OpenAPI to ReadMe
         run: |
-          npx rdme@v10 openapi upload ./reference/test.json \
+          npx rdme@v10 openapi upload ./reference/tst-last.json \
             --key=${{ secrets.README_API_KEY }} \
             --slug=test.json \
             --title="Test API"
@@ -27,8 +27,3 @@ jobs:
             --key=${{ secrets.README_API_KEY }} \
             --slug=flex2.json \
             --title="Flex2 API"
-
-          npx rdme@v10 openapi upload ./reference/flex3.json \
-            --key=${{ secrets.README_API_KEY }} \
-            --slug=flex3.json \
-            --title="Flex3 API"
