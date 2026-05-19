@@ -1,4 +1,4 @@
 ---
 title: Hidden
-hidden: false
+hidden: true
 ---
