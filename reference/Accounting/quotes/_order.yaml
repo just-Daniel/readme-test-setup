@@ -1,0 +1,11 @@
+- getquotechanges
+- listquotes
+- postquotes
+- getquote
+- updatequote
+- getquoteappendices
+- postquoteappendices
+- getquoteinvoicelines
+- getquoteinvoicelinesections
+- sendbyemailquote
+- updatestatusquote

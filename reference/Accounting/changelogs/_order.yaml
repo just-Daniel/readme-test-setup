@@ -1,0 +1,7 @@
+- getcustomerinvoiceschanges
+- getsupplierinvoiceschanges
+- getcustomerchanges
+- getsupplierchanges
+- getproductchanges
+- getledgerentrylinechanges
+- gettransactionchanges

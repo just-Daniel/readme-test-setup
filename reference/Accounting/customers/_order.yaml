@@ -1,0 +1,11 @@
+- postcompanycustomer
+- getcompanycustomer
+- putcompanycustomer
+- postindividualcustomer
+- getindividualcustomer
+- putindividualcustomer
+- getcustomers
+- getcustomer
+- getcustomercategories
+- putcustomercategories
+- getcustomercontacts

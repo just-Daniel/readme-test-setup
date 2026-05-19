@@ -1,0 +1,14 @@
+- getsupplierinvoicelines
+- getsupplierinvoices
+- getsupplierinvoice
+- putsupplierinvoice
+- getsupplierinvoicecategories
+- putsupplierinvoicecategories
+- getsupplierinvoicepayments
+- updatesupplierinvoicepaymentstatus
+- getsupplierinvoicematchedtransactions
+- postsupplierinvoicelinkedpurchaserequests
+- importsupplierinvoice
+- createsupplierinvoiceeinvoiceimport
+- validateaccountingsupplierinvoice
+- putsupplierinvoiceeinvoicestatus

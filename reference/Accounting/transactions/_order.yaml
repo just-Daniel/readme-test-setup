@@ -1,0 +1,11 @@
+- postcustomerinvoicematchedtransactions
+- deletecustomerinvoicematchedtransactions
+- postsupplierinvoicematchedtransactions
+- deletesupplierinvoicematchedtransactions
+- gettransactions
+- createtransaction
+- gettransaction
+- updatetransaction
+- gettransactioncategories
+- puttransactioncategories
+- gettransactionmatchedinvoices

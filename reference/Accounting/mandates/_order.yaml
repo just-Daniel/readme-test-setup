@@ -1,0 +1,10 @@
+- getsepamandates
+- postsepamandates
+- getsepamandate
+- putsepamandate
+- deletesepamandate
+- getgocardlessmandates
+- getgocardlessmandate
+- postgocardlessmandatemailrequests
+- postgocardlessmandatecancellations
+- postgocardlessmandateassociations

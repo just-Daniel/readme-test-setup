@@ -1,0 +1,4 @@
+---
+title: Mandates
+hidden: false
+---
