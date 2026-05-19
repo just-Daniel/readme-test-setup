@@ -1,4 +1,0 @@
----
-title: Treaties
-hidden: false
----
