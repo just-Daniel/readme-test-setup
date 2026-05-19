@@ -16,8 +16,8 @@
     "/api/external/v2/webhook_subscriptions": {
       "get": {
         "operationId": "getWebhookSubscriptions",
-        "summary": "Lol",
-        "description": " for the authenticated token, paginated.\nNote that the secret is not included in the response.\n",
+        "summary": "Lol2.0",
+        "description": " Ppppp paginated",
         "tags": [
           "Hidden"
         ],
