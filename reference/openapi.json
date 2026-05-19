@@ -16,8 +16,8 @@
     "/api/external/v2/webhook_subscriptions": {
       "get": {
         "operationId": "getWebhookSubscriptions",
-        "summary": "List webhook subscriptions",
-        "description": "Returns all webhook subscriptions for the authenticated token, paginated.\nNote that the secret is not included in the response.\n",
+        "summary": "Lol",
+        "description": " for the authenticated token, paginated.\nNote that the secret is not included in the response.\n",
         "tags": [
           "Hidden"
         ],
@@ -127427,7 +127427,7 @@
         }
       },
       "Conflict": {
-        "description": "Conflict with the current state of the target resource, such as when trying to create a resource that already exists.",
+        "description": "Conflict with s when trying to create a resource that already exists.",
         "content": {
           "application/json": {
             "schema": {
