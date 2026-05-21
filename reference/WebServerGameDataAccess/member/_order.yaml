@@ -1,0 +1,8 @@
+- get_vendor-api-v1-0-member-balance
+- post_vendor-api-v1-0-member-create
+- post_vendor-api-v1-0-member-kick
+- get_vendor-api-v2-0-member-gamingcount
+- get_vendor-v2-0-member-balance
+- post_vendor-v2-0-member-create
+- get_vendor-v2-0-member-gamingcount
+- post_vendor-v2-0-member-kick

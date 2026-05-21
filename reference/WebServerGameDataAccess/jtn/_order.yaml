@@ -1,0 +1,8 @@
+- get_vendor-api-betlog-bytime
+- get_vendor-api-game-gamelink
+- post_vendor-api-player-create
+- get_vendor-api-player-isgaming
+- post_vendor-api-player-logout
+- get_vendor-api-player-wallet
+- post_vendor-api-transaction-deposit
+- post_vendor-api-transaction-withdraw
