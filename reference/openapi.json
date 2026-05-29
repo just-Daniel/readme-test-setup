@@ -34919,7 +34919,7 @@
         "summary": "Copy of "
       }
     },
-    "/api/{domain}/Query-1": {
+    "/api/{domain}/Query?1": {
       "get": {
         "description": "",
         "operationId": "get_api{domain}Query-1",
