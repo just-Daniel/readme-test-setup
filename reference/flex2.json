@@ -11,37 +11,6 @@
     }
   ],
   "paths": {
-    "/ingest/v0/customers/events/2": {
-      "post": {
-        "operationId": "flex",
-        "summary": "Customer events",
-        "description": "Ingests events related to customer activity.",
-        "requestBody": {
-          "description": "An array of customer records to synchronise",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CustomerEvents"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Successful operation"
-          },
-          "400": {
-            "description": "Validation Error"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
     "/user": {
       "get": {
         "responses": {
