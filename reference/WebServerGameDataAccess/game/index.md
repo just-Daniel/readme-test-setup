@@ -1,4 +1,0 @@
----
-title: game
-hidden: false
----
