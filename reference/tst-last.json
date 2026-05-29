@@ -63,6 +63,18 @@
           }
         }
       }
+    },
+    "/new-endpoint": {
+      "get": {
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "parameters": [],
+        "summary": "First"
+      }
     }
   },
   "components": {
