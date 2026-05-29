@@ -10,17 +10,7 @@
       "url": "https://some.cpd"
     }
   ],
-  "paths": {
-    "/user": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    }
-  },
+  "paths": {},
   "components": {
     "schemas": {
       "CustomerEventBase": {
