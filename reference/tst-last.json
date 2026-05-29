@@ -75,6 +75,18 @@
         "parameters": [],
         "summary": "First"
       }
+    },
+    "/new-endpoint-1": {
+      "get": {
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "parameters": [],
+        "summary": "Copy of First"
+      }
     }
   },
   "components": {
