@@ -87,6 +87,18 @@
         "summary": "Copy of First",
         "operationId": "get_new-endpoint-1"
       }
+    },
+    "/new-endpoint-1": {
+      "get": {
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "parameters": [],
+        "summary": "Copy of First"
+      }
     }
   },
   "components": {
