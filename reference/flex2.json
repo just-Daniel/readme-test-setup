@@ -30,6 +30,16 @@
         "summary": "Copy of ",
         "operationId": "get_user-1"
       }
+    },
+    "/user-1": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Copy of "
+      }
     }
   },
   "components": {
