@@ -1,0 +1,4 @@
+- listdeferredtransactiongroups
+- createdeferredtransactiongroup
+- retrievedeferredtransactiongroup
+- retrievedeferredtransactiongrouptransactions
