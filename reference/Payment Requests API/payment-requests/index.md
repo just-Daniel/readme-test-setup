@@ -8,4 +8,4 @@ Retrieve information about accounts, balances, and account activity.
 
 Endpoints:
 
-* [List](ref:listpets)
+* [List](ref:retrieve-payment-request)
