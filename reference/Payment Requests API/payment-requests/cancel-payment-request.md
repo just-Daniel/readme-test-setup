@@ -1,6 +1,6 @@
 ---
 api:
   file: tst-last.json
-  operationId: listPets
+  operationId: cancel-payment-request
 hidden: false
 ---
