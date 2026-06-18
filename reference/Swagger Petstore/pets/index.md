@@ -7,6 +7,6 @@ hidden: false
 
 Retrieve information about accounts, balances, and account activity.
 
-Endpoints:  
+Endpoints:
 
-* [List](ref:listaccounts) 
+* [List](ref:listpets)
