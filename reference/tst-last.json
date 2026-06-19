@@ -916,6 +916,18 @@
         "parameters": [],
         "summary": "Copy of Test first"
       }
+    },
+    "/new-endpoint-2": {
+      "get": {
+        "operationId": "get_new-endpoint-2",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "parameters": [],
+        "summary": "Copy of Test first"
+      }
     }
   },
   "components": {
