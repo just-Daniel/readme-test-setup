@@ -169,11 +169,6 @@ paths:
                       message: >-
                         Webhook callback URL [<callbackUrl>] returned error
                         status: [<statusCode>] body: [<body>]
-    get:
-      operationId: getWebhookSubscriptions
-      tags:
-        - Webhooks
-      summary: Get webhook subscriptions
   /nova/webhooks/{id}:
     delete:
       operationId: deleteWebhookSubscription
