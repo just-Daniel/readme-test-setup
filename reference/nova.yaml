@@ -461,28 +461,6 @@ paths:
                     error:
                       code: MANAGED_CHARGING_PROGRAM_ENROLLMENT_NOT_FOUND
                       message: No managed charging program enrollment found.
-  /nova/charge/command:
-    post:
-      operationId: chargeCommand
-      tags:
-        - Vehicle Control
-      summary: Send a vehicle a charge command
-      description: >-
-        Sends a vehicle a realtime start or stop charge command.
-
-
-        Note: A 200 does not guarantee the vehicle has physically responded. A
-        vehicle.state.updated webhook may be triggered depending on the OEM,
-        which can be used to verify adherence.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ChargeCommandRequest'
-      responses:
-        '200':
-          description: OK
   /nova/charge/schedule:
     post:
       operationId: scheduleCharge
