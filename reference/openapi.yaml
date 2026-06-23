@@ -1601,7 +1601,7 @@ components:
         longitude:
           type: number
           format: double
-          description: Double representing the longitude the Charge Event occurred
+          description: Double representing the longitude the Charge Event occurred 2.0
           examples:
             - -80.1234
         currentSoc:
