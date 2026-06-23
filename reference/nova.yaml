@@ -230,30 +230,6 @@ paths:
                 items:
                   $ref: '#/components/schemas/ManagedChargingProgramDetailsResponse'
   /nova/managed-charging-programs/{id}:
-    put:
-      operationId: createManagedChargingProgram
-      tags:
-        - Managed Charging Programs
-      summary: Create or update a managed charging program
-      description: >-
-        Creates a managed charging program or updates an existing one that will
-        be served to OEM users for enrollment.
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-          example: prog-a1b2c3d4-e5f6-7890-abcd-ef1234567890
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateManagedChargingProgramRequest'
-      responses:
-        '200':
-          $ref: '#/components/responses/SuccessResponse'
     get:
       operationId: dermsGetManagedChargingProgram
       tags:
