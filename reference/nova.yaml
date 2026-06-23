@@ -10,6 +10,8 @@ servers:
     description: Acceptance
   - url: https://api.elematics.com
     description: Production
+security:
+  - apiKey: []
 tags:
   - name: Webhooks
     description: Endpoints to manage webhook subscriptions
@@ -25,8 +27,8 @@ paths:
         - Webhooks
       summary: Create a webhook subscription
       description: >-
-        TEST. Registers and validates a webhook subscription. For more
-        information and guidance on creating a subscription, see
+        Registers and validates a webhook subscription. For more information and
+        guidance on creating a subscription, see
         [Webhooks](https://docs.elematics.com/v2.0/docs/webhooks).
       requestBody:
         required: true
@@ -174,6 +176,13 @@ paths:
       tags:
         - Webhooks
       summary: Get webhook subscriptions
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookListResponse'
   /nova/webhooks/{id}:
     delete:
       operationId: deleteWebhookSubscription
@@ -188,6 +197,9 @@ paths:
             type: string
             format: uuid
           example: d4f2b71f-5006-4718-a09a-5d56f9f171d7
+      responses:
+        '204':
+          description: No Content
   /nova/managed-charging-programs:
     get:
       operationId: dermsSearchManagedChargingPrograms
@@ -480,6 +492,9 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ChargeCommandRequest'
+      responses:
+        '200':
+          description: OK
   /nova/charge/schedule:
     post:
       operationId: scheduleCharge
@@ -535,7 +550,7 @@ components:
           type: string
           format: uri
           examples:
-            - https://api.dermssite.com/vehicle-states
+            - https://api.example.com/vehicle-states
         eventType:
           type: string
           enum:
@@ -552,6 +567,59 @@ components:
             - d4f2b71f-5006-4718-a09a-5d56f9f171d7
       required:
         - id
+    WebhookListItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        dermsId:
+          type: string
+          format: uuid
+        callbackUrl:
+          type: string
+          format: uri
+          examples:
+            - https://api.example.com/vehicle-states
+        eventType:
+          type: string
+          enum:
+            - vehicle.charge_event
+            - vehicle.state.updated
+            - vehicle.enrollment.created
+            - vehicle.enrollment.updated
+        filters:
+          type: object
+          properties:
+            vins:
+              type: array
+              items:
+                type: string
+            vehicleStateEventTypes:
+              type: array
+              items:
+                type: string
+            partnerIds:
+              type: array
+              items:
+                type: integer
+        enabled:
+          type: boolean
+        challengeVerifiedAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+    WebhookListResponse:
+      type: object
+      properties:
+        webhooks:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookListItem'
+      required:
+        - webhooks
     CreateManagedChargingProgramRequest:
       type: object
       required:
@@ -601,7 +669,7 @@ components:
     ManagedChargingProgramMarketing:
       type: object
       description: >-
-        Marketing content for a managed charging program to be displayed in the
+        Marketing content for a managed charging program for display in the
         OEM's enrollment UI.
       required:
         - displayName
@@ -1360,6 +1428,14 @@ components:
             respective validation rules.
 
             Only a DERMS can set this to false.
+        enforceGeographicRestrictions:
+          type: boolean
+          default: false
+          description: >-
+            Whether to enforce geographic restrictions (e.g. utility service
+            territory postal codes) for the enrollment.
+
+            Only a DERMS can set this to false.
         status:
           type: string
           default: PENDING
@@ -1373,7 +1449,6 @@ components:
       type: object
       required:
         - name
-        - value
       properties:
         name:
           type: string
@@ -1601,7 +1676,7 @@ components:
         longitude:
           type: number
           format: double
-          description: Double representing the longitude the Charge Event occurred 2.0
+          description: Double representing the longitude the Charge Event occurred
           examples:
             - -80.1234
         currentSoc:
