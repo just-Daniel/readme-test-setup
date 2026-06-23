@@ -1,4 +1,0 @@
----
-title: Rules
-hidden: false
----
