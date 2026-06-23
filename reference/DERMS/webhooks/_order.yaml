@@ -1,3 +1,6 @@
 - createwebhooksubscription
 - getwebhooksubscriptions
 - deletewebhooksubscription
+- createwebhooksubscription-1
+- getwebhooksubscriptions-1
+- deletewebhooksubscription-1
