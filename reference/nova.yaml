@@ -171,6 +171,18 @@ paths:
                       message: >-
                         Webhook callback URL [<callbackUrl>] returned error
                         status: [<statusCode>] body: [<body>]
+    get:
+      operationId: getWebhookSubscriptions
+      tags:
+        - Webhooks
+      summary: Get webhook subscriptions
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookListResponse'
   /nova/webhooks/{id}:
     delete:
       operationId: deleteWebhookSubscription
@@ -234,7 +246,7 @@ paths:
       operationId: createManagedChargingProgram
       tags:
         - Managed Charging Programs
-      summary: Create or update a managed charging program
+      summary: Test. Create or update a managed charging program
       description: >-
         Creates a managed charging program or updates an existing one that will
         be served to OEM users for enrollment.
@@ -461,6 +473,28 @@ paths:
                     error:
                       code: MANAGED_CHARGING_PROGRAM_ENROLLMENT_NOT_FOUND
                       message: No managed charging program enrollment found.
+  /nova/charge/command:
+    post:
+      operationId: chargeCommand
+      tags:
+        - Vehicle Control
+      summary: Send a vehicle a charge command
+      description: >-
+        Sends a vehicle a realtime start or stop charge command.
+
+
+        Note: A 200 does not guarantee the vehicle has physically responded. A
+        vehicle.state.updated webhook may be triggered depending on the OEM,
+        which can be used to verify adherence.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChargeCommandRequest'
+      responses:
+        '200':
+          description: OK
   /nova/charge/schedule:
     post:
       operationId: scheduleCharge
