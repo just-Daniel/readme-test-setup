@@ -2,3 +2,6 @@
 - dermsgetmanagedchargingprogram-1
 - deletewebhooksubscription-1
 - getwebhooksubscriptions
+- createwebhooksubscription
+- getwebhooksubscriptions-1
+- deletewebhooksubscription

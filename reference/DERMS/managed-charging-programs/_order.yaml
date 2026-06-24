@@ -2,3 +2,8 @@
 - createenrollment-1
 - updateenrollment-1
 - createmanagedchargingprogram
+- dermssearchmanagedchargingprograms
+- createmanagedchargingprogram-1
+- dermsgetmanagedchargingprogram
+- createenrollment
+- updateenrollment
