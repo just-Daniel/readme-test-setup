@@ -25,7 +25,7 @@ paths:
       operationId: createWebhookSubscription
       tags:
         - Webhooks
-      summary: Create a webhook subscription
+      summary: Create awebhook subscription
       description: >-
         Registers and validates a webho ok subscription. For more information
         and guidance on creating a subscription, see
