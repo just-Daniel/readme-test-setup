@@ -27,8 +27,8 @@ paths:
         - Webhooks
       summary: Create a webhook subscription
       description: >-
-        Registers and validates a webhook subscription. For more information and
-        guidance on creating a subscription, see
+        Registers and validates a webho ok subscription. For more information
+        and guidance on creating a subscription, see
         [Webhooks](https://docs.elematics.com/v2.0/docs/webhooks).
       requestBody:
         required: true
