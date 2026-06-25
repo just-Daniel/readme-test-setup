@@ -1,0 +1,40 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "api_title"
+  },
+  "servers": [
+    {
+      "url": "https://urlhost"
+    }
+  ],
+  "tags": [],
+  "paths": {
+    "/new-endpoint": {
+      "get": {
+        "summary": "New Endpoint",
+        "description": "This is your first endpoint! Edit this page to start documenting your API.",
+        "operationId": "get_new-endpoint",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "Test": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "api key name test"
+      }
+    }
+  },
+  "x-readme": {
+    "explorer-enabled": true,
+    "proxy-enabled": true
+  }
+}
