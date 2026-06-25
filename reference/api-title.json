@@ -20,7 +20,12 @@
           "200": {
             "description": "Successful response"
           }
-        }
+        },
+        "security": [
+          {
+            "Test": []
+          }
+        ]
       }
     }
   },
