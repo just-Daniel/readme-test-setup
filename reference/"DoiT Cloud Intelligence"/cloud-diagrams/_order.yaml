@@ -1,0 +1,12 @@
+- findclouddiagrams
+- getclouddiagramsstats
+- getclouddiagramcomponents
+- searchclouddiagrams
+- getstatussheetcomponents
+- exportclouddiagramjson
+- getclouddiagramcostsnapshot
+- listclouddiagramlayersnapshots
+- getclouddiagramlayersnapshot
+- getclouddiagramresourcerelationships
+- listclouddiagramactivitygroups
+- listclouddiagramnodeactivities

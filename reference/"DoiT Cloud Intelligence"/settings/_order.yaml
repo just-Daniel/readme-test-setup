@@ -1,0 +1,7 @@
+- listcustomthemes
+- createcustomtheme
+- getcustomtheme
+- updatecustomtheme
+- deletecustomtheme
+- getactivetheme
+- setactivetheme

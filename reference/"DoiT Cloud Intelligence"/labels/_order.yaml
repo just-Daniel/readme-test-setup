@@ -1,0 +1,7 @@
+- listlabels
+- createlabel
+- getlabel
+- deletelabel
+- updatelabel
+- getlabelassignments
+- assignobjectstolabel
