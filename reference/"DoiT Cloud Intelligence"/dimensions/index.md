@@ -1,4 +1,0 @@
----
-title: Dimensions
-hidden: false
----

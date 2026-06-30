@@ -1,4 +1,0 @@
----
-title: Anomalies
-hidden: false
----

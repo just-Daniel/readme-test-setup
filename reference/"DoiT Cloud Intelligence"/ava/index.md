@@ -1,4 +1,0 @@
----
-title: Ava
-hidden: false
----
