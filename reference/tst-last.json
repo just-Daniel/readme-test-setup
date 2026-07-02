@@ -565,6 +565,34 @@
         },
         "x-codegen-request-body-name": "Body"
       }
+    },
+    "/new-endpoint": {
+      "get": {
+        "operationId": "",
+        "responses": {
+          "400": {
+            "description": "<table> <tr>first</tr> </table>  <br />",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "default": "ffd"
+                    }
+                  },
+                  "required": [
+                    "name"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "parameters": [],
+        "summary": "jf"
+      }
     }
   },
   "components": {
