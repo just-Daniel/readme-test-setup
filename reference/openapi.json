@@ -29,7 +29,7 @@
                 "properties": {
                   "reasonCode": {
                     "type": "string",
-                    "description": "Always present when `AU` is requested. For more info on values, refer to [Account Updater Codes](/reference/account-updater).\n\n - `U`: Unsupported card brand (not Visa/MasterCard). No lookup performed; original card unchanged; no card object. \n - ` ` (empty): RTAU completed and the network returned no reject reason (e.g., successful update / match).\n - other: Reject reason code returned by the card network's Account Updater service. TabaPay returns the value exactly as received. "
+                    "description": "Always present when `AU` is requested. For more info on values, refer to [Account Updater Codes](/reference/account-updater).\n\n - `U`: Unsupported card brand (not Visa/MasterCard). No lookup performed; original card unchanged; no card object.  - ` ` (empty): RTAU completed and the network returned no reject reason (e.g., successful update / match).\n - other: Reject reason code returned by the card network's Account Updater service. TabaPay returns the value exactly as received. "
                   }
                 }
               }
