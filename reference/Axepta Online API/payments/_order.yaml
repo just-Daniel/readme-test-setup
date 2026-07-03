@@ -7,6 +7,5 @@
 - refundpayment
 - refundexternalpayment
 - getpaymentdetailsbypaymentid
-- getpaymentdetailsbytransactionid
 - updatepaymentdetails
 - createpaymentlink
