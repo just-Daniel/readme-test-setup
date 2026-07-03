@@ -4,7 +4,6 @@
 - incrementauthorization
 - reversepayment
 - capturepayment
-- refundexternalpayment
 - getpaymentdetailsbypaymentid
 - updatepaymentdetails
 - createpaymentlink
