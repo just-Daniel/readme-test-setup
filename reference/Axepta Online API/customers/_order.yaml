@@ -1,0 +1,7 @@
+- getcustomers
+- getcustomer
+- updatecustomer
+- deletecustomer
+- getpaymentmethods
+- getpaymentmethod
+- deletepaymentmethod
