@@ -1,0 +1,10 @@
+- searchoutboxentries
+- dequeueoutboxentrybyquery
+- dequeuemanyoutboxentries
+- recoveroutboxentrybyquery
+- setstatusofmanyoutboxentries
+- deleteoutboxentry
+- getoutboxentry
+- dequeueoutboxentrybyid
+- recoveroutboxentrybyid
+- setstatusofoutboxentry
