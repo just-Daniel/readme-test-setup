@@ -1,329 +1,162 @@
 {
-  "openapi": "3.1.0",
+  "openapi": "3.0.0",
   "info": {
-    "title": "Flex-new-test",
-    "description": "The NEW Flex Ingestion API",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "title": "Swagger Petstore",
+    "license": {
+      "name": "MIT"
+    }
   },
   "servers": [
     {
-      "url": "https://some.cpd"
+      "url": "http://petstore.swagger.io/v1"
     }
   ],
   "paths": {
-    "/ingest/v0/customers/events": {
-      "post": {
-        "operationId": "flex",
-        "summary": "Customer events",
-        "description": "Ingests events related to customer activity.",
-        "requestBody": {
-          "description": "An array of customer records to synchronise",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CustomerEvents"
-              }
+    "/pets": {
+      "get": {
+        "summary": "List all pets",
+        "operationId": "listPets",
+        "tags": ["pets"],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "How many items to return at one time (max 100)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
-          },
-          "required": true
-        },
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Successful operation"
-          },
-          "400": {
-            "description": "Validation Error"
-          },
-          "500": {
-            "description": "Internal Server Error",
+            "description": "A paged array of pets",
+            "headers": {
+              "x-next": {
+                "description": "A link to the next page of responses",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "examples": {
-                  "databaseError": {
-                    "summary": "Database Error",
-                    "value": {
-                      "error": "Connection to the database failed."
-                    }
-                  },
-                  "timeoutError": {
-                    "summary": "Timeout Error",
-                    "value": {
-                      "error": "The server timed out waiting for the operation to complete."
-                    }
-                  }
+                  "$ref": "#/components/schemas/Pets"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
+        }
+      },
+      "post": {
+        "summary": "Create a pet",
+        "operationId": "createPets",
+        "tags": ["pets"],
+        "responses": {
+          "201": {
+            "description": "Null response"
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
-        ]
+        }
+      }
+    },
+    "/pets/{petId}": {
+      "get": {
+        "summary": "Info for a specific pet",
+        "operationId": "showPetById",
+        "tags": ["pets"],
+        "parameters": [
+          {
+            "name": "petId",
+            "in": "path",
+            "required": true,
+            "description": "The id of the pet to retrieve",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Expected response to a valid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pet"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
       }
     }
   },
   "components": {
     "schemas": {
-      "CustomerEventBase": {
+      "Pet": {
         "type": "object",
-        "required": [
-          "type_id"
-        ],
+        "required": ["id", "name"],
         "properties": {
-          "country": {
-            "type": "string",
-            "pattern": "ISO 3166-1 alpha-2 code",
-            "description": "country code",
-            "examples": [
-              "ZA"
-            ]
-          },
-          "type_id": {
+          "id": {
             "type": "integer",
-            "description": "Event type",
-            "enum": [
-              1,
-              2,
-              20,
-              50
-            ]
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "tag": {
+            "type": "string"
           }
         }
       },
-      "OptOutEvent": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/CustomerEventBase"
-          },
-          {
-            "type": "object",
-            "required": [
-              "type_id"
-            ],
-            "properties": {
-              "type_id": {
-                "type": "integer",
-                "enum": [
-                  1
-                ]
-              },
-              "name": {
-                "type": "string",
-                "description": "OptOutEvent"
-              }
-            }
-          }
-        ]
-      },
-      "OptInEvent": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/CustomerEventBase"
-          },
-          {
-            "type": "object",
-            "required": [
-              "type_id"
-            ],
-            "properties": {
-              "type_id": {
-                "type": "integer",
-                "enum": [
-                  2
-                ]
-              },
-              "name": {
-                "type": "string",
-                "description": "OptInEvent"
-              }
-            }
-          }
-        ]
-      },
-      "InboundMessageEvent": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/CustomerEventBase"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "type_id": {
-                "type": "integer",
-                "enum": [
-                  20
-                ]
-              },
-              "channel": {
-                "type": "integer",
-                "enum": [
-                  1,
-                  2,
-                  3
-                ],
-                "description": "1 - WhatsApp, 2 - SMS, 3 - Email"
-              }
-            }
-          }
-        ]
-      },
-      "TagEvent": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/CustomerEventBase"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "type_id": {
-                "type": "integer",
-                "enum": [
-                  50
-                ]
-              },
-              "name": {
-                "type": "string",
-                "description": "TagEvent"
-              }
-            }
-          }
-        ]
-      },
-      "TagEvent2": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/CustomerEventBase"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "type_id": {
-                "type": "integer",
-                "enum": [
-                  51
-                ]
-              },
-              "name": {
-                "type": "string",
-                "description": "TagEvent2"
-              }
-            }
-          }
-        ]
-      },
-      "TagEvent3": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/CustomerEventBase"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "type_id": {
-                "type": "integer",
-                "enum": [
-                  53
-                ]
-              },
-              "name": {
-                "type": "string",
-                "description": "TagEvent3"
-              }
-            }
-          }
-        ]
-      },
-      "TagEvent4": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/CustomerEventBase"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "type_id": {
-                "type": "integer",
-                "enum": [
-                  54
-                ]
-              },
-              "name": {
-                "type": "string",
-                "description": "TagEvent4"
-              }
-            }
-          }
-        ]
-      },
-      "TagEvent5": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/CustomerEventBase"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "type_id": {
-                "type": "integer",
-                "enum": [
-                  55
-                ]
-              },
-              "name": {
-                "type": "string",
-                "description": "TagEvent5"
-              }
-            }
-          }
-        ]
-      },
-      "CustomerEvents": {
+      "Pets": {
         "type": "array",
         "items": {
-          "anyOf": [
-            {
-              "title": "Opt out event",
-              "$ref": "#/components/schemas/OptOutEvent"
-            },
-            {
-              "title": "Opt in event",
-              "$ref": "#/components/schemas/OptInEvent"
-            },
-            {
-              "title": "Inbound message event",
-              "$ref": "#/components/schemas/InboundMessageEvent"
-            },
-            {
-              "title": "Tag event for adding or removing tags",
-              "$ref": "#/components/schemas/TagEvent"
-            },
-            {
-              "title": "2-Tag event for adding or removing tags",
-              "$ref": "#/components/schemas/TagEvent2"
-            },
-            {
-              "title": "3-Tag event for adding or removing tags",
-              "$ref": "#/components/schemas/TagEvent3"
-            }
-          ],
-          "discriminator": {
-            "propertyName": "type_id",
-            "mapping": {
-              "1": "#/components/schemas/OptOutEvent",
-              "2": "#/components/schemas/OptInEvent",
-              "20": "#/components/schemas/InboundMessageEvent",
-              "50": "#/components/schemas/TagEvent"
-            }
+          "$ref": "#/components/schemas/Pet"
+        }
+      },
+      "Error": {
+        "type": "object",
+        "required": ["code", "message"],
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
           }
         }
       }
