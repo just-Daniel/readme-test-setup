@@ -497,6 +497,10 @@
                     },
                     "docs": {
                       "type": "string"
+                    },
+                    "total": {
+                      "type": "string",
+                      "default": "0"
                     }
                   }
                 },
