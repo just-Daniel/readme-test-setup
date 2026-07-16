@@ -1,0 +1,1068 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "模拟器API"
+  },
+  "x-readme": {
+    "explorer-enabled": false,
+    "proxy-enabled": false,
+    "samples-languages": [
+      "json",
+      "shell",
+      "python",
+      "node"
+    ],
+    "parameter-ordering": [
+      "header",
+      "query",
+      "body",
+      "cookie",
+      "form",
+      "path"
+    ]
+  },
+  "tags": [],
+  "paths": {
+    "/simulator/snipe_order": {
+      "post": {
+        "operationId": "create-simulator-auto-sniper",
+        "summary": "模拟器自动狙击",
+        "deprecated": false,
+        "description": "此API用于创建模拟器的多链代币狙击任务",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "description": "任务启用状态，\"true\"表示启用模拟器自动狙击"
+                  },
+                  "chain": {
+                    "type": "string",
+                    "description": "链 (solana/ethereum/base/bsc/tron/robinhood)"
+                  },
+                  "token": {
+                    "type": "string",
+                    "description": "需要狙击的token的合约地址"
+                  },
+                  "walletId": {
+                    "type": "string",
+                    "description": "模拟器的walletId默认为\"\"",
+                    "default": ""
+                  },
+                  "expireDelta": {
+                    "type": "integer",
+                    "description": "任务有效时长，最大值为432000000 (毫秒)"
+                  },
+                  "buySettings": {
+                    "type": "object",
+                    "description": "买入设置",
+                    "properties": {
+                      "buyAmountUI": {
+                        "type": "number",
+                        "description": "用于狙击的金额（ETH/SOL/BNB/TRX）"
+                      },
+                      "priorityFee": {
+                        "type": "number",
+                        "description": "优先费 (SOL)，对Solana有效，空字符串表示使用自动优先费"
+                      },
+                      "gasFeeDelta": {
+                        "type": "number",
+                        "description": "额外增加的gas (Gwei)，对EVM链有效"
+                      },
+                      "maxFeePerGas": {
+                        "type": "number",
+                        "description": "基础gas超过此值时将不进行交易 (Gwei)，对EVM链有效"
+                      },
+                      "maxSlippage": {
+                        "type": "number",
+                        "description": "最大滑点（0.00-1.00），买入时表示实际成交价格和期望价格之间的差距，卖出时表示期望价格和实际成交价格之间的差距，相差倍数=1/(1-滑点)，0.5即最多接受2倍价差，1 即不限制价差"
+                      },
+                      "minLiquidity": {
+                        "type": "number",
+                        "description": "流动性需要大于此值才会触发狙击（美元）",
+                        "default": 0
+                      }
+                    },
+                    "required": [
+                      "buyAmountUI",
+                      "priorityFee",
+                      "gasFeeDelta",
+                      "maxFeePerGas",
+                      "maxSlippage"
+                    ]
+                  },
+                  "sellSettings": {
+                    "type": "object",
+                    "description": "卖出设置",
+                    "properties": {
+                      "enabled": {
+                        "type": "boolean",
+                        "description": "卖出任务启用状态，\"true\"表示启用狙击卖出设置"
+                      },
+                      "stopEarnEnabled": {
+                        "type": "boolean",
+                        "description": "是否启用止盈，止盈止损至少启用一个",
+                        "default": false
+                      },
+                      "stopEarnMode": {
+                        "type": "string",
+                        "description": "止盈方式，目前支持\"profit_percent\"，表示按百分比止盈，启用止盈时必填"
+                      },
+                      "stopEarnPercentOrPrice": {
+                        "type": "number",
+                        "description": "开启止盈后必填，止盈比例，0.5表示上涨50%时卖出"
+                      },
+                      "stopLossEnabled": {
+                        "type": "boolean",
+                        "description": "是否启用止损，止盈止损至少启用一个",
+                        "default": false
+                      },
+                      "stopLossMode": {
+                        "type": "string",
+                        "description": "止损方式，目前支持\"loss_percent\"，表示按百分比止损，启用止损时必填"
+                      },
+                      "stopLossPercentOrPrice": {
+                        "type": "number",
+                        "description": "开启止损后必填，止损比例（0.00-1.00），0.5表示下跌50%时卖出"
+                      },
+                      "autoSell": {
+                        "type": "boolean",
+                        "description": "在任务结束未触发止盈止损时，是否自动卖出",
+                        "default": false
+                      },
+                      "priorityFee": {
+                        "type": "number",
+                        "description": "优先费 (SOL)，对Solana有效，空字符串表示使用自动优先费"
+                      },
+                      "gasFeeDelta": {
+                        "type": "number",
+                        "description": "额外增加的gas (Gwei)，对EVM链有效"
+                      },
+                      "maxFeePerGas": {
+                        "type": "number",
+                        "description": "基础gas超过此值时将不进行交易 (Gwei)，对EVM链有效"
+                      },
+                      "maxSlippage": {
+                        "type": "number",
+                        "description": "最大滑点（0.00-1.00），买入时表示实际成交价格和期望价格之间的差距，卖出时表示期望价格和实际成交价格之间的差距，相差倍数=1/(1-滑点)，0.5即最多接受2倍价差，1 即不限制价差"
+                      }
+                    },
+                    "required": [
+                      "enabled",
+                      "stopEarnEnabled",
+                      "stopEarnMode",
+                      "stopEarnPercentOrPrice",
+                      "stopLossEnabled",
+                      "stopLossMode",
+                      "stopLossPercentOrPrice",
+                      "priorityFee",
+                      "gasFeeDelta",
+                      "maxFeePerGas",
+                      "maxSlippage"
+                    ]
+                  }
+                },
+                "required": [
+                  "enabled",
+                  "chain",
+                  "token",
+                  "sellSettings",
+                  "buySettings",
+                  "expireDelta"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功响应",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "err": {
+                      "type": "boolean"
+                    },
+                    "res": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "docs": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "Result": {
+                    "summary": "Result",
+                    "value": {
+                      "err": false,
+                      "res": {
+                        "id": "lus8bfug0040i2"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "x-readme": {
+          "code-samples": [
+            {
+              "code": "{\n  \"name\": \"模拟器自动狙击\",\n  \"method\": \"POST\",\n  \"path\": \"https://api-bot-v1.dbotx.com/simulator/snipe_order\",\n  \"params\": {\n    \"header\": [\n      \"x-api-key:YOUR_API_KEY\"\n    ]\n  },\n  \"body\": {\n    \"enabled\": true,\n    \"chain\": \"solana\",\n    \"token\": \"8EPRkSsLRQ3vLZUyKHohMHQ7F7FN8fmVBeViNwznEHgJ\",\n    \"walletId\": \"\",\n    \"expireDelta\": 360000000,\n    \"buySettings\": {\n      \"buyAmountUI\": 0.1,\n      \"priorityFee\": 0.00005,\n      \"gasFeeDelta\": 5,\n      \"maxFeePerGas\": 100,\n      \"maxSlippage\": 0.1,\n      \"minLiquidity\": 100\n    },\n    \"sellSettings\": {\n      \"enabled\": true,\n      \"stopEarnEnabled\": true,\n      \"stopEarnMode\": \"profit_percent\",\n      \"stopEarnPercentOrPrice\": 1,\n      \"stopLossEnabled\": true,\n      \"stopLossMode\": \"loss_percent\",\n      \"stopLossPercentOrPrice\": 0.5,\n      \"autoSell\": false,\n      \"priorityFee\": 0.00005,\n      \"gasFeeDelta\": 5,\n      \"maxFeePerGas\": 100,\n      \"maxSlippage\": 0.1\n    }\n  },\n  \"response\": {\n    \"err\": false,\n    \"res\": {\n      \"id\": \"lus8bfug0040i2\"\n    }\n  }\n}",
+              "language": "json",
+              "name": ""
+            },
+            {
+              "code": "curl --location --request POST 'https://api-bot-v1.dbotx.com/simulator/snipe_order' \\\n     --header 'x-api-key: YOUR_API_KEY' \\\n     --header 'Content-Type: application/json' \\\n     --data-raw '{\"enabled\":true,\"chain\":\"solana\",\"token\":\"8EPRkSsLRQ3vLZUyKHohMHQ7F7FN8fmVBeViNwznEHgJ\",\"walletId\":\"\",\"expireDelta\":360000000,\"buySettings\":{\"buyAmountUI\":0.1,\"priorityFee\":0.00005,\"gasFeeDelta\":5,\"maxFeePerGas\":100,\"maxSlippage\":0.1,\"minLiquidity\":0},\"sellSettings\":{\"enabled\":true,\"stopEarnEnabled\":true,\"stopEarnMode\":\"profit_percent\",\"stopEarnPercentOrPrice\":1,\"stopLossEnabled\":true,\"stopLossMode\":\"loss_percent\",\"stopLossPercentOrPrice\":0.5,\"autoSell\":false,\"priorityFee\":0.00005,\"gasFeeDelta\":5,\"maxFeePerGas\":100,\"maxSlippage\":0.1}}'",
+              "language": "shell",
+              "name": ""
+            },
+            {
+              "code": "import requests\n\nurl = \"https://api-bot-v1.dbotx.com/simulator/snipe_order\"\nheaders = {\n    'x-api-key': 'YOUR_API_KEY',\n    'Content-Type': 'application/json'\n}\npayload = {\n    \"enabled\": True,\n    \"chain\": \"solana\",\n    \"token\": \"8EPRkSsLRQ3vLZUyKHohMHQ7F7FN8fmVBeViNwznEHgJ\",\n    \"walletId\": \"\",\n    \"expireDelta\": 360000000,\n    \"buySettings\": {\n        \"buyAmountUI\": 0.1,\n        \"priorityFee\": 0.00005,\n        \"gasFeeDelta\": 5,\n        \"maxFeePerGas\": 100,\n        \"maxSlippage\": 0.1,\n        \"minLiquidity\": 0\n    },\n    \"sellSettings\": {\n        \"enabled\": True,\n        \"stopEarnEnabled\": True,\n        \"stopEarnMode\": \"profit_percent\",\n        \"stopEarnPercentOrPrice\": 1,\n        \"stopLossEnabled\": True,\n        \"stopLossMode\": \"loss_percent\",\n        \"stopLossPercentOrPrice\": 0.5,\n        \"autoSell\": False,\n        \"priorityFee\": 0.00005,\n        \"gasFeeDelta\": 5,\n        \"maxFeePerGas\": 100,\n        \"maxSlippage\": 0.1\n    }\n}\nresponse = requests.post(url, headers=headers, json=payload)\nprint(response.text)",
+              "language": "python",
+              "name": ""
+            },
+            {
+              "code": "const fetch = require('node-fetch');\n\nasync function makeAPICall() {\n  const url = 'https://api-bot-v1.dbotx.com/simulator/snipe_order';\n  const apiKey = 'YOUR_API_KEY';\n  const payload = {\n  \"enabled\": true,\n  \"chain\": \"solana\",\n  \"token\": \"8EPRkSsLRQ3vLZUyKHohMHQ7F7FN8fmVBeViNwznEHgJ\",\n  \"walletId\": \"\",\n  \"expireDelta\": 360000000,\n  \"buySettings\": {\n    \"buyAmountUI\": 0.1,\n    \"priorityFee\": 0.00005,\n    \"gasFeeDelta\": 5,\n    \"maxFeePerGas\": 100,\n    \"maxSlippage\": 0.1,\n    \"minLiquidity\": 0\n  },\n  \"sellSettings\": {\n    \"enabled\": true,\n    \"stopEarnEnabled\": true,\n    \"stopEarnMode\": \"profit_percent\",\n    \"stopEarnPercentOrPrice\": 1,\n    \"stopLossEnabled\": true,\n    \"stopLossMode\": \"loss_percent\",\n    \"stopLossPercentOrPrice\": 0.5,\n    \"autoSell\": false,\n    \"priorityFee\": 0.00005,\n    \"gasFeeDelta\": 5,\n    \"maxFeePerGas\": 100,\n    \"maxSlippage\": 0.1\n  }\n};\n\n  try {\n    const response = await fetch(url, {\n      method: 'POST',\n      headers: {\n        'x-api-key': apiKey,\n        'Content-Type': 'application/json'\n      },\n      body: JSON.stringify(payload)\n    });\n\n    if (!response.ok) {\n      throw new Error(`HTTP error! Status: ${response.status}`);\n    }\n\n    const data = await response.json();\n    console.log(JSON.stringify(data, null, 2));\n  } catch (error) {\n    console.error('Error:', error);\n  }\n}\n\nmakeAPICall();",
+              "language": "node",
+              "name": ""
+            }
+          ],
+          "samples-languages": [
+            "json",
+            "shell",
+            "python",
+            "node"
+          ]
+        }
+      }
+    },
+    "/simulator/follow_order": {
+      "post": {
+        "operationId": "create-simulator-copy-trading",
+        "summary": "模拟器跟单交易",
+        "deprecated": false,
+        "description": "此API用于创建模拟器的多链跟单交易任务",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "description": "任务启用状态，\"true\"表示启用模拟器跟单交易"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "跟单任务的名称"
+                  },
+                  "chain": {
+                    "type": "string",
+                    "description": "链 (solana/ethereum/base/bsc/tron/robinhood)",
+                    "default": "solana"
+                  },
+                  "dexFilter": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "需要跟随的DEX，null表示全部跟随",
+                    "default": "null"
+                  },
+                  "targetIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "需要跟单的钱包地址（最多10个）"
+                  },
+                  "walletId": {
+                    "type": "string",
+                    "description": "模拟器的walletId默认为\"\"",
+                    "default": ""
+                  },
+                  "buySettings": {
+                    "type": "object",
+                    "description": "买入设置",
+                    "properties": {
+                      "enabled": {
+                        "type": "boolean",
+                        "description": "买入任务启用状态,\"true\"表示启用买入设置"
+                      },
+                      "buyAmountType": {
+                        "type": "string",
+                        "description": "跟单买入类型，\"fixed_amount\"表示固定金额，\"fixed_ratio\"表示固定比例，\"follow_amount\"表示跟随金额"
+                      },
+                      "maxBuyAmountUI": {
+                        "type": "number",
+                        "description": "跟单的最大买入金额，最小可填写0.001 SOL，0.0001 ETH，0.0001 BNB，1 TRX"
+                      },
+                      "buyRatio": {
+                        "type": "number",
+                        "description": "跟随买入比例（0-10），当买入类型为\"fixed_ratio\"时必填"
+                      },
+                      "targetMinAmountUI": {
+                        "type": "number",
+                        "description": "聪明钱买入金额大于此值时才会跟随买入"
+                      },
+                      "targetMaxAmountUI": {
+                        "type": "number",
+                        "description": "聪明钱买入金额小于此值时才会跟随买入"
+                      },
+                      "priorityFee": {
+                        "type": "number",
+                        "description": "优先费 (SOL)，对Solana有效，空字符串表示使用自动优先费"
+                      },
+                      "gasFeeDelta": {
+                        "type": "number",
+                        "description": "额外增加的gas (Gwei)，对EVM链有效"
+                      },
+                      "maxFeePerGas": {
+                        "type": "number",
+                        "description": "基础gas超过此值时将不进行交易 (Gwei)，对EVM链有效"
+                      },
+                      "maxSlippage": {
+                        "type": "number",
+                        "description": "最大滑点（0.00-1.00）"
+                      },
+                      "buyExist": {
+                        "type": "boolean",
+                        "description": "已持有代币是否继续跟随买入",
+                        "default": false
+                      }
+                    },
+                    "required": [
+                      "enabled",
+                      "buyAmountType",
+                      "maxBuyAmountUI",
+                      "buyRatio",
+                      "priorityFee",
+                      "gasFeeDelta",
+                      "maxFeePerGas",
+                      "maxSlippage"
+                    ]
+                  },
+                  "sellSettings": {
+                    "type": "object",
+                    "description": "卖出设置",
+                    "properties": {
+                      "enabled": {
+                        "type": "boolean",
+                        "description": "卖出任务启用状态，\"true\"表示启用卖出设置"
+                      },
+                      "mode": {
+                        "type": "string",
+                        "description": "卖出模式，\"mixed\"表示同时启用跟随卖出和止盈止损，\"only_copy\"表示只启用跟随卖出，\"only_pnl\"表示只启用止盈止损"
+                      },
+                      "sellAmountType": {
+                        "type": "string",
+                        "description": "跟单卖出的比例，\"all\"表示100%卖出，\"follow_ratio\"表示跟随比例卖出，\"x_target_ratio\"表示根据聪明钱的卖出比例，固定乘以一个倍数进行卖出"
+                      },
+                      "sellSpeedType": {
+                        "type": "string",
+                        "description": "跟随卖出的速度，可填写\"fast\"和\"accurate\"",
+                        "default": "accurate"
+                      },
+                      "stopEarnPercent": {
+                        "type": "number",
+                        "description": "止盈百分比 (0.5表示50%)，在快速买卖的type为\"buy\"时，和跟单的卖出设置中有效，当某个代币价格上涨超过此百分比时自动卖出，\"null\"表示不启用止盈"
+                      },
+                      "stopLossPercent": {
+                        "type": "number",
+                        "description": "止损百分比 (0.5表示50%)，在快速买卖的type为\"buy\"时，和跟单的卖出设置中有效，当某个代币价格下跌超过此百分比时自动卖出，\"null\"表示不启用止盈"
+                      },
+                      "stopEarnGroup": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "pricePercent": {
+                              "type": "number",
+                              "description": "价格涨跌百分比 (0.5表示50%),在止盈分组里表示上涨多少卖出"
+                            },
+                            "amountPercent": {
+                              "type": "number",
+                              "description": "卖出比例 (0-1，0.5表示50%)，例如涨100%卖50%，涨200%全卖，卖出比例需要设置为0.5和1，而不是0.5和0.5"
+                            }
+                          },
+                          "required": [
+                            "pricePercent",
+                            "amountPercent"
+                          ]
+                        },
+                        "description": "止盈分组,在跟单卖出模式为“mixed”或“only_pnl”时有效，最多支持设置6个，\"null\"表示不启用止盈，若同时设置了\"stopEarnGroup\"和\"stopEarnPercent\"，则\"stopEarnPercent\"将失效"
+                      },
+                      "stopLossGroup": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "pricePercent": {
+                              "type": "number",
+                              "description": "价格涨跌百分比 (0.5表示50%),在止损分组里表示下跌多少卖出"
+                            },
+                            "amountPercent": {
+                              "type": "number",
+                              "description": "卖出比例 (0-1，0.5表示50%)，例如涨100%卖50%，涨200%全卖，卖出比例需要设置为0.5和1，而不是0.5和0.5"
+                            }
+                          },
+                          "required": [
+                            "pricePercent",
+                            "amountPercent"
+                          ]
+                        },
+                        "description": "止损分组,在跟单卖出模式为“mixed”或“only_pnl”时有效，最多支持设置6个，\"null\"表示不启用止损，若同时设置了\"stopLossGroup\"和\"stopLossPercent\"，则\"stopLossPercent\"将失效"
+                      },
+                      "sellmode": {
+                        "type": "string",
+                        "description": "卖出方式，对EVM链有效，当卖出收入低于消耗的gas时，\"smart\"表示不会卖出，\"normal\"表示继续卖出",
+                        "default": "smart"
+                      },
+                      "priorityFee": {
+                        "type": "number",
+                        "description": "优先费 (SOL)，对Solana有效，空字符串表示使用自动优先费"
+                      },
+                      "gasFeeDelta": {
+                        "type": "number",
+                        "description": "额外增加的gas (Gwei)，对EVM链有效"
+                      },
+                      "maxFeePerGas": {
+                        "type": "number",
+                        "description": "基础gas超过此值时将不进行交易 (Gwei)，对EVM链有效"
+                      },
+                      "maxSlippage": {
+                        "type": "number",
+                        "description": "最大滑点（0.00-1.00），买入时表示实际成交价格和期望价格之间的差距，卖出时表示期望价格和实际成交价格之间的差距，相差倍数=1/(1-滑点)，0.5即最多接受2倍价差，1 即不限制价差"
+                      }
+                    },
+                    "required": [
+                      "enabled",
+                      "mode",
+                      "sellAmountType",
+                      "priorityFee",
+                      "gasFeeDelta",
+                      "maxFeePerGas",
+                      "maxSlippage"
+                    ]
+                  }
+                },
+                "required": [
+                  "enabled",
+                  "name",
+                  "chain",
+                  "targetIds",
+                  "buySettings",
+                  "sellSettings"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功响应",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "err": {
+                      "type": "boolean"
+                    },
+                    "res": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "docs": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "Result": {
+                    "summary": "Result",
+                    "value": {
+                      "err": false,
+                      "res": {
+                        "id": "lus8bfug0040i2"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "x-readme": {
+          "code-samples": [
+            {
+              "code": "{\n  \"name\": \"模拟器跟单交易\",\n  \"method\": \"POST\",\n  \"path\": \"https://api-bot-v1.dbotx.com/simulator/follow_order\",\n  \"params\": {\n    \"header\": [\n      \"x-api-key:YOUR_API_KEY\"\n    ]\n  },\n  \"body\": {\n    \"enabled\": true,\n    \"name\": \"模拟器跟单任务\",\n    \"chain\": \"solana\",\n    \"dexFilter\": [\"raydium_amm\"],\n    \"targetIds\": [\"ECQwEUMk75pxgruroXKTfqMHL4Aoj622vEZxBtYu4gNt\"],\n    \"walletId\": \"\",\n    \"buySettings\": {\n      \"enabled\": true,\n      \"buyAmountType\": \"follow_amount\",\n      \"maxBuyAmountUI\": 0.1,\n      \"buyRatio\": 1.5,\n      \"reservedAmountUI\": 0.01,\n      \"targetMinAmountUI\": 0.1,\n      \"targetMaxAmountUI\": 0.5,\n      \"priorityFee\": 0.00005,\n      \"gasFeeDelta\": 5,\n      \"maxFeePerGas\": 100,\n      \"maxSlippage\": 0.1,\n      \"buyExist\": false\n    },\n    \"sellSettings\": {\n      \"enabled\": true,\n      \"mode\": \"mixed\",\n      \"sellAmountType\": \"all\",\n      \"sellSpeedType\": \"accurate\",\n      \"stopEarnPercent\": 1,\n      \"stopLossPercent\": 0.5,\n      \"stopEarnGroup\": [\n        {\n          \"pricePercent\": 0.2,\n          \"amountPercent\": 0.5\n        },\n        {\n          \"pricePercent\": 0.8,\n          \"amountPercent\": 1\n        }\n      ],\n      \"stopLossGroup\": [\n        {\n          \"pricePercent\": 0.2,\n          \"amountPercent\": 0.5\n        },\n        {\n          \"pricePercent\": 0.8,\n          \"amountPercent\": 1\n        }\n      ],\n      \"sellMode\": \"smart\",\n      \"priorityFee\": \"\",\n      \"gasFeeDelta\": 5,\n      \"maxFeePerGas\": 100,\n      \"maxSlippage\": 0.1\n    }\n  },\n  \"response\": {\n    \"err\": false,\n    \"res\": {\n      \"id\": \"lus8bfug0040i2\"\n    }\n  }\n}",
+              "language": "json",
+              "name": ""
+            },
+            {
+              "code": "curl --location --request POST 'https://api-bot-v1.dbotx.com/simulator/follow_order' \\\n     --header 'x-api-key: YOUR_API_KEY' \\\n     --header 'Content-Type: application/json' \\\n     --data-raw '{\"enabled\":true,\"name\":\"task name\",\"chain\":\"solana\",\"dexFilter\":[\"raydium_amm\",\"pump\"],\"targetIds\":[\"ECQwEUMk75pxgruroXKTfqMHL4Aoj622vEZxBtYu4gNt\"],\"walletId\":\"\",\"buySettings\":{\"enabled\":true,\"buyAmountType\":\"follow_amount\",\"maxBuyAmountUI\":0.1,\"buyRatio\":1.5,\"maxBalanceUI\":100,\"reservedAmountUI\":0.01,\"targetMinAmountUI\":0.1,\"targetMaxAmountUI\":0.5,\"priorityFee\":0.00005,\"gasFeeDelta\":5,\"maxFeePerGas\":100,\"maxSlippage\":0.1,\"buyExist\":false},\"sellSettings\":{\"enabled\":true,\"mode\":\"mixed\",\"sellAmountType\":\"all\",\"sellSpeedType\":\"accurate\",\"stopEarnPercent\":1,\"stopLossPercent\":0.5,\"stopEarnGroup\":[{\"pricePercent\":0.2,\"amountPercent\":0.5},{\"pricePercent\":0.8,\"amountPercent\":1}],\"stopLossGroup\":[{\"pricePercent\":0.2,\"amountPercent\":0.5},{\"pricePercent\":0.8,\"amountPercent\":1}],\"sellMode\":\"smart\",\"priorityFee\":\"\",\"gasFeeDelta\":5,\"maxFeePerGas\":100,\"maxSlippage\":0.1}}'",
+              "language": "shell",
+              "name": ""
+            },
+            {
+              "code": "import requests\n\nurl = \"https://api-bot-v1.dbotx.com/simulator/follow_order\"\nheaders = {\n    'x-api-key': 'YOUR_API_KEY',\n    'Content-Type': 'application/json'\n}\npayload = {\n    \"enabled\": True,\n    \"name\": \"task name\",\n    \"chain\": \"solana\",\n    \"dexFilter\": [\"raydium_amm\", \"pump\"],\n    \"targetIds\": [\"ECQwEUMk75pxgruroXKTfqMHL4Aoj622vEZxBtYu4gNt\"],\n    \"walletId\": \"\",\n    \"buySettings\": {\n        \"enabled\": True,\n        \"buyAmountType\": \"follow_amount\",\n        \"maxBuyAmountUI\": 0.1,\n        \"buyRatio\": 1.5,\n        \"maxBalanceUI\": 100,\n        \"reservedAmountUI\": 0.01,\n        \"targetMinAmountUI\": 0.1,\n        \"targetMaxAmountUI\": 0.5,\n        \"priorityFee\": 0.00005,\n        \"gasFeeDelta\": 5,\n        \"maxFeePerGas\": 100,\n        \"maxSlippage\": 0.1,\n        \"buyExist\": False\n    },\n    \"sellSettings\": {\n        \"enabled\": True,\n        \"mode\": \"mixed\",\n        \"sellAmountType\": \"all\",\n        \"sellSpeedType\": \"accurate\",\n        \"stopEarnPercent\": 1,\n        \"stopLossPercent\": 0.5,\n        \"stopEarnGroup\": [\n            {\n                \"pricePercent\": 0.2,\n                \"amountPercent\": 0.5\n            },\n            {\n                \"pricePercent\": 0.8,\n                \"amountPercent\": 1\n            }\n        ],\n        \"stopLossGroup\": [\n            {\n                \"pricePercent\": 0.2,\n                \"amountPercent\": 0.5\n            },\n            {\n                \"pricePercent\": 0.8,\n                \"amountPercent\": 1\n            }\n        ],\n        \"sellMode\": \"smart\",\n        \"priorityFee\": \"\",\n        \"gasFeeDelta\": 5,\n        \"maxFeePerGas\": 100,\n        \"maxSlippage\": 0.1\n    }\n}\nresponse = requests.post(url, headers=headers, json=payload)\nprint(response.text)",
+              "language": "python",
+              "name": ""
+            },
+            {
+              "code": "const fetch = require('node-fetch');\n\nasync function makeAPICall() {\n  const url = 'https://api-bot-v1.dbotx.com/simulator/follow_order';\n  const apiKey = 'YOUR_API_KEY';\n  const payload = {\n  \"enabled\": true,\n  \"name\": \"task name\",\n  \"chain\": \"solana\",\n  \"dexFilter\": [\"raydium_amm\", \"pump\"],\n  \"targetIds\": [\"ECQwEUMk75pxgruroXKTfqMHL4Aoj622vEZxBtYu4gNt\"],\n  \"walletId\": \"\",\n  \"buySettings\": {\n    \"enabled\": true,\n    \"buyAmountType\": \"follow_amount\",\n    \"maxBuyAmountUI\": 0.1,\n    \"buyRatio\": 1.5,\n    \"maxBalanceUI\": 100,\n    \"reservedAmountUI\": 0.01,\n    \"targetMinAmountUI\": 0.1,\n    \"targetMaxAmountUI\": 0.5,\n    \"priorityFee\": 0.00005,\n    \"gasFeeDelta\": 5,\n    \"maxFeePerGas\": 100,\n    \"maxSlippage\": 0.1,\n    \"buyExist\": false\n  },\n  \"sellSettings\": {\n    \"enabled\": true,\n    \"mode\": \"mixed\",\n    \"sellAmountType\": \"all\",\n    \"sellSpeedType\": \"accurate\",\n    \"stopEarnPercent\": 1,\n    \"stopLossPercent\": 0.5,\n    \"stopEarnGroup\": [\n      {\n        \"pricePercent\": 0.2,\n        \"amountPercent\": 0.5\n      },\n      {\n        \"pricePercent\": 0.8,\n        \"amountPercent\": 1\n      }\n    ],\n    \"stopLossGroup\": [\n      {\n        \"pricePercent\": 0.2,\n        \"amountPercent\": 0.5\n      },\n      {\n        \"pricePercent\": 0.8,\n        \"amountPercent\": 1\n      }\n    ],\n    \"sellMode\": \"smart\",\n    \"priorityFee\": \"\",\n    \"gasFeeDelta\": 5,\n    \"maxFeePerGas\": 100,\n    \"maxSlippage\": 0.1\n};\n\n  try {\n    const response = await fetch(url, {\n      method: 'POST',\n      headers: {\n        'x-api-key': apiKey,\n        'Content-Type': 'application/json'\n      },\n      body: JSON.stringify(payload)\n    });\n\n    if (!response.ok) {\n      throw new Error(`HTTP error! Status: ${response.status}`);\n    }\n\n    const data = await response.json();\n    console.log(JSON.stringify(data, null, 2));\n  } catch (error) {\n    console.error('Error:', error);\n  }\n}\n\nmakeAPICall();",
+              "language": "node",
+              "name": ""
+            }
+          ],
+          "samples-languages": [
+            "json",
+            "shell",
+            "python",
+            "node"
+          ]
+        }
+      }
+    },
+    "/simulator/limit_orders": {
+      "post": {
+        "operationId": "create-simulator-limit-order",
+        "summary": "模拟器限价订单",
+        "deprecated": false,
+        "description": "此API用于创建模拟器的多链限价买入和限价卖出任务",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "chain": {
+                    "type": "string",
+                    "description": "链 (solana/ethereum/base/bsc/tron/robinhood)"
+                  },
+                  "pair": {
+                    "type": "string",
+                    "description": "需要买入/卖出的代币地址或交易对地址"
+                  },
+                  "walletId": {
+                    "type": "string",
+                    "description": "模拟器的walletId默认为\"\""
+                  },
+                  "settings(限价买入设置)": {
+                    "type": "object",
+                    "description": "限价买入设置",
+                    "properties": {
+                      "enabled": {
+                        "type": "boolean",
+                        "description": "买入任务启用状态，\"true\"表示启用限价买入"
+                      },
+                      "tradeType": {
+                        "type": "string",
+                        "description": "\"buy\"表示创建买入限价单，\"sell\"表示创建卖出限价单",
+                        "default": "buy"
+                      },
+                      "triggerPriceUsd": {
+                        "type": "number",
+                        "description": "触发买入/卖出的价格（美元）"
+                      },
+                      "triggerDirection": {
+                        "type": "string",
+                        "description": "\"down\"表示低于触发价格时执行买入/卖出，\"up\"表示高于触发价格时执行买入/卖出"
+                      },
+                      "currencyAmountUI": {
+                        "type": "number",
+                        "description": "交易类型为buy时，填写买入金额（ETH/SOL/BNB/TRX），交易类型为sell时，填写卖出比例（0.00-1.00）"
+                      },
+                      "priorityFee": {
+                        "type": "number",
+                        "description": "优先费 (SOL)，对Solana有效，空字符串表示使用自动优先费"
+                      },
+                      "expireDelta": {
+                        "type": "integer",
+                        "description": "任务有效时长，最大值为432000000 (毫秒)"
+                      },
+                      "gasFeeDelta": {
+                        "type": "number",
+                        "description": "额外增加的gas (Gwei)，对EVM链有效"
+                      },
+                      "maxFeePerGas": {
+                        "type": "number",
+                        "description": "基础gas超过此值时将不进行交易 (Gwei)，对EVM链有效"
+                      },
+                      "maxSlippage": {
+                        "type": "number",
+                        "description": "最大滑点（0.00-1.00）"
+                      }
+                    },
+                    "required": [
+                      "enabled",
+                      "tradeType",
+                      "triggerPriceUsd",
+                      "triggerDirection",
+                      "currencyAmountUI",
+                      "priorityFee",
+                      "gasFeeDelta",
+                      "maxFeePerGas",
+                      "expireDelta",
+                      "maxSlippage"
+                    ]
+                  },
+                  "settings(限价卖出设置)": {
+                    "type": "object",
+                    "description": "限价卖出设置",
+                    "properties": {
+                      "enabled": {
+                        "type": "boolean",
+                        "description": "卖出任务启用状态,\"true\"表示启用限价卖出"
+                      },
+                      "tradeType": {
+                        "type": "string",
+                        "description": "交易类型，值为buy和sell"
+                      },
+                      "triggerPriceUsd": {
+                        "type": "number",
+                        "description": "触发买入/卖出的价格（美元）"
+                      },
+                      "triggerDirection": {
+                        "type": "string",
+                        "description": "\"down\"表示低于触发价格时执行买入/卖出，\"up\"表示高于触发价格时执行买入/卖出"
+                      },
+                      "currencyAmountUI": {
+                        "type": "number",
+                        "description": "交易类型为buy时，填写买入金额（ETH/SOL/BNB/TRX），交易类型为sell时，填写卖出比例（0.00-1.00）"
+                      },
+                      "priorityFee": {
+                        "type": "number",
+                        "description": "优先费 (SOL)，对Solana有效，空字符串表示使用自动优先费"
+                      },
+                      "expireDelta": {
+                        "type": "integer",
+                        "description": "任务有效时长，最大值为432000000 (毫秒)"
+                      },
+                      "gasFeeDelta": {
+                        "type": "number",
+                        "description": "额外增加的gas (Gwei)，对EVM链有效"
+                      },
+                      "maxFeePerGas": {
+                        "type": "number",
+                        "description": "基础gas超过此值时将不进行交易 (Gwei)，对EVM链有效"
+                      },
+                      "maxSlippage": {
+                        "type": "number",
+                        "description": "最大滑点（0.00-1.00）"
+                      }
+                    },
+                    "required": [
+                      "enabled",
+                      "tradeType",
+                      "triggerPriceUsd",
+                      "expireDelta",
+                      "triggerDirection",
+                      "currencyAmountUI",
+                      "priorityFee",
+                      "gasFeeDelta",
+                      "maxFeePerGas",
+                      "maxSlippage"
+                    ]
+                  }
+                },
+                "required": [
+                  "chain",
+                  "pair",
+                  "settings(限价买入设置)",
+                  "settings(限价卖出设置)"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功响应",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "err": {
+                      "type": "boolean"
+                    },
+                    "res": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "docs": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "Result": {
+                    "summary": "Result",
+                    "value": {
+                      "err": false,
+                      "res": {
+                        "ids": [
+                          "lus8bfug0040i2",
+                          "lus8bfug004166"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "x-readme": {
+          "code-samples": [
+            {
+              "code": "{\n  \"name\": \"模拟器限价订单\",\n  \"method\": \"POST\",\n  \"path\": \"https://api-bot-v1.dbotx.com/simulator/limit_orders\",\n  \"params\": {\n    \"header\": [\n      \"x-api-key:YOUR_API_KEY\"\n    ]\n  },\n  \"body\": {\n    \"chain\": \"solana\",\n    \"pair\": \"BAS6Cv5qG2FnEQ8W1wXKGfU2r6MFAiSdgGgkUM7NsStE\",\n    \"walletId\": \"\",\n    \"settings\": [\n      {\n        \"enabled\": true,\n        \"tradeType\": \"buy\",\n        \"triggerPriceUsd\": 0.02234821026,\n        \"triggerDirection\": \"down\",\n        \"currencyAmountUI\": 0.1,\n        \"priorityFee\": \"\",\n        \"expireDelta\": 360000000,\n        \"gasFeeDelta\": 5,\n        \"maxFeePerGas\": 100,\n        \"maxSlippage\": 0.1\n      },\n      {\n        \"enabled\": true,\n        \"tradeType\": \"sell\",\n        \"triggerPriceUsd\": 1.5,\n        \"triggerDirection\": \"up\",\n        \"priorityFee\": 0.00005,\n        \"currencyAmountUI\": 1,\n        \"expireDelta\": 360000000,\n        \"gasFeeDelta\": 5,\n        \"maxFeePerGas\": 100,\n        \"maxSlippage\": 0.1\n      }\n    ]\n  },\n  \"response\": {\n    \"err\": false,\n    \"res\": {\n      \"ids\":[\n\t\"lus8bfug0040i2\",\n\t\"lus8bfug004166\"\n\t]\n    }\n  }\n}",
+              "language": "json",
+              "name": ""
+            },
+            {
+              "code": "curl --location --request POST 'https://api-bot-v1.dbotx.com/simulator/limit_orders' \\\n     --header 'x-api-key: YOUR_API_KEY' \\\n     --header 'Content-Type: application/json' \\\n     --data-raw '{\"chain\":\"solana\",\"pair\":\"BAS6Cv5qG2FnEQ8W1wXKGfU2r6MFAiSdgGgkUM7NsStE\",\"walletId\":\"\",\"settings\":[{\"enabled\":true,\"tradeType\":\"buy\",\"triggerPriceUsd\":0.02234821026,\"triggerDirection\":\"down\",\"currencyAmountUI\":0.1,\"priorityFee\":\"\",\"expireDelta\":360000000,\"gasFeeDelta\":5,\"maxFeePerGas\":100,\"maxSlippage\":0.1},{\"enabled\":true,\"tradeType\":\"sell\",\"triggerPriceUsd\":1.5,\"triggerDirection\":\"up\",\"priorityFee\":0.00005,\"currencyAmountUI\":1,\"expireDelta\":360000000,\"gasFeeDelta\":5,\"maxFeePerGas\":100,\"maxSlippage\":0.1}]}'",
+              "language": "shell",
+              "name": ""
+            },
+            {
+              "code": "import requests\n\nurl = \"https://api-bot-v1.dbotx.com/simulator/limit_orders\"\nheaders = {\n    'x-api-key': 'YOUR_API_KEY',\n    'Content-Type': 'application/json'\n}\npayload = {\n    \"chain\": \"solana\",\n    \"pair\": \"BAS6Cv5qG2FnEQ8W1wXKGfU2r6MFAiSdgGgkUM7NsStE\",\n    \"walletId\": \"\",\n    \"settings\": [\n        {\n            \"enabled\": True,\n            \"tradeType\": \"buy\",\n            \"triggerPriceUsd\": 0.02234821026,\n            \"triggerDirection\": \"down\",\n            \"currencyAmountUI\": 0.1,\n            \"priorityFee\": \"\",\n            \"expireDelta\": 360000000,\n            \"gasFeeDelta\": 5,\n            \"maxFeePerGas\": 100,\n            \"maxSlippage\": 0.1\n        },\n        {\n            \"enabled\": True,\n            \"tradeType\": \"sell\",\n            \"triggerPriceUsd\": 1.5,\n            \"triggerDirection\": \"up\",\n            \"priorityFee\": 0.00005,\n            \"currencyAmountUI\": 1,\n            \"expireDelta\": 360000000,\n            \"gasFeeDelta\": 5,\n            \"maxFeePerGas\": 100,\n            \"maxSlippage\": 0.1\n        }\n    ]\n}\nresponse = requests.post(url, headers=headers, json=payload)\nprint(response.text)",
+              "language": "python",
+              "name": ""
+            },
+            {
+              "code": "const fetch = require('node-fetch');\n\nasync function makeAPICall() {\n  const url = 'https://api-bot-v1.dbotx.com/simulator/limit_orders';\n  const apiKey = 'YOUR_API_KEY';\n  const payload = {\n  \"chain\": \"solana\",\n  \"pair\": \"BAS6Cv5qG2FnEQ8W1wXKGfU2r6MFAiSdgGgkUM7NsStE\",\n  \"walletId\": \"\",\n  \"settings\": [\n    {\n      \"enabled\": true,\n      \"tradeType\": \"buy\",\n      \"triggerPriceUsd\": 0.02234821026,\n      \"triggerDirection\": \"down\",\n      \"currencyAmountUI\": 0.1,\n      \"priorityFee\": \"\",\n      \"expireDelta\": 360000000,\n      \"gasFeeDelta\": 5,\n      \"maxFeePerGas\": 100,\n      \"maxSlippage\": 0.1\n    },\n    {\n      \"enabled\": true,\n      \"tradeType\": \"sell\",\n      \"triggerPriceUsd\": 1.5,\n      \"triggerDirection\": \"up\",\n      \"priorityFee\": 0.00005,\n      \"currencyAmountUI\": 1,\n      \"expireDelta\": 360000000,\n      \"gasFeeDelta\": 5,\n      \"maxFeePerGas\": 100,\n      \"maxSlippage\": 0.1\n    }\n  ]\n};\n\n  try {\n    const response = await fetch(url, {\n      method: 'POST',\n      headers: {\n        'x-api-key': apiKey,\n        'Content-Type': 'application/json'\n      },\n      body: JSON.stringify(payload)\n    });\n\n    if (!response.ok) {\n      throw new Error(`HTTP error! Status: ${response.status}`);\n    }\n\n    const data = await response.json();\n    console.log(JSON.stringify(data, null, 2));\n  } catch (error) {\n    console.error('Error:', error);\n  }\n}\n\nmakeAPICall();",
+              "language": "node",
+              "name": ""
+            }
+          ],
+          "samples-languages": [
+            "json",
+            "shell",
+            "python",
+            "node"
+          ]
+        }
+      }
+    },
+    "/simulator/sim_swap_order": {
+      "post": {
+        "operationId": "create-simulator-fast-swap",
+        "summary": "模拟器快速买卖",
+        "deprecated": false,
+        "description": "此API用于创建模拟器的多链快速买卖任务",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "chain": {
+                    "type": "string",
+                    "description": "链 (solana/ethereum/base/bsc/tron/robinhood)"
+                  },
+                  "pair": {
+                    "type": "string",
+                    "description": "需要买入/卖出的token的合约地址"
+                  },
+                  "walletId": {
+                    "type": "string",
+                    "description": "模拟器的walletId默认为\"\""
+                  },
+                  "type": {
+                    "type": "string",
+                    "description": "交易类型，buy为买入，sell为卖出"
+                  },
+                  "amountOrPercent": {
+                    "type": "number",
+                    "description": "交易类型为buy时，填写买入金额（ETH/SOL/BNB/TRX），交易类型为sell时，填写卖出比例（0.00-1.00）"
+                  },
+                  "stopEarnPercent": {
+                    "type": "number",
+                    "description": "止盈比例，0.5表示上涨50%时卖出，\"null\"表示不启用止盈"
+                  },
+                  "stopLossPercent": {
+                    "type": "number",
+                    "description": "止损比例（0.00-1.00），0.5表示下跌50%时卖出，\"null\"表示不启用止损"
+                  },
+                  "stopEarnGroup": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "pricePercent": {
+                          "type": "number",
+                          "description": "价格涨跌百分比 (0.5表示50%),在止盈分组里表示上涨多少卖出"
+                        },
+                        "amountPercent": {
+                          "type": "number",
+                          "description": "卖出比例 (0-1，0.5表示50%)，例如涨100%卖50%，涨200%全卖，卖出比例需要设置为0.5和1，而不是0.5和0.5"
+                        }
+                      },
+                      "required": [
+                        "pricePercent",
+                        "amountPercent"
+                      ]
+                    },
+                    "description": "止盈分组，type为“buy”时有效，最多支持设置6个，\"null\"表示不启用止盈，若同时设置了\"stopEarnGroup\"和\"stopEarnPercent\"，则\"stopEarnPercent\"将失效"
+                  },
+                  "stopLossGroup": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "pricePercent": {
+                          "type": "number",
+                          "description": "价格涨跌百分比 (0.5表示50%),在止损分组里表示下跌多少卖出"
+                        },
+                        "amountPercent": {
+                          "type": "number",
+                          "description": "卖出比例 (0-1，0.5表示50%)，例如涨100%卖50%，涨200%全卖，卖出比例需要设置为0.5和1，而不是0.5和0.5"
+                        }
+                      },
+                      "required": [
+                        "pricePercent",
+                        "amountPercent"
+                      ]
+                    },
+                    "description": "止损分组止损分组，type为“buy”时有效，最多支持设置6个，\"null\"表示不启用止损，若同时设置了\"stopLossGroup\"和\"stopLossPercent\"，则\"stopLossPercent\"将失效"
+                  },
+                  "priorityFee": {
+                    "type": "number",
+                    "description": "优先费 (SOL)，对Solana有效，空字符串表示使用自动优先费"
+                  },
+                  "gasFeeDelta": {
+                    "type": "number",
+                    "description": "额外增加的gas (Gwei)，对EVM链有效"
+                  },
+                  "maxFeePerGas": {
+                    "type": "number",
+                    "description": "基础gas超过此值时将不进行交易 (Gwei)，对EVM链有效"
+                  },
+                  "slippage": {
+                    "type": "number",
+                    "description": "最大滑点（0.00-1.00），买入时表示实际成交价格和期望价格之间的差距，卖出时表示期望价格和实际成交价格之间的差距，相差倍数=1/(1-滑点)，0.5即最多接受2倍价差，1 即不限制价差"
+                  }
+                },
+                "required": [
+                  "chain",
+                  "type",
+                  "pair",
+                  "amountOrPercent",
+                  "priorityFee",
+                  "gasFeeDelta",
+                  "maxFeePerGas",
+                  "maxSlippage"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功响应",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "err": {
+                      "type": "boolean"
+                    },
+                    "res": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "docs": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "Result": {
+                    "summary": "Result",
+                    "value": {
+                      "err": false,
+                      "res": {
+                        "id": "lus8bfug0040i2"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "x-readme": {
+          "code-samples": [
+            {
+              "code": "{\n  \"name\": \"模拟器快速买卖\",\n  \"method\": \"POST\",\n  \"path\": \"https://api-bot-v1.dbotx.com/simulator/sim_swap_order\",\n  \"params\": {\n    \"header\": [\n      \"x-api-key:YOUR_API_KEY\"\n    ]\n  },\n  \"body\": {\n    \"chain\": \"solana\",\n    \"pair\": \"BAS6Cv5qG2FnEQ8W1wXKGfU2r6MFAiSdgGgkUM7NsStE\",\n    \"walletId\": \"\",\n    \"type\": \"buy\",\n    \"amountOrPercent\": 0.1,\n    \"stopEarnPercent\": 0.5,\n    \"stopLossPercent\": 0.5,\n    \"stopEarnGroup\": [\n      {\n        \"pricePercent\": 0.2,\n        \"amountPercent\": 0.5\n      },\n      {\n        \"pricePercent\": 0.8,\n        \"amountPercent\": 1\n      }\n    ],\n    \"stopLossGroup\": [\n      {\n        \"pricePercent\": 0.2,\n        \"amountPercent\": 0.5\n      },\n      {\n        \"pricePercent\": 0.8,\n        \"amountPercent\": 1\n      }\n    ],\n    \"priorityFee\": \"\",\n    \"gasFeeDelta\": 5,\n    \"maxFeePerGas\": 100,\n    \"slippage\": 0.1\n  },\n  \"response\": {\n    \"err\": false,\n    \"res\": {\n      \"id\": \"lus8bfug0040i2\"\n    }\n  }\n}",
+              "language": "json",
+              "name": ""
+            },
+            {
+              "code": "curl --location --request POST 'https://api-bot-v1.dbotx.com/simulator/sim_swap_order' \\\n     --header 'x-api-key: YOUR_API_KEY' \\\n     --header 'Content-Type: application/json' \\\n     --data-raw '{\"chain\":\"solana\",\"pair\":\"BAS6Cv5qG2FnEQ8W1wXKGfU2r6MFAiSdgGgkUM7NsStE\",\"walletId\":\"\",\"type\":\"buy\",\"amountOrPercent\":0.1,\"stopEarnPercent\":0.5,\"stopLossPercent\":0.5,\"stopEarnGroup\":[{\"pricePercent\":0.2,\"amountPercent\":0.5},{\"pricePercent\":0.8,\"amountPercent\":1}],\"stopLossGroup\":[{\"pricePercent\":0.2,\"amountPercent\":0.5},{\"pricePercent\":0.8,\"amountPercent\":1}],\"priorityFee\":\"\",\"gasFeeDelta\":5,\"maxFeePerGas\":100,\"slippage\":0.1}'",
+              "language": "shell",
+              "name": ""
+            },
+            {
+              "code": "import requests\n\nurl = \"https://api-bot-v1.dbotx.com/simulator/sim_swap_order\"\nheaders = {\n    'x-api-key': 'YOUR_API_KEY',\n    'Content-Type': 'application/json'\n}\npayload = {\n    \"chain\": \"solana\",\n    \"pair\": \"BAS6Cv5qG2FnEQ8W1wXKGfU2r6MFAiSdgGgkUM7NsStE\",\n    \"walletId\": \"\",\n    \"type\": \"buy\",\n    \"amountOrPercent\": 0.1,\n    \"stopEarnPercent\": 0.5,\n    \"stopLossPercent\": 0.5,\n    \"stopEarnGroup\": [\n        {\n            \"pricePercent\": 0.2,\n            \"amountPercent\": 0.5\n        },\n        {\n            \"pricePercent\": 0.8,\n            \"amountPercent\": 1\n        }\n    ],\n    \"stopLossGroup\": [\n        {\n            \"pricePercent\": 0.2,\n            \"amountPercent\": 0.5\n        },\n        {\n            \"pricePercent\": 0.8,\n            \"amountPercent\": 1\n        }\n    ],\n    \"priorityFee\": \"\",\n    \"gasFeeDelta\": 5,\n    \"maxFeePerGas\": 100,\n    \"slippage\": 0.1\n}\nresponse = requests.post(url, headers=headers, json=payload)\nprint(response.text)",
+              "language": "python",
+              "name": ""
+            },
+            {
+              "code": "const fetch = require('node-fetch');\n\nasync function makeAPICall() {\n  const url = 'https://api-bot-v1.dbotx.com/simulator/sim_swap_order';\n  const apiKey = 'YOUR_API_KEY';\n  const payload = {\n  \"chain\": \"solana\",\n  \"pair\": \"BAS6Cv5qG2FnEQ8W1wXKGfU2r6MFAiSdgGgkUM7NsStE\",\n  \"walletId\": \"\",\n  \"type\": \"buy\",\n  \"amountOrPercent\": 0.1,\n  \"stopEarnPercent\": 0.5,\n  \"stopLossPercent\": 0.5,\n  \"stopEarnGroup\": [\n    {\n      \"pricePercent\": 0.2,\n      \"amountPercent\": 0.5\n    },\n    {\n      \"pricePercent\": 0.8,\n      \"amountPercent\": 1\n    }\n  ],\n  \"stopLossGroup\": [\n    {\n      \"pricePercent\": 0.2,\n      \"amountPercent\": 0.5\n    },\n    {\n      \"pricePercent\": 0.8,\n      \"amountPercent\": 1\n    }\n  ],\n  \"priorityFee\": \"\",\n  \"gasFeeDelta\": 5,\n  \"maxFeePerGas\": 100,\n  \"slippage\": 0.1\n};\n\n  try {\n    const response = await fetch(url, {\n      method: 'POST',\n      headers: {\n        'x-api-key': apiKey,\n        'Content-Type': 'application/json'\n      },\n      body: JSON.stringify(payload)\n    });\n\n    if (!response.ok) {\n      throw new Error(`HTTP error! Status: ${response.status}`);\n    }\n\n    const data = await response.json();\n    console.log(JSON.stringify(data, null, 2));\n  } catch (error) {\n    console.error('Error:', error);\n  }\n}\n\nmakeAPICall();",
+              "language": "node",
+              "name": ""
+            }
+          ],
+          "samples-languages": [
+            "json",
+            "shell",
+            "python",
+            "node"
+          ]
+        }
+      }
+    },
+    "/simulator/sim_account": {
+      "get": {
+        "operationId": "get-simulator-account-info",
+        "summary": "获取模拟器账号信息",
+        "deprecated": false,
+        "description": "此API用于获取模拟器的模拟器账户余额、盈亏等信息",
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "成功响应",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "err": {
+                      "type": "boolean"
+                    },
+                    "res": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "type": "object"
+                          }
+                        },
+                        "total": {
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "docs": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "Result": {
+                    "summary": "Result",
+                    "value": {
+                      "err": false,
+                      "res": {
+                        "err": false,
+                        "res": {
+                          "balance": "15645.23",
+                          "change24h": 0.15236485698489546,
+                          "changeAll": 0.5645235645125698,
+                          "holdTokens": 15
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "x-readme": {
+          "code-samples": [
+            {
+              "language": "json",
+              "code": "{\n  \"name\": \"获取模拟器账号信息\",\n  \"method\": \"GET\",\n  \"path\": \"https://api-bot-v1.dbotx.com/simulator/sim_account\",\n  \"params\": {\n    \"header\": [\n      \"x-api-key:YOUR_API_KEY\"\n    ]\n  },\n  \"response\": {\n    \"err\": false,\n    \"res\": {\n      \"balance\": \"15645.23\",\n      \"change24h\": 0.15236485698489546,\n      \"changeAll\": 0.5645235645125698,\n      \"holdTokens\": 15\n    }\n  }\n}",
+              "name": ""
+            },
+            {
+              "code": "curl --location --request GET 'https://api-bot-v1.dbotx.com/simulator/sim_account' \\\n     --header 'x-api-key: YOUR_API_KEY'",
+              "language": "shell",
+              "name": ""
+            },
+            {
+              "code": "import requests\n\nurl = 'https://api-bot-v1.dbotx.com/simulator/sim_account'\nheaders = {\n    'x-api-key': 'YOUR_API_KEY'\n}\nresponse = requests.get(url, headers=headers)\nprint(response.text)",
+              "language": "python",
+              "name": ""
+            },
+            {
+              "code": "const fetch = require('node-fetch');\n\nasync function makeAPICall() {\n  const url = 'https://api-bot-v1.dbotx.com/simulator/sim_account';\n  const apiKey = 'YOUR_API_KEY';\n\n  try {\n    const response = await fetch(url, {\n      method: 'GET',\n      headers: {\n        'x-api-key': apiKey\n      }\n    });\n\n    if (!response.ok) {\n      throw new Error(`HTTP error! Status: ${response.status}`);\n    }\n\n    const data = await response.json();\n    console.log(JSON.stringify(data, null, 2));\n  } catch (error) {\n    console.error('Error:', error);\n  }\n}\n\nmakeAPICall();",
+              "language": "node",
+              "name": ""
+            }
+          ],
+          "samples-languages": [
+            "shell",
+            "python",
+            "node"
+          ]
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {},
+    "securitySchemes": {}
+  },
+  "servers": [
+    {
+      "url": "https://api-bot-v1.dbotx.com"
+    }
+  ]
+}
