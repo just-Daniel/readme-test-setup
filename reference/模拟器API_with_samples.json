@@ -259,7 +259,16 @@
         "deprecated": false,
         "description": "此API用于创建模拟器的多链跟单交易任务",
         "tags": [],
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "param",
+            "schema": {
+              "type": "string"
+            },
+            "description": "test\n\ntest\n\n\nts1"
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
