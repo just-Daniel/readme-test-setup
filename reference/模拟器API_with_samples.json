@@ -266,7 +266,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "test\n\ntest\n\n\nts1"
+            "description": "test\n\ntest\n\n\n\n\n\n\nts1"
           }
         ],
         "requestBody": {
