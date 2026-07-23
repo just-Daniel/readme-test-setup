@@ -277,7 +277,7 @@
                 "properties": {
                   "enabled": {
                     "type": "boolean",
-                    "description": "任务启用状态，\"true\"表示启用模拟器跟单交易"
+                    "description": "任务启用状态，\"true\"表示启用模拟器跟单交易\n\n\n\ngdgf\n\n\n\n\ngdgfd"
                   },
                   "name": {
                     "type": "string",
