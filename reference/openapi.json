@@ -1,0 +1,3142 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "Bakkt Stablecoin API for crypto-fiat conversions. Get wallet addresses, manage remote bank accounts, and track conversion transactions.",
+    "version": "2.1.9",
+    "title": "Stablecoin API",
+    "contact": {
+      "name": "Bakkt",
+      "url": "https://bakkt.com",
+      "email": "sales@bakkt.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://sandbox.api.bakkt.com/",
+      "description": "Bakkt Sandbox"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "apiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization",
+        "description": "Bakkt API key"
+      },
+      "bakktSessionId": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "bakkt-session-id",
+        "description": "Individual session_id (header name kept for backward compatibility)"
+      },
+      "bakktUserUuid": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "user-uuid",
+        "description": "Individual user_uuid"
+      }
+    },
+    "schemas": {
+      "unknown-error": {
+        "type": "object",
+        "properties": {
+          "error_id": {
+            "type": "string",
+            "example": "Root=1-64118425-5b233dc94ac4727878b35611;Parent=7bd132fc7513d006"
+          },
+          "message": {
+            "type": "string",
+            "example": "An Unknown error has happened, please reach out to the dev support of Bakkt."
+          }
+        }
+      },
+      "transaction-limits-response": {
+        "type": "object",
+        "properties": {
+          "limit_type": {
+            "type": "string",
+            "enum": [
+              "minimums"
+            ],
+            "description": "Category of limit returned"
+          },
+          "limit_amount": {
+            "type": "number",
+            "description": "Limit amount for the requested configuration"
+          }
+        }
+      },
+      "body-malformed-error": {
+        "type": "object",
+        "properties": {
+          "error_id": {
+            "type": "string",
+            "example": "Root=1-64118425-5b233dc94ac4727878b35611;Parent=7bd132fc7513d006"
+          },
+          "message": {
+            "type": "string",
+            "example": "Request body is malformed, please review the documentation: https://api.bakkt.com"
+          }
+        }
+      },
+      "unauthorized-error": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Invalid session_id or api key"
+          }
+        }
+      },
+      "parent-resource-not-found-error": {
+        "type": "object",
+        "properties": {
+          "error_id": {
+            "type": "string",
+            "example": "Root=1-64118425-5b233dc94ac4727878b35611;Parent=7bd132fc7513d006;Sampled=1"
+          },
+          "message": {
+            "type": "string",
+            "example": "The parent resource of the entity being created cannot be found."
+          }
+        }
+      },
+      "conflict-error": {
+        "type": "object",
+        "properties": {
+          "error_id": {
+            "type": "string",
+            "example": "Root=1-64118425-5b233dc94ac4727878b35611;Parent=7bd132fc7513d006;Sampled=1"
+          },
+          "message": {
+            "type": "string",
+            "example": "The resource already exists"
+          }
+        }
+      },
+      "bank-account-bakkt": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "example": "5594401c-0072-4df2-be9c-d491c0754c21"
+          },
+          "currency": {
+            "type": "string",
+            "enum": [
+              "EUR",
+              "GBP",
+              "USD",
+              "NGN"
+            ]
+          },
+          "bank_country": {
+            "type": "string",
+            "enum": [
+              "MT",
+              "NG",
+              "GB",
+              "DE",
+              "US"
+            ],
+            "example": "MT"
+          },
+          "iban": {
+            "type": "string",
+            "example": "AL472121100900000002356987411"
+          },
+          "bic": {
+            "type": "string",
+            "example": "CHASUS33"
+          },
+          "account_number": {
+            "type": "string",
+            "example": "37483967894"
+          },
+          "sort_code": {
+            "type": "string",
+            "example": "340958"
+          },
+          "bank_code": {
+            "type": "string",
+            "example": "101"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "ACTIVE",
+              "DISABLED"
+            ]
+          },
+          "bank_name": {
+            "type": "string",
+            "example": "The Bank",
+            "description": "The legal name of the bank providing the bank account"
+          },
+          "bank_address": {
+            "type": "string",
+            "example": "20, Bank's street, 432 PY9, London",
+            "description": "Legal registered address of the bank providing the bank account"
+          }
+        }
+      },
+      "bank-account-remote": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "example": "5594401c-0072-4df2-be9c-d491c0754c21"
+          },
+          "currency": {
+            "type": "string",
+            "enum": [
+              "EUR",
+              "GBP",
+              "INR",
+              "PKR",
+              "USD",
+              "NGN"
+            ]
+          },
+          "bank_country": {
+            "type": "string",
+            "example": "DE"
+          },
+          "iban": {
+            "type": "string",
+            "example": "AL472121100900000002356987411"
+          },
+          "bic": {
+            "type": "string",
+            "example": "CHASUS33"
+          },
+          "account_number": {
+            "type": "string",
+            "example": "37483967894"
+          },
+          "sort_code": {
+            "type": "string",
+            "example": "340958"
+          },
+          "bank_code": {
+            "type": "string",
+            "example": "101"
+          },
+          "bank_name": {
+            "type": "string",
+            "example": "Bank of America"
+          },
+          "account_name": {
+            "type": "string",
+            "example": "Olivia account"
+          },
+          "receiving_address": {
+            "type": "string",
+            "example": "0xCC0964076916291c8CBB198F350CcAa012345F67"
+          }
+        }
+      },
+      "transaction": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "All these status are also sent via our webhook",
+            "enum": [
+              "OUTSIDE_TRANSFER_IN_REVIEW",
+              "OUTSIDE_TRANSFER_REJECTED",
+              "OUTSIDE_TRANSFER_APPROVED",
+              "OUTSIDE_TRANSFER_RECEIVED",
+              "FINALIZE_PROCESS_FAILED",
+              "FINALITY_REACHED",
+              "WAITING_FOR_FINALITY",
+              "FINALITY_FAILED",
+              "PROCESS_BLOCKED",
+              "PROCESS_COMPLETED",
+              "PROCESS_INITIATION_FAILED",
+              "CRYPTO_TRANSFER_FAILED",
+              "CRYPTO_TRANSFER_IN_PROGRESS",
+              "CRYPTO_TRANSFER_ISSUED",
+              "CRYPTO_TRANSFER_COMPLETED",
+              "INTERLEDGER_TRANSFER_FAILED",
+              "INTERLEDGER_TRANSFER_IN_PROGRESS",
+              "INTERLEDGER_TRANSFER_ISSUED",
+              "INTERLEDGER_TRANSFER_COMPLETED",
+              "IBAN_TRANSFER_FAILED",
+              "IBAN_TRANSFER_IN_PROGRESS",
+              "IBAN_TRANSFER_ISSUED",
+              "IBAN_TRANSFER_COMPLETED",
+              "AML_CHECKS_FAILED",
+              "AML_CHECKS_IN_PROGRESS",
+              "AML_CHECKS_COMPLETED",
+              "ON_HOLD_KYC",
+              "ON_HOLD_PROCESS",
+              "ON_HOLD_REVIEW",
+              "REFUND_LACK_KYC",
+              "REFUND_TRANSACTION_REJECTED",
+              "REFUND_PAYIN_REJECTED",
+              "REFUND_PAYOUT_FAILED"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "example": "2023-02-27T16:37:26.982Z"
+          },
+          "user_uuid": {
+            "type": "string",
+            "example": "5594401c-0072-4df2-be9c-d491c0754c21"
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "cryptoToFiat",
+              "fiatToCrypto"
+            ]
+          },
+          "input": {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "type": "number",
+                "example": 10.23
+              },
+              "currency": {
+                "type": "string",
+                "enum": [
+                  "GBP",
+                  "EUR",
+                  "CEUR",
+                  "USDC",
+                  "USDCE",
+                  "USDT",
+                  "CUSD",
+                  "AGEUR"
+                ]
+              },
+              "transaction_id": {
+                "type": "string",
+                "description": "Either a transaction hash or a uuid for fiat transfers",
+                "example": "0xf7571e12301E70aCb89D5ACf0258F55c88AD097f"
+              },
+              "sender_details": {
+                "type": "object",
+                "description": "Only present for fiatToCrypto transactions and only available to certain merchants.",
+                "nullable": true,
+                "properties": {
+                  "sender_iban": {
+                    "type": "string",
+                    "nullable": true,
+                    "example": "GB29NWBK60161331926819"
+                  },
+                  "sender_account_number": {
+                    "type": "string",
+                    "nullable": true,
+                    "example": "31926819"
+                  },
+                  "sender_sort_code": {
+                    "type": "string",
+                    "nullable": true,
+                    "example": "601613"
+                  }
+                }
+              }
+            }
+          },
+          "output": {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "type": "number",
+                "example": 8.23
+              },
+              "currency": {
+                "type": "string",
+                "enum": [
+                  "GBP",
+                  "EUR",
+                  "CEUR",
+                  "USDC",
+                  "USDCE",
+                  "USDT",
+                  "CUSD",
+                  "AGEUR"
+                ]
+              },
+              "transaction_id": {
+                "type": "string",
+                "description": "Either a transaction hash or a uuid for fiat transfers",
+                "example": "5594401c-0072-4df2-be9c-d491c0754c21"
+              }
+            }
+          }
+        }
+      },
+      "chain-list": {
+        "type": "string",
+        "enum": [
+          "polygon",
+          "celo",
+          "optimism",
+          "arbitrum",
+          "tron",
+          "mainnet",
+          "solana",
+          "base",
+          "bsc",
+          "avalanche"
+        ]
+      },
+      "payout-fiat-list": {
+        "type": "string",
+        "enum": [
+          "EUR",
+          "GBP",
+          "USD",
+          "PKR",
+          "INR",
+          "TRY",
+          "NGN",
+          "MXN",
+          "BRL",
+          "ARS",
+          "IDR",
+          "PHP",
+          "AED",
+          "OMR",
+          "QAR",
+          "SGD",
+          "CAD"
+        ]
+      },
+      "fiat-list": {
+        "type": "string",
+        "enum": [
+          "EUR",
+          "GBP",
+          "USD",
+          "PKR",
+          "INR",
+          "TRY",
+          "NGN",
+          "MXN",
+          "BRL",
+          "ARS",
+          "IDR",
+          "PHP",
+          "AED",
+          "OMR",
+          "QAR",
+          "SGD",
+          "CAD"
+        ]
+      },
+      "supported-banks-fiat-list": {
+        "type": "string",
+        "enum": [
+          "NGN",
+          "INR",
+          "TRY",
+          "IDR",
+          "PHP",
+          "PKR",
+          "VND",
+          "COP",
+          "GHS",
+          "KES",
+          "JPY",
+          "GTQ",
+          "MXN",
+          "BRL",
+          "ARS",
+          "AED",
+          "OMR",
+          "QAR",
+          "SGD",
+          "CAD"
+        ]
+      },
+      "fiat-payment-method": {
+        "type": "string",
+        "description": "Fiat payment method. Must be one of the methods supported for the chosen `input_currency` (validated server-side). Supported methods per currency: EUR → SEPA_INSTANT, SEPA; GBP → FASTER_PAYMENTS; USD → ACH, WIRE, INT_WIRE; NGN → NIBSS; INR → IMPS, NEFT; MXN → SPEI; BRL → PIX; ARS, JPY, EGP, GTQ → SWIFT; PKR, KES, COP, AED, OMR, QAR → RTGS; TRY → FAST_TRY; IDR → BI_FAST; CNY → ALIPAY; PHP → INSTAPAY; VND → CITAD; GHS → SWIFT, RTGS.",
+        "enum": [
+          "SEPA",
+          "SEPA_INSTANT",
+          "FASTER_PAYMENTS",
+          "ACH",
+          "WIRE",
+          "INT_WIRE",
+          "NIBSS",
+          "IMPS",
+          "NEFT",
+          "SPEI",
+          "PIX",
+          "SWIFT",
+          "RTGS",
+          "FAST_TRY",
+          "BI_FAST",
+          "ALIPAY",
+          "INSTAPAY",
+          "CITAD"
+        ]
+      },
+      "fiat-currency": {
+        "type": "string",
+        "description": "Supported fiat currency code.",
+        "enum": [
+          "EUR",
+          "GBP",
+          "USD",
+          "NGN",
+          "PKR",
+          "INR",
+          "TRY",
+          "MXN",
+          "BRL",
+          "ARS",
+          "IDR",
+          "KES",
+          "CNY",
+          "PHP",
+          "AED",
+          "VND",
+          "COP",
+          "GHS",
+          "JPY",
+          "EGP",
+          "GTQ",
+          "OMR",
+          "QAR"
+        ]
+      },
+      "crypto-list": {
+        "type": "string",
+        "enum": [
+          "USDC",
+          "USDT",
+          "DAI",
+          "CEUR",
+          "CUSD",
+          "USDCE",
+          "agEUR"
+        ]
+      },
+      "custodial-wallet-status-list": {
+        "type": "string",
+        "enum": [
+          "Pending",
+          "Active"
+        ]
+      },
+      "fee-override-base": {
+        "type": "object",
+        "properties": {
+          "fee": {
+            "type": "number",
+            "description": "The fee value in decimals (e.g.: 0.01 corresponds to 1%)",
+            "example": 0.01
+          },
+          "input_currency": {
+            "type": "string",
+            "enum": [
+              "EUR",
+              "GBP",
+              "USD"
+            ],
+            "description": "If direction is offramp, the input currency represents tokens based on it"
+          },
+          "output_currency": {
+            "type": "string",
+            "enum": [
+              "EUR",
+              "GBP",
+              "USD",
+              "INR",
+              "PKR",
+              "NGN",
+              "MXN",
+              "BRL",
+              "ARS",
+              "TRY",
+              "IDR",
+              "PHP",
+              "VND",
+              "COP",
+              "JPY",
+              "GHS",
+              "KES",
+              "GTQ",
+              "AED",
+              "OMR",
+              "QAR",
+              "SGD",
+              "CAD"
+            ],
+            "description": "If direction is onramp, the output currency represents tokens based on it"
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "OFFRAMP",
+              "ONRAMP"
+            ]
+          },
+          "fee_op_type": {
+            "type": "string",
+            "enum": [
+              "add",
+              "subtract"
+            ]
+          },
+          "minimum_fee": {
+            "type": "number",
+            "description": "A fixed value to apply as a minimum fee",
+            "example": 1
+          },
+          "minimum_fee_currency": {
+            "type": "string",
+            "enum": [
+              "EUR",
+              "GBP",
+              "USD",
+              "INR",
+              "PKR",
+              "NGN",
+              "MXN",
+              "BRL",
+              "ARS",
+              "TRY",
+              "IDR",
+              "PHP",
+              "VND",
+              "COP",
+              "JPY",
+              "GHS",
+              "KES",
+              "GTQ",
+              "AED",
+              "OMR",
+              "QAR",
+              "SGD",
+              "CAD"
+            ],
+            "description": "Currency for the minimum fee. Required when minimum_fee is provided"
+          },
+          "fixed_fee": {
+            "type": "number",
+            "description": "A fixed fee amount added on top of the percentage fee"
+          },
+          "payment_method": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "SEPA",
+              "SEPA_INSTANT",
+              "FASTER_PAYMENTS",
+              "ACH",
+              "WIRE",
+              "INT_WIRE",
+              "NIBSS",
+              "IMPS",
+              "NEFT",
+              "SPEI",
+              "PIX",
+              "SWIFT",
+              "RTGS",
+              "FAST_TRY",
+              "BI_FAST",
+              "ALIPAY",
+              "INSTAPAY",
+              "CITAD"
+            ],
+            "description": "Fiat payment method this fee applies to. When set, the fee only applies to transactions using the specified payment method."
+          }
+        }
+      },
+      "user-fee-override-item": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/fee-override-base"
+          },
+          {
+            "type": "object",
+            "required": [
+              "fee",
+              "direction",
+              "fee_op_type",
+              "user_uuid"
+            ],
+            "properties": {
+              "user_uuid": {
+                "type": "string",
+                "format": "uuid",
+                "description": "UUID of the end user this override applies to"
+              }
+            }
+          }
+        ]
+      },
+      "corporate-fee-override-item": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/fee-override-base"
+          },
+          {
+            "type": "object",
+            "required": [
+              "fee",
+              "direction",
+              "fee_op_type",
+              "company_uuid"
+            ],
+            "properties": {
+              "company_uuid": {
+                "type": "string",
+                "format": "uuid",
+                "description": "UUID of the corporate (company) entity this override applies to"
+              }
+            }
+          }
+        ]
+      },
+      "user-fee-override-patch-body": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/user-fee-override-item"
+          },
+          {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/user-fee-override-item"
+            }
+          }
+        ]
+      },
+      "corporate-fee-override-patch-body": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/corporate-fee-override-item"
+          },
+          {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/corporate-fee-override-item"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Users — Wallets",
+      "description": "Bakkt wallet addresses for individual users (off-ramp destinations)"
+    },
+    {
+      "name": "Users — Remote Bank Accounts",
+      "description": "Manage a user's fiat remote bank accounts used as off-ramp payout destinations"
+    },
+    {
+      "name": "Users — Converting Fiat to Crypto",
+      "description": "User on-ramp: stablecoin fiat accounts, bank linking (Plaid), and fiat-to-crypto conversions"
+    },
+    {
+      "name": "Users — Token Preferences",
+      "description": "Per-user preferences for the stablecoin received on conversions"
+    },
+    {
+      "name": "Users — Transactions & Statements",
+      "description": "Transaction history and account statements for individual users"
+    },
+    {
+      "name": "Users — Fees",
+      "description": "Per-user fee overrides"
+    },
+    {
+      "name": "Corporates — Wallets",
+      "description": "Corporate Bakkt wallets, including single-use off-ramp wallets"
+    },
+    {
+      "name": "Corporates — Remote Bank Accounts",
+      "description": "Manage a corporate's fiat remote bank accounts used as off-ramp payout destinations"
+    },
+    {
+      "name": "Corporates — Converting Fiat to Crypto",
+      "description": "Corporate on-ramp: stablecoin fiat accounts and fiat-to-crypto conversions"
+    },
+    {
+      "name": "Corporates — Token Preferences",
+      "description": "Per-corporate preferences for the stablecoin received on conversions"
+    },
+    {
+      "name": "Corporates — Transactions & Statements",
+      "description": "Transaction history and account statements for corporates"
+    },
+    {
+      "name": "Corporates — Fees",
+      "description": "Per-corporate fee overrides"
+    },
+    {
+      "name": "Custodial Wallets",
+      "description": "Create and manage custodial wallets with smart contract security"
+    },
+    {
+      "name": "Merchant",
+      "description": "Merchant-level configuration: fees, transaction-fee history, and micro-deposit management"
+    },
+    {
+      "name": "Reference Data",
+      "description": "Supported chains, currencies, banks, fees, indicative quotes, exchange rates, and receipt URLs"
+    }
+  ],
+  "paths": {
+    "/stablecoin/user/bank-account/remote": {
+      "post": {
+        "tags": [
+          "Users — Remote Bank Accounts"
+        ],
+        "summary": "[USERS] Create remote bank account",
+        "description": "Create a remote bank account where exchanged crypto will be sent to in fiat. KYC is required.\n\n**Important:** When providing third party details (`third_party_details`), the `recipient_first_name` and `recipient_last_name` fields must contain at least one letter. Names containing only digits are not accepted.\n\n**USD accounts:** `transfer_method` is required (`ACH` for domestic ACH, `WIRE` for domestic Fedwire, or `INT_WIRE` for an international SWIFT wire). `ACH`/`WIRE` use `account_number` + `routing_number`; `INT_WIRE` uses `swift_code` plus exactly one of `account_number` or `iban` (no `routing_number`). When `recipient_type` is `THIRD_PARTY` and `transfer_method` is `WIRE` or `INT_WIRE`, `third_party_details` (recipient name + address) must be provided.",
+        "security": [
+          {
+            "apiKeyAuth": [],
+            "bakktSessionId": []
+          },
+          {
+            "apiKeyAuth": [],
+            "bakktSessionId": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "account_name",
+                  "account_details"
+                ],
+                "properties": {
+                  "account_name": {
+                    "type": "string",
+                    "example": "Main Bank Account",
+                    "description": "Alias for User Remote Bank Account"
+                  },
+                  "main_recipient": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Setting this as true will set the account as the default off ramp bank account for a given user"
+                  },
+                  "recipient_type": {
+                    "type": "string",
+                    "enum": [
+                      "SELF",
+                      "THIRD_PARTY"
+                    ],
+                    "description": "Recipient type (SELF or THIRD_PARTY)"
+                  },
+                  "account_details": {
+                    "type": "object",
+                    "description": "Select account type based on currency: USD (ACH/Wire = Account+Routing, Int'l Wire = SWIFT + Account/IBAN), EUR (IBAN), GBP (Account+Sort), PKR (with customer details), INR (IFSC, SWIFT/BIC, bank name, remittance fields), TRY (IBAN), NGN (Account+Bank code), MXN/PHP/IDR/AED/OMR/QAR/GTQ (full remittance details), GHS (Mobile wallet or Bank account), BRL (PIX key), ARS (Account+Tax ID)",
+                    "oneOf": [
+                      {
+                        "title": "🇺🇸 United States (USD) — ACH",
+                        "type": "object",
+                        "required": [
+                          "currency",
+                          "transfer_method",
+                          "account_number",
+                          "routing_number"
+                        ],
+                        "properties": {
+                          "currency": {
+                            "type": "string",
+                            "enum": [
+                              "USD"
+                            ]
+                          },
+                          "transfer_method": {
+                            "type": "string",
+                            "description": "Domestic ACH transfer. Requires `account_number` + `routing_number`.",
+                            "enum": [
+                              "ACH"
+                            ]
+                          },
+                          "account_number": {
+                            "type": "string",
+                            "description": "The bank account number (digits only, 8–12 characters).",
+                            "example": "12365498",
+                            "minLength": 8,
+                            "maxLength": 12
+                          },
+                          "routing_number": {
+                            "type": "string",
+                            "description": "The 9-digit ABA routing number of the recipient's US bank.",
+                            "example": "026009593",
+                            "minLength": 9,
+                            "maxLength": 9
+                          },
+                          "account_type": {
+                            "type": "string",
+                            "description": "Bank account type.",
+                            "enum": [
+                              "checking",
+                              "savings"
+                            ],
+                            "example": "checking"
+                          },
+                          "recipient_relationship": {
+                            "type": "string",
+                            "description": "The recipient's relationship to the sender.",
+                            "enum": [
+                              "First Party",
+                              "Employee",
+                              "Independent Contractor",
+                              "Vendor or Supplier",
+                              "Subsidiary or Affiliate",
+                              "Merchant or Partner",
+                              "Customer",
+                              "Landlord",
+                              "Family",
+                              "Other"
+                            ],
+                            "example": "First Party"
+                          },
+                          "bank_name": {
+                            "type": "string",
+                            "description": "The name of the recipient's bank.",
+                            "example": "Lead Bank"
+                          }
+                        }
+                      },
+                      {
+                        "title": "🇺🇸 United States (USD) — Domestic Wire",
+                        "type": "object",
+                        "required": [
+                          "currency",
+                          "transfer_method",
+                          "account_number",
+                          "routing_number"
+                        ],
+                        "properties": {
+                          "currency": {
+                            "type": "string",
+                            "enum": [
+                              "USD"
+                            ]
+                          },
+                          "transfer_method": {
+                            "type": "string",
+                            "description": "Domestic Fedwire transfer. Requires `account_number` + `routing_number`. When `recipient_type` is `THIRD_PARTY`, `third_party_details` (recipient name + full US address) is required.",
+                            "enum": [
+                              "WIRE"
+                            ]
+                          },
+                          "account_number": {
+                            "type": "string",
+                            "description": "The bank account number (digits only, 8–12 characters).",
+                            "example": "12365498",
+                            "minLength": 8,
+                            "maxLength": 12
+                          },
+                          "routing_number": {
+                            "type": "string",
+                            "description": "The 9-digit ABA routing number of the recipient's US bank.",
+                            "example": "026009593",
+                            "minLength": 9,
+                            "maxLength": 9
+                          },
+                          "account_type": {
+                            "type": "string",
+                            "description": "Bank account type.",
+                            "enum": [
+                              "checking",
+                              "savings"
+                            ],
+                            "example": "checking"
+                          },
+                          "recipient_relationship": {
+                            "type": "string",
+                            "description": "The recipient's relationship to the sender.",
+                            "enum": [
+                              "First Party",
+                              "Employee",
+                              "Independent Contractor",
+                              "Vendor or Supplier",
+                              "Subsidiary or Affiliate",
+                              "Merchant or Partner",
+                              "Customer",
+                              "Landlord",
+                              "Family",
+                              "Other"
+                            ],
+                            "example": "First Party"
+                          },
+                          "bank_name": {
+                            "type": "string",
+                            "description": "The name of the recipient's bank.",
+                            "example": "Lead Bank"
+                          },
+                          "third_party_details": {
+                            "type": "object",
+                            "description": "Required when `recipient_type` is `THIRD_PARTY`. Identifies the third-party recipient and is used by the wire rail.",
+                            "required": [
+                              "recipient_first_name",
+                              "recipient_last_name",
+                              "recipient_address_line",
+                              "recipient_country",
+                              "recipient_city",
+                              "recipient_state",
+                              "recipient_postal_code"
+                            ],
+                            "properties": {
+                              "recipient_first_name": {
+                                "type": "string",
+                                "description": "Recipient's first name (must contain at least one letter)",
+                                "example": "John"
+                              },
+                              "recipient_last_name": {
+                                "type": "string",
+                                "description": "Recipient's last name (must contain at least one letter)",
+                                "example": "Doe"
+                              },
+                              "recipient_address_line": {
+                                "type": "string",
+                                "description": "Street address line for the wire recipient",
+                                "example": "123 Main St"
+                              },
+                              "recipient_country": {
+                                "type": "string",
+                                "description": "ISO 3166-1 alpha-2 country code (uppercase)",
+                                "example": "US"
+                              },
+                              "recipient_city": {
+                                "type": "string",
+                                "description": "City of the wire recipient",
+                                "example": "New York"
+                              },
+                              "recipient_state": {
+                                "type": "string",
+                                "description": "State or region of the wire recipient",
+                                "example": "NY"
+                              },
+                              "recipient_postal_code": {
+                                "type": "string",
+                                "description": "Postal / ZIP code of the wire recipient",
+                                "example": "10001"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "title": "🇺🇸 United States (USD) — International Wire (Account Number)",
+                        "type": "object",
+                        "required": [
+                          "currency",
+                          "transfer_method",
+                          "swift_code",
+                          "account_number"
+                        ],
+                        "properties": {
+                          "currency": {
+                            "type": "string",
+                            "enum": [
+                              "USD"
+                            ]
+                          },
+                          "transfer_method": {
+                            "type": "string",
+                            "description": "International SWIFT wire using an account number. Requires `swift_code` + `account_number`. When `recipient_type` is `THIRD_PARTY`, `third_party_details` (recipient name + `recipient_address_line`, `recipient_city`, `recipient_country`) is required.",
+                            "enum": [
+                              "INT_WIRE"
+                            ]
+                          },
+                          "swift_code": {
+                            "type": "string",
+                            "description": "The recipient bank's BIC/SWIFT code (8 or 11 characters).",
+                            "example": "DEUTDEFF"
+                          },
+                          "account_number": {
+                            "type": "string",
+                            "description": "The bank account number (up to 17 characters).",
+                            "example": "12365498",
+                            "minLength": 8,
+                            "maxLength": 17
+                          },
+                          "account_type": {
+                            "type": "string",
+                            "description": "Bank account type.",
+                            "enum": [
+                              "checking",
+                              "savings"
+                            ],
+                            "example": "checking"
+                          },
+                          "recipient_relationship": {
+                            "type": "string",
+                            "description": "The recipient's relationship to the sender.",
+                            "enum": [
+                              "First Party",
+                              "Employee",
+                              "Independent Contractor",
+                              "Vendor or Supplier",
+                              "Subsidiary or Affiliate",
+                              "Merchant or Partner",
+                              "Customer",
+                              "Landlord",
+                              "Family",
+                              "Other"
+                            ],
+                            "example": "First Party"
+                          },
+                          "bank_name": {
+                            "type": "string",
+                            "description": "The name of the recipient's bank.",
+                            "example": "Lead Bank"
+                          },
+                          "third_party_details": {
+                            "type": "object",
+                            "description": "Required when `recipient_type` is `THIRD_PARTY`. Identifies the third-party recipient and is used by the wire rail.",
+                            "required": [
+                              "recipient_first_name",
+                              "recipient_last_name",
+                              "recipient_address_line",
+                              "recipient_country",
+                              "recipient_city"
+                            ],
+                            "properties": {
+                              "recipient_first_name": {
+                                "type": "string",
+                                "description": "Recipient's first name (letters and common name punctuation only; must not contain digits)",
+                                "example": "John"
+                              },
+                              "recipient_last_name": {
+                                "type": "string",
+                                "description": "Recipient's last name (letters and common name punctuation only; must not contain digits)",
+                                "example": "Doe"
+                              },
+                              "recipient_address_line": {
+                                "type": "string",
+                                "description": "Street address line for the wire recipient",
+                                "example": "123 Main St"
+                              },
+                              "recipient_country": {
+                                "type": "string",
+                                "description": "ISO 3166-1 alpha-2 country code (uppercase)",
+                                "example": "US"
+                              },
+                              "recipient_city": {
+                                "type": "string",
+                                "description": "City of the wire recipient",
+                                "example": "New York"
+                              },
+                              "recipient_state": {
+                                "type": "string",
+                                "description": "State or region of the wire recipient (optional for international wire)",
+                                "example": "NY"
+                              },
+                              "recipient_postal_code": {
+                                "type": "string",
+                                "description": "Postal / ZIP code of the wire recipient (optional for international wire)",
+                                "example": "10001"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "title": "🇺🇸 United States (USD) — International Wire (IBAN)",
+                        "type": "object",
+                        "required": [
+                          "currency",
+                          "transfer_method",
+                          "swift_code",
+                          "iban"
+                        ],
+                        "properties": {
+                          "currency": {
+                            "type": "string",
+                            "enum": [
+                              "USD"
+                            ]
+                          },
+                          "transfer_method": {
+                            "type": "string",
+                            "description": "International SWIFT wire using an IBAN. Requires `swift_code` + `iban`. When `recipient_type` is `THIRD_PARTY`, `third_party_details` (recipient name + `recipient_address_line`, `recipient_city`, `recipient_country`) is required.",
+                            "enum": [
+                              "INT_WIRE"
+                            ]
+                          },
+                          "swift_code": {
+                            "type": "string",
+                            "description": "The recipient bank's BIC/SWIFT code (8 or 11 characters).",
+                            "example": "DEUTDEFF"
+                          },
+                          "iban": {
+                            "type": "string",
+                            "description": "International Bank Account Number of the recipient.",
+                            "example": "GB29NWBK60161331926819"
+                          },
+                          "recipient_relationship": {
+                            "type": "string",
+                            "description": "The recipient's relationship to the sender.",
+                            "enum": [
+                              "First Party",
+                              "Employee",
+                              "Independent Contractor",
+                              "Vendor or Supplier",
+                              "Subsidiary or Affiliate",
+                              "Merchant or Partner",
+                              "Customer",
+                              "Landlord",
+                              "Family",
+                              "Other"
+                            ],
+                            "example": "First Party"
+                          },
+                          "bank_name": {
+                            "type": "string",
+                            "description": "The name of the recipient's bank.",
+                            "example": "Lead Bank"
+                          },
+                          "third_party_details": {
+                            "type": "object",
+                            "description": "Required when `recipient_type` is `THIRD_PARTY`. Identifies the third-party recipient and is used by the wire rail.",
+                            "required": [
+                              "recipient_first_name",
+                              "recipient_last_name",
+                              "recipient_address_line",
+                              "recipient_country",
+                              "recipient_city"
+                            ],
+                            "properties": {
+                              "recipient_first_name": {
+                                "type": "string",
+                                "description": "Recipient's first name (must contain at least one letter)",
+                                "example": "John"
+                              },
+                              "recipient_last_name": {
+                                "type": "string",
+                                "description": "Recipient's last name (must contain at least one letter)",
+                                "example": "Doe"
+                              },
+                              "recipient_address_line": {
+                                "type": "string",
+                                "description": "Street address line for the wire recipient",
+                                "example": "123 Main St"
+                              },
+                              "recipient_country": {
+                                "type": "string",
+                                "description": "ISO 3166-1 alpha-2 country code (uppercase)",
+                                "example": "US"
+                              },
+                              "recipient_city": {
+                                "type": "string",
+                                "description": "City of the wire recipient",
+                                "example": "New York"
+                              },
+                              "recipient_state": {
+                                "type": "string",
+                                "description": "State or region of the wire recipient (optional for international wire)",
+                                "example": "NY"
+                              },
+                              "recipient_postal_code": {
+                                "type": "string",
+                                "description": "Postal / ZIP code of the wire recipient (optional for international wire)",
+                                "example": "10001"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "title": "🇬🇧 United Kingdom (GBP)",
+                        "type": "object",
+                        "required": [
+                          "currency",
+                          "account_number",
+                          "sort_code"
+                        ],
+                        "properties": {
+                          "currency": {
+                            "type": "string",
+                            "enum": [
+                              "GBP"
+                            ]
+                          },
+                          "account_number": {
+                            "type": "string",
+                            "description": "Bank account number",
+                            "example": "31926819"
+                          },
+                          "sort_code": {
+                            "type": "string",
+                            "description": "Bank sort code without hyphens",
+                            "example": "401664"
+                          },
+                          "third_party_details": {
+                            "type": "object",
+                            "description": "Required when `recipient_type` is `THIRD_PARTY`. Identifies the third-party recipient who owns this bank account.",
+                            "required": [
+                              "recipient_first_name",
+                              "recipient_last_name"
+                            ],
+                            "properties": {
+                              "recipient_first_name": {
+                                "type": "string",
+                                "description": "Recipient's first name (letters and common name punctuation only; must not contain digits)",
+                                "example": "John"
+                              },
+                              "recipient_last_name": {
+                                "type": "string",
+                                "description": "Recipient's last name (letters and common name punctuation only; must not contain digits)",
+                                "example": "Doe"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "title": "🇪🇺 Eurozone (EUR)",
+                        "type": "object",
+                        "required": [
+                          "currency",
+                          "iban"
+                        ],
+                        "properties": {
+                          "currency": {
+                            "type": "string",
+                            "enum": [
+                              "EUR"
+                            ]
+                          },
+                          "iban": {
+                            "type": "string",
+                            "example": "PT50002700000001234567833"
+                          },
+                          "third_party_details": {
+                            "type": "object",
+                            "description": "Required when `recipient_type` is `THIRD_PARTY`. Identifies the third-party recipient who owns this bank account.",
+                            "required": [
+                              "recipient_first_name",
+                              "recipient_last_name"
+                            ],
+                            "properties": {
+                              "recipient_first_name": {
+                                "type": "string",
+                                "description": "Recipient's first name (letters and common name punctuation only; must not contain digits)",
+                                "example": "John"
+                              },
+                              "recipient_last_name": {
+                                "type": "string",
+                                "description": "Recipient's last name (letters and common name punctuation only; must not contain digits)",
+                                "example": "Doe"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "title": "🇵🇰 Pakistan (PKR)",
+                        "type": "object",
+                        "required": [
+                          "currency",
+                          "account_number",
+                          "swift_code",
+                          "bank_name",
+                          "recipient_relationship",
+                          "remittance_purpose"
+                        ],
+                        "properties": {
+                          "currency": {
+                            "type": "string",
+                            "enum": [
+                              "PKR"
+                            ]
+                          },
+                          "account_number": {
+                            "type": "string",
+                            "description": "Either a Pakistani IBAN (starts with `PK`, 24 characters total: `PK\\d{2}[A-Z0-9]{20}`) or a 10-16 digit local account number",
+                            "example": "PK49MUCB0157509401004943"
+                          },
+                          "swift_code": {
+                            "type": "string",
+                            "description": "The bank's SWIFT/BIC code",
+                            "example": "MUCBPKKA"
+                          },
+                          "bank_name": {
+                            "type": "string",
+                            "description": "The name of the recipient's bank",
+                            "example": "MCB Bank Limited"
+                          },
+                          "recipient_relationship": {
+                            "type": "string",
+                            "description": "The relationship that recipient has with sender",
+                            "example": "Self",
+                            "enum": [
+                              "Self",
+                              "Friend",
+                              "Employer",
+                              "Colleague",
+                              "Family",
+                              "Husband",
+                              "Wife",
+                              "Father",
+                              "Mother",
+                              "Son",
+                              "Daughter",
+                              "Brother",
+                              "Sister"
+                            ]
+                          },
+                          "remittance_purpose": {
+                            "type": "string",
+                            "description": "The purpose of the remittance",
+                            "example": "Salary",
+                            "enum": [
+                              "Salary",
+                              "Real Estate",
+                              "Savings",
+                              "Gift",
+                              "Education Support",
+                              "Home Improvement"
+                            ]
+                          },
+                          "third_party_details": {
+                            "type": "object",
+                            "description": "Required when `recipient_type` is `THIRD_PARTY`. Identifies the third-party recipient who owns this bank account.",
+                            "required": [
+                              "recipient_first_name",
+                              "recipient_last_name"
+                            ],
+                            "properties": {
+                              "recipient_first_name": {
+                                "type": "string",
+                                "description": "Recipient's first name (letters and common name punctuation only; must not contain digits)",
+                                "example": "John"
+                              },
+                              "recipient_last_name": {
+                                "type": "string",
+                                "description": "Recipient's last name (letters and common name punctuation only; must not contain digits)",
+                                "example": "Doe"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "title": "🇮🇳 India (INR)",
+                        "type": "object",
+                        "required": [
+                          "currency",
+                          "account_number",
+                          "ifsc",
+                          "swift_code",
+                          "bank_name",
+                          "recipient_relationship",
+                          "remittance_purpose"
+                        ],
+                        "properties": {
+                          "currency": {
+                            "type": "string",
+                            "enum": [
+                              "INR"
+                            ]
+                          },
+                          "account_number": {
+                            "type": "string",
+                            "description": "The bank account number (digits only, 5–20 characters)",
+                            "example": "2982352921"
+                          },
+                          "ifsc": {
+                            "type": "string",
+                            "description": "The bank's IFSC: 4 uppercase letters, digit 0, then 6 alphanumeric characters",
+                            "example": "SBIN0001140"
+                          },
+                          "swift_code": {
+                            "type": "string",
+                            "description": "The bank's SWIFT/BIC code",
+                            "example": "IDIBINBBXXX"
+                          },
+                          "bank_name": {
+                            "type": "string",
+                            "description": "The beneficiary bank name (must match a supported bank for INR)",
+                            "example": "Standard Chartered Bank"
+                          },
+                          "recipient_relationship": {
+                            "type": "string",
+                            "description": "The relationship that recipient has with sender",
+                            "example": "Self",
+                            "enum": [
+                              "Self",
+                              "Friend",
+                              "Employer",
+                              "Colleague",
+                              "Family",
+                              "Husband",
+                              "Wife",
+                              "Father",
+                              "Mother",
+                              "Son",
+                              "Daughter",
+                              "Brother",
+                              "Sister"
+                            ]
+                          },
+                          "remittance_purpose": {
+                            "type": "string",
+                            "description": "The purpose of the remittance",
+                            "example": "Salary",
+                            "enum": [
+                              "Salary",
+                              "Real Estate",
+                              "Savings",
+                              "Gift",
+                              "Education Support",
+                              "Home Improvement"
+                            ]
+                          },
+                          "third_party_details": {
+                            "type": "object",
+                            "description": "Required when `recipient_type` is `THIRD_PARTY`. Identifies the third-party recipient who owns this bank account.",
+                            "required": [
+                              "recipient_first_name",
+                              "recipient_last_name"
+                            ],
+                            "properties": {
+                              "recipient_first_name": {
+                                "type": "string",
+                                "description": "Recipient's first name (letters and common name punctuation only; must not contain digits)",
+                                "example": "John"
+                              },
+                              "recipient_last_name": {
+                                "type": "string",
+                                "description": "Recipient's last name (letters and common name punctuation only; must not contain digits)",
+                                "example": "Doe"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "title": "🇹🇷 Türkiye (TRY)",
+                        "type": "object",
+                        "required": [
+                          "currency",
+                          "account_number",
+                          "swift_code",
+                          "bank_name",
+                          "recipient_relationship",
+                          "remittance_purpose"
+                        ],
+                        "properties": {
+                          "currency": {
+                            "type": "string",
+                            "enum": [
+                              "TRY"
+                            ]
+                          },
+                          "account_number": {
+                            "type": "string",
+                            "description": "The bank account number (5-26 characters; a Turkish IBAN is accepted)",
+                            "example": "TR680006400000112170547027",
+                            "minLength": 5,
+                            "maxLength": 26
+                          },
+                          "swift_code": {
+                            "type": "string",
+                            "description": "The bank's SWIFT/BIC code",
+                            "example": "TEBUTRISXXX"
+                          },
+                          "bank_name": {
+                            "type": "string",
+                            "description": "The name of the recipient's bank",
+                            "example": "Türkiye Ekonomi Bankasi"
+                          },
+                          "recipient_relationship": {
+                            "type": "string",
+                            "description": "The relationship that recipient has with sender",
+                            "example": "Self",
+                            "enum": [
+                              "Self",
+                              "Friend",
+                              "Employer",
+                              "Colleague",
+                              "Family",
+                              "Husband",
+                              "Wife",
+                              "Father",
+                              "Mother",
+                              "Son",
+                              "Daughter",
+                              "Brother",
+                              "Sister"
+                            ]
+                          },
+                          "remittance_purpose": {
+                            "type": "string",
+                            "description": "The purpose of the remittance",
+                            "example": "Salary",
+                            "enum": [
+                              "Salary",
+                              "Real Estate",
+                              "Savings",
+                              "Gift",
+                              "Education Support",
+                              "Home Improvement"
+                            ]
+                          },
+                          "third_party_details": {
+                            "type": "object",
+                            "description": "Required when `recipient_type` is `THIRD_PARTY`. Identifies the third-party recipient who owns this bank account.",
+                            "required": [
+                              "recipient_first_name",
+                              "recipient_last_name"
+                            ],
+                            "properties": {
+                              "recipient_first_name": {
+                                "type": "string",
+                                "description": "Recipient's first name (letters and common name punctuation only; must not contain digits)",
+                                "example": "John"
+                              },
+                              "recipient_last_name": {
+                                "type": "string",
+                                "description": "Recipient's last name (letters and common name punctuation only; must not contain digits)",
+                                "example": "Doe"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "title": "🇳🇬 Nigeria (NGN)",
+                        "type": "object",
+                        "required": [
+                          "currency",
+                          "account_number",
+                          "bank_code"
+                        ],
+                        "properties": {
+                          "currency": {
+                            "type": "string",
+                            "enum": [
+                              "NGN"
+                            ]
+                          },
+                          "account_number": {
+                            "type": "string",
+                            "description": "The NUBAN number (10-digits)",
+                            "example": "2982352921"
+                          },
+                          "bank_code": {
+                            "type": "string",
+                            "description": "The bank's code (3-digits)",
+                            "example": "NBP"
+                          },
+                          "third_party_details": {
+                            "type": "object",
+                            "description": "Required when `recipient_type` is `THIRD_PARTY`. Identifies the third-party recipient who owns this bank account.",
+                            "required": [
+                              "recipient_first_name",
+                              "recipient_last_name"
+                            ],
+                            "properties": {
+                              "recipient_first_name": {
+                                "type": "string",
+                                "description": "Recipient's first name (letters and common name punctuation only; must not contain digits)",
+                                "example": "John"
+                              },
+                              "recipient_last_name": {
+                                "type": "string",
+                                "description": "Recipient's last name (letters and common name punctuation only; must not contain digits)",
+                                "example": "Doe"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "title": "🇲🇽 Mexico (MXN)",
+                        "type": "object",
+                        "required": [
+                          "currency",
+                          "account_number",
+                          "recipient_relationship",
+                          "remittance_purpose"
+                        ],
+                        "properties": {
+                          "currency": {
+                            "type": "string",
+                            "enum": [
+                              "MXN"
+                            ]
+                          },
+                          "account_number": {
+                            "type": "string",
+                            "description": "The bank account number in CLABE format (digits only, exactly 18 characters)",
+                            "example": "002010077777777771",
+                            "minLength": 18,
+                            "maxLength": 18,
+                            "pattern": "^[0-9]{18}$"
+                          },
+                          "recipient_relationship": {
+                            "type": "string",
+                            "description": "The relationship that recipient has with sender",
+                            "example": "Self",
+                            "enum": [
+                              "Self",
+                              "Friend",
+                              "Employer",
+                              "Colleague",
+                              "Family",
+                              "Husband",
+                              "Wife",
+                              "Father",
+                              "Mother",
+                              "Son",
+                              "Daughter",
+                              "Brother",
+                              "Sister"
+                            ]
+                          },
+                          "remittance_purpose": {
+                            "type": "string",
+                            "description": "The purpose of the remittance",
+                            "example": "Gift",
+                            "enum": [
+                              "Salary",
+                              "Real Estate",
+                              "Savings",
+                              "Gift",
+                              "Education Support",
+                              "Home Improvement"
+                            ]
+                          },
+                          "third_party_details": {
+                            "type": "object",
+                            "description": "Required when `recipient_type` is `THIRD_PARTY`. Identifies the third-party recipient who owns this bank account.",
+                            "required": [
+                              "recipient_first_name",
+                              "recipient_last_name"
+                            ],
+                            "properties": {
+                              "recipient_first_name": {
+                                "type": "string",
+                                "description": "Recipient's first name (letters and common name punctuation only; must not contain digits)",
+                                "example": "John"
+                              },
+                              "recipient_last_name": {
+                                "type": "string",
+                                "description": "Recipient's last name (letters and common name punctuation only; must not contain digits)",
+                                "example": "Doe"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "title": "🇧🇷 Brazil (BRL)",
+                        "type": "object",
+                        "required": [
+                          "currency",
+                          "pix_key",
+                          "tax_id",
+                          "recipient_relationship",
+                          "remittance_purpose"
+                        ],
+                        "properties": {
+                          "currency": {
+                            "type": "string",
+                            "enum": [
+                              "BRL"
+                            ]
+                          },
+                          "pix_key": {
+                            "type": "string",
+                            "description": "PIX key for Brazilian payments. Can be an email address, phone number, CPF, or bank account number. CNPJ is not accepted.",
+                            "example": "edee3d60-a20b-4a87-aca5-83d00d6167c9"
+                          },
+                          "tax_id": {
+                            "type": "string",
+                            "example": "93659452101",
+                            "description": "CPF format"
+                          },
+                          "recipient_relationship": {
+                            "type": "string",
+                            "description": "The relationship that recipient has with sender",
+                            "example": "Self",
+                            "enum": [
+                              "Self",
+                              "Friend",
+                              "Employer",
+                              "Colleague",
+                              "Family",
+                              "Husband",
+                              "Wife",
+                              "Father",
+                              "Mother",
+                              "Son",
+                              "Daughter",
+                              "Brother",
+                              "Sister"
+                            ]
+                          },
+                          "remittance_purpose": {
+                            "type": "string",
+                            "description": "The purpose of the remittance",
+                            "example": "Gift",
+                            "enum": [
+                              "Salary",
+                              "Real Estate",
+                              "Savings",
+                              "Gift",
+                              "Education Support",
+                              "Home Improvement"
+                            ]
+                          },
+                          "third_party_details": {
+                            "type": "object",
+                            "description": "Required when `recipient_type` is `THIRD_PARTY`. Identifies the third-party recipient who owns this bank account.",
+                            "required": [
+                              "recipient_first_name",
+                              "recipient_last_name"
+                            ],
+                            "properties": {
+                              "recipient_first_name": {
+                                "type": "string",
+                                "description": "Recipient's first name (letters and common name punctuation only; must not contain digits)",
+                                "example": "John"
+                              },
+                              "recipient_last_name": {
+                                "type": "string",
+                                "description": "Recipient's last name (letters and common name punctuation only; must not contain digits)",
+                                "example": "Doe"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "title": "🇦🇷 Argentina (ARS)",
+                        "type": "object",
+                        "required": [
+                          "currency",
+                          "account_number",
+                          "tax_id",
+                          "recipient_relationship",
+                          "remittance_purpose"
+                        ],
+                        "properties": {
+                          "currency": {
+                            "type": "string",
+                            "enum": [
+                              "ARS"
+                            ]
+                          },
+                          "account_number": {
+                            "type": "string",
+                            "description": "The bank account number",
+                            "example": "0070011520000021741969"
+                          },
+                          "tax_id": {
+                            "type": "string",
+                            "description": "Tax ID (CUIT)",
+                            "example": "30715470701"
+                          },
+                          "recipient_relationship": {
+                            "type": "string",
+                            "description": "The relationship that recipient has with sender",
+                            "example": "Self",
+                            "enum": [
+                              "Self",
+                              "Friend",
+                              "Employer",
+                              "Colleague",
+                              "Family",
+                              "Husband",
+                              "Wife",
+                              "Father",
+                              "Mother",
+                              "Son",
+                              "Daughter",
+                              "Brother",
+                              "Sister"
+                            ]
+                          },
+                          "remittance_purpose": {
+                            "type": "string",
+                            "description": "The purpose of the remittance",
+                            "example": "Gift",
+                            "enum": [
+                              "Salary",
+                              "Real Estate",
+                              "Savings",
+                              "Gift",
+                              "Education Support",
+                              "Home Improvement"
+                            ]
+                          },
+                          "third_party_details": {
+                            "type": "object",
+                            "description": "Required when `recipient_type` is `THIRD_PARTY`. Identifies the third-party recipient who owns this bank account.",
+                            "required": [
+                              "recipient_first_name",
+                              "recipient_last_name"
+                            ],
+                            "properties": {
+                              "recipient_first_name": {
+                                "type": "string",
+                                "description": "Recipient's first name (letters and common name punctuation only; must not contain digits)",
+                                "example": "John"
+                              },
+                              "recipient_last_name": {
+                                "type": "string",
+                                "description": "Recipient's last name (letters and common name punctuation only; must not contain digits)",
+                                "example": "Doe"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "title": "🇮🇩 Indonesia (IDR)",
+                        "type": "object",
+                        "required": [
+                          "currency",
+                          "account_number",
+                          "swift_code",
+                          "bank_name",
+                          "recipient_relationship",
+                          "remittance_purpose"
+                        ],
+                        "properties": {
+                          "currency": {
+                            "type": "string",
+                            "enum": [
+                              "IDR"
+                            ]
+                          },
+                          "account_number": {
+                            "type": "string",
+                            "description": "The bank account number (digits only)",
+                            "example": "020601089805504"
+                          },
+                          "swift_code": {
+                            "type": "string",
+                            "description": "The bank's SWIFT code",
+                            "example": "BRINIDJA"
+                          },
+                          "bank_name": {
+                            "type": "string",
+                            "description": "The name of the recipient's bank",
+                            "example": "Bank Rakyat Indonesia"
+                          },
+                          "recipient_relationship": {
+                            "type": "string",
+                            "description": "The relationship that recipient has with sender",
+                            "example": "Self",
+                            "enum": [
+                              "Self",
+                              "Friend",
+                              "Employer",
+                              "Colleague",
+                              "Family",
+                              "Husband",
+                              "Wife",
+                              "Father",
+                              "Mother",
+                              "Son",
+                              "Daughter",
+                              "Brother",
+                              "Sister"
+                            ]
+                          },
+                          "remittance_purpose": {
+                            "type": "string",
+                            "description": "The purpose of the remittance",
+                            "example": "Gift",
+                            "enum": [
+                              "Salary",
+                              "Real Estate",
+                              "Savings",
+                              "Gift",
+                              "Education Support",
+                              "Home Improvement"
+                            ]
+                          },
+                          "third_party_details": {
+                            "type": "object",
+                            "description": "Required when `recipient_type` is `THIRD_PARTY`. Identifies the third-party recipient who owns this bank account.",
+                            "required": [
+                              "recipient_first_name",
+                              "recipient_last_name"
+                            ],
+                            "properties": {
+                              "recipient_first_name": {
+                                "type": "string",
+                                "description": "Recipient's first name (letters and common name punctuation only; must not contain digits)",
+                                "example": "John"
+                              },
+                              "recipient_last_name": {
+                                "type": "string",
+                                "description": "Recipient's last name (letters and common name punctuation only; must not contain digits)",
+                                "example": "Doe"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "title": "🇵🇭 Philippines (PHP)",
+                        "type": "object",
+                        "required": [
+                          "currency",
+                          "account_number",
+                          "swift_code",
+                          "bank_name",
+                          "recipient_relationship",
+                          "remittance_purpose"
+                        ],
+                        "properties": {
+                          "currency": {
+                            "type": "string",
+                            "enum": [
+                              "PHP"
+                            ]
+                          },
+                          "account_number": {
+                            "type": "string",
+                            "description": "The bank account number (digits only)",
+                            "example": "0123456789012345"
+                          },
+                          "swift_code": {
+                            "type": "string",
+                            "description": "The bank's SWIFT code",
+                            "example": "BOPIPHMMXXX"
+                          },
+                          "bank_name": {
+                            "type": "string",
+                            "description": "The name of the recipient's bank",
+                            "example": "Bank of the Philippine Islands"
+                          },
+                          "recipient_relationship": {
+                            "type": "string",
+                            "description": "The relationship that recipient has with sender",
+                            "example": "Self",
+                            "enum": [
+                              "Self",
+                              "Friend",
+                              "Employer",
+                              "Colleague",
+                              "Family",
+                              "Husband",
+                              "Wife",
+                              "Father",
+                              "Mother",
+                              "Son",
+                              "Daughter",
+                              "Brother",
+                              "Sister"
+                            ]
+                          },
+                          "remittance_purpose": {
+                            "type": "string",
+                            "description": "The purpose of the remittance",
+                            "example": "Gift",
+                            "enum": [
+                              "Salary",
+                              "Real Estate",
+                              "Savings",
+                              "Gift",
+                              "Education Support",
+                              "Home Improvement"
+                            ]
+                          },
+                          "third_party_details": {
+                            "type": "object",
+                            "description": "Required when `recipient_type` is `THIRD_PARTY`. Identifies the third-party recipient who owns this bank account.",
+                            "required": [
+                              "recipient_first_name",
+                              "recipient_last_name"
+                            ],
+                            "properties": {
+                              "recipient_first_name": {
+                                "type": "string",
+                                "description": "Recipient's first name (letters and common name punctuation only; must not contain digits)",
+                                "example": "John"
+                              },
+                              "recipient_last_name": {
+                                "type": "string",
+                                "description": "Recipient's last name (letters and common name punctuation only; must not contain digits)",
+                                "example": "Doe"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "title": "🇯🇵 Japan (JPY)",
+                        "type": "object",
+                        "required": [
+                          "currency",
+                          "account_number",
+                          "swift_code",
+                          "bank_name",
+                          "bank_code",
+                          "recipient_relationship",
+                          "remittance_purpose"
+                        ],
+                        "properties": {
+                          "currency": {
+                            "type": "string",
+                            "enum": [
+                              "JPY"
+                            ]
+                          },
+                          "account_number": {
+                            "type": "string",
+                            "description": "The bank account number (digits only)",
+                            "example": "1004567"
+                          },
+                          "swift_code": {
+                            "type": "string",
+                            "description": "The bank's SWIFT code",
+                            "example": "BOTKJPJT"
+                          },
+                          "bank_name": {
+                            "type": "string",
+                            "description": "The name of the recipient's bank",
+                            "example": "MUFG Bank"
+                          },
+                          "bank_code": {
+                            "type": "string",
+                            "description": "The recipient's 3-digit Zengin branch code (note: in Japan this is the branch code, not the primary bank code; field name is kept as `bank_code` for backward compatibility)",
+                            "example": "146"
+                          },
+                          "recipient_relationship": {
+                            "type": "string",
+                            "description": "The relationship that recipient has with sender",
+                            "example": "Self",
+                            "enum": [
+                              "Self",
+                              "Friend",
+                              "Employer",
+                              "Colleague",
+                              "Family",
+                              "Husband",
+                              "Wife",
+                              "Father",
+                              "Mother",
+                              "Son",
+                              "Daughter",
+                              "Brother",
+                              "Sister"
+                            ]
+                          },
+                          "remittance_purpose": {
+                            "type": "string",
+                            "description": "The purpose of the remittance",
+                            "example": "Salary",
+                            "enum": [
+                              "Salary",
+                              "Real Estate",
+                              "Savings",
+                              "Gift",
+                              "Education Support",
+                              "Home Improvement"
+                            ]
+                          },
+                          "third_party_details": {
+                            "type": "object",
+                            "description": "Required when `recipient_type` is `THIRD_PARTY`. Identifies the third-party recipient who owns this bank account.",
+                            "required": [
+                              "recipient_first_name",
+                              "recipient_last_name"
+                            ],
+                            "properties": {
+                              "recipient_first_name": {
+                                "type": "string",
+                                "description": "Recipient's first name (letters and common name punctuation only; must not contain digits)",
+                                "example": "John"
+                              },
+                              "recipient_last_name": {
+                                "type": "string",
+                                "description": "Recipient's last name (letters and common name punctuation only; must not contain digits)",
+                                "example": "Doe"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "title": "🇻🇳 Vietnam (VND)",
+                        "type": "object",
+                        "required": [
+                          "currency",
+                          "account_number",
+                          "swift_code",
+                          "bank_name",
+                          "recipient_relationship",
+                          "remittance_purpose"
+                        ],
+                        "properties": {
+                          "currency": {
+                            "type": "string",
+                            "enum": [
+                              "VND"
+                            ]
+                          },
+                          "account_number": {
+                            "type": "string",
+                            "description": "The bank account number (digits only)",
+                            "example": "19035002190035"
+                          },
+                          "swift_code": {
+                            "type": "string",
+                            "description": "The bank's SWIFT code",
+                            "example": "MSCBVNVX"
+                          },
+                          "bank_name": {
+                            "type": "string",
+                            "description": "The name of the recipient's bank",
+                            "example": "Military Commercial Joint Stock Bank"
+                          },
+                          "recipient_relationship": {
+                            "type": "string",
+                            "description": "The relationship that recipient has with sender",
+                            "example": "Self",
+                            "enum": [
+                              "Self",
+                              "Friend",
+                              "Employer",
+                              "Colleague",
+                              "Family",
+                              "Husband",
+                              "Wife",
+                              "Father",
+                              "Mother",
+                              "Son",
+                              "Daughter",
+                              "Brother",
+                              "Sister"
+                            ]
+                          },
+                          "remittance_purpose": {
+                            "type": "string",
+                            "description": "The purpose of the remittance",
+                            "example": "Salary",
+                            "enum": [
+                              "Salary",
+                              "Real Estate",
+                              "Savings",
+                              "Gift",
+                              "Education Support",
+                              "Home Improvement"
+                            ]
+                          },
+                          "third_party_details": {
+                            "type": "object",
+                            "description": "Required when `recipient_type` is `THIRD_PARTY`. Identifies the third-party recipient who owns this bank account.",
+                            "required": [
+                              "recipient_first_name",
+                              "recipient_last_name"
+                            ],
+                            "properties": {
+                              "recipient_first_name": {
+                                "type": "string",
+                                "description": "Recipient's first name (letters and common name punctuation only; must not contain digits)",
+                                "example": "John"
+                              },
+                              "recipient_last_name": {
+                                "type": "string",
+                                "description": "Recipient's last name (letters and common name punctuation only; must not contain digits)",
+                                "example": "Doe"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "title": "🇨🇴 Colombia (COP)",
+                        "type": "object",
+                        "required": [
+                          "currency",
+                          "account_number",
+                          "swift_code",
+                          "bank_name",
+                          "national_identifier",
+                          "recipient_relationship",
+                          "remittance_purpose"
+                        ],
+                        "properties": {
+                          "currency": {
+                            "type": "string",
+                            "enum": [
+                              "COP"
+                            ]
+                          },
+                          "account_number": {
+                            "type": "string",
+                            "description": "The bank account number (digits only)",
+                            "example": "020601089805504"
+                          },
+                          "swift_code": {
+                            "type": "string",
+                            "description": "The bank's SWIFT code",
+                            "example": "COLOCOBM"
+                          },
+                          "bank_name": {
+                            "type": "string",
+                            "description": "The name of the recipient's bank",
+                            "example": "Bancolombia"
+                          },
+                          "national_identifier": {
+                            "type": "string",
+                            "description": "Colombian national ID document number (Cédula de Ciudadanía / Cédula de Extranjería)",
+                            "example": "3214786174"
+                          },
+                          "recipient_relationship": {
+                            "type": "string",
+                            "description": "The relationship that recipient has with sender",
+                            "example": "Self",
+                            "enum": [
+                              "Self",
+                              "Friend",
+                              "Employer",
+                              "Colleague",
+                              "Family",
+                              "Husband",
+                              "Wife",
+                              "Father",
+                              "Mother",
+                              "Son",
+                              "Daughter",
+                              "Brother",
+                              "Sister"
+                            ]
+                          },
+                          "remittance_purpose": {
+                            "type": "string",
+                            "description": "The purpose of the remittance",
+                            "example": "Salary",
+                            "enum": [
+                              "Salary",
+                              "Real Estate",
+                              "Savings",
+                              "Gift",
+                              "Education Support",
+                              "Home Improvement"
+                            ]
+                          },
+                          "third_party_details": {
+                            "type": "object",
+                            "description": "Required when `recipient_type` is `THIRD_PARTY`. Identifies the third-party recipient who owns this bank account.",
+                            "required": [
+                              "recipient_first_name",
+                              "recipient_last_name"
+                            ],
+                            "properties": {
+                              "recipient_first_name": {
+                                "type": "string",
+                                "description": "Recipient's first name (letters and common name punctuation only; must not contain digits)",
+                                "example": "John"
+                              },
+                              "recipient_last_name": {
+                                "type": "string",
+                                "description": "Recipient's last name (letters and common name punctuation only; must not contain digits)",
+                                "example": "Doe"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "title": "🇦🇪 United Arab Emirates (AED)",
+                        "type": "object",
+                        "required": [
+                          "currency",
+                          "account_number",
+                          "swift_code",
+                          "bank_name",
+                          "recipient_relationship",
+                          "remittance_purpose"
+                        ],
+                        "properties": {
+                          "currency": {
+                            "type": "string",
+                            "enum": [
+                              "AED"
+                            ]
+                          },
+                          "account_number": {
+                            "type": "string",
+                            "description": "The bank account number (IBAN format)",
+                            "example": "AE12ABCD123456781234516"
+                          },
+                          "swift_code": {
+                            "type": "string",
+                            "description": "The bank's SWIFT/BIC code",
+                            "example": "EBILAEADXXX"
+                          },
+                          "bank_name": {
+                            "type": "string",
+                            "description": "The name of the recipient's bank",
+                            "example": "Emirates NBD"
+                          },
+                          "recipient_relationship": {
+                            "type": "string",
+                            "description": "The relationship that recipient has with sender",
+                            "example": "Self",
+                            "enum": [
+                              "Self",
+                              "Friend",
+                              "Employer",
+                              "Colleague",
+                              "Family",
+                              "Husband",
+                              "Wife",
+                              "Father",
+                              "Mother",
+                              "Son",
+                              "Daughter",
+                              "Brother",
+                              "Sister"
+                            ]
+                          },
+                          "remittance_purpose": {
+                            "type": "string",
+                            "description": "The purpose of the remittance",
+                            "example": "Salary",
+                            "enum": [
+                              "Salary",
+                              "Real Estate",
+                              "Savings",
+                              "Gift",
+                              "Education Support",
+                              "Home Improvement"
+                            ]
+                          },
+                          "third_party_details": {
+                            "type": "object",
+                            "description": "Required when `recipient_type` is `THIRD_PARTY`. Identifies the third-party recipient who owns this bank account.",
+                            "required": [
+                              "recipient_first_name",
+                              "recipient_last_name"
+                            ],
+                            "properties": {
+                              "recipient_first_name": {
+                                "type": "string",
+                                "description": "Recipient's first name (letters and common name punctuation only; must not contain digits)",
+                                "example": "John"
+                              },
+                              "recipient_last_name": {
+                                "type": "string",
+                                "description": "Recipient's last name (letters and common name punctuation only; must not contain digits)",
+                                "example": "Doe"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "title": "🇴🇲 Oman (OMR)",
+                        "type": "object",
+                        "required": [
+                          "currency",
+                          "account_number",
+                          "swift_code",
+                          "bank_name",
+                          "recipient_relationship",
+                          "remittance_purpose"
+                        ],
+                        "properties": {
+                          "currency": {
+                            "type": "string",
+                            "enum": [
+                              "OMR"
+                            ]
+                          },
+                          "account_number": {
+                            "type": "string",
+                            "description": "The bank account number (IBAN format)",
+                            "example": "OM15001000012345678901230"
+                          },
+                          "swift_code": {
+                            "type": "string",
+                            "description": "The bank's SWIFT/BIC code",
+                            "example": "BMUSOMRXISL"
+                          },
+                          "bank_name": {
+                            "type": "string",
+                            "description": "The name of the recipient's bank",
+                            "example": "LULU EXCHANGE CO. LLC, OMAN"
+                          },
+                          "recipient_relationship": {
+                            "type": "string",
+                            "description": "The relationship that recipient has with sender",
+                            "example": "Self",
+                            "enum": [
+                              "Self",
+                              "Friend",
+                              "Employer",
+                              "Colleague",
+                              "Family",
+                              "Husband",
+                              "Wife",
+                              "Father",
+                              "Mother",
+                              "Son",
+                              "Daughter",
+                              "Brother",
+                              "Sister"
+                            ]
+                          },
+                          "remittance_purpose": {
+                            "type": "string",
+                            "description": "The purpose of the remittance",
+                            "example": "Salary",
+                            "enum": [
+                              "Salary",
+                              "Real Estate",
+                              "Savings",
+                              "Gift",
+                              "Education Support",
+                              "Home Improvement"
+                            ]
+                          },
+                          "third_party_details": {
+                            "type": "object",
+                            "description": "Required when `recipient_type` is `THIRD_PARTY`. Identifies the third-party recipient who owns this bank account.",
+                            "required": [
+                              "recipient_first_name",
+                              "recipient_last_name"
+                            ],
+                            "properties": {
+                              "recipient_first_name": {
+                                "type": "string",
+                                "description": "Recipient's first name (letters and common name punctuation only; must not contain digits)",
+                                "example": "John"
+                              },
+                              "recipient_last_name": {
+                                "type": "string",
+                                "description": "Recipient's last name (letters and common name punctuation only; must not contain digits)",
+                                "example": "Doe"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "title": "🇶🇦 Qatar (QAR)",
+                        "type": "object",
+                        "required": [
+                          "currency",
+                          "account_number",
+                          "swift_code",
+                          "bank_name",
+                          "recipient_relationship",
+                          "remittance_purpose"
+                        ],
+                        "properties": {
+                          "currency": {
+                            "type": "string",
+                            "enum": [
+                              "QAR"
+                            ]
+                          },
+                          "account_number": {
+                            "type": "string",
+                            "description": "The bank account number (IBAN format)",
+                            "example": "QA58001000012345678901234"
+                          },
+                          "swift_code": {
+                            "type": "string",
+                            "description": "The bank's SWIFT/BIC code",
+                            "example": "QNBAQAQA"
+                          },
+                          "bank_name": {
+                            "type": "string",
+                            "description": "The name of the recipient's bank",
+                            "example": "Qatar National Bank"
+                          },
+                          "recipient_relationship": {
+                            "type": "string",
+                            "description": "The relationship that recipient has with sender",
+                            "example": "Self",
+                            "enum": [
+                              "Self",
+                              "Friend",
+                              "Employer",
+                              "Colleague",
+                              "Family",
+                              "Husband",
+                              "Wife",
+                              "Father",
+                              "Mother",
+                              "Son",
+                              "Daughter",
+                              "Brother",
+                              "Sister"
+                            ]
+                          },
+                          "remittance_purpose": {
+                            "type": "string",
+                            "description": "The purpose of the remittance",
+                            "example": "Salary",
+                            "enum": [
+                              "Salary",
+                              "Real Estate",
+                              "Savings",
+                              "Gift",
+                              "Education Support",
+                              "Home Improvement"
+                            ]
+                          },
+                          "third_party_details": {
+                            "type": "object",
+                            "description": "Required when `recipient_type` is `THIRD_PARTY`. Identifies the third-party recipient who owns this bank account.",
+                            "required": [
+                              "recipient_first_name",
+                              "recipient_last_name"
+                            ],
+                            "properties": {
+                              "recipient_first_name": {
+                                "type": "string",
+                                "description": "Recipient's first name (letters and common name punctuation only; must not contain digits)",
+                                "example": "John"
+                              },
+                              "recipient_last_name": {
+                                "type": "string",
+                                "description": "Recipient's last name (letters and common name punctuation only; must not contain digits)",
+                                "example": "Doe"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "title": "🇸🇬 Singapore (SGD)",
+                        "type": "object",
+                        "required": [
+                          "currency",
+                          "account_number",
+                          "swift_code",
+                          "bank_name",
+                          "recipient_relationship",
+                          "remittance_purpose"
+                        ],
+                        "properties": {
+                          "currency": {
+                            "type": "string",
+                            "enum": [
+                              "SGD"
+                            ]
+                          },
+                          "account_number": {
+                            "type": "string",
+                            "description": "The bank account number (digits only)",
+                            "example": "114844311152"
+                          },
+                          "swift_code": {
+                            "type": "string",
+                            "description": "The bank's SWIFT/BIC code",
+                            "example": "HSBCSGS2XXX"
+                          },
+                          "bank_name": {
+                            "type": "string",
+                            "description": "The name of the recipient's bank",
+                            "example": "HSBC BANK (SINGAPORE)"
+                          },
+                          "recipient_relationship": {
+                            "type": "string",
+                            "description": "The relationship that recipient has with sender",
+                            "example": "Self",
+                            "enum": [
+                              "Self",
+                              "Friend",
+                              "Employer",
+                              "Colleague",
+                              "Family",
+                              "Husband",
+                              "Wife",
+                              "Father",
+                              "Mother",
+                              "Son",
+                              "Daughter",
+                              "Brother",
+                              "Sister"
+                            ]
+                          },
+                          "remittance_purpose": {
+                            "type": "string",
+                            "description": "The purpose of the remittance",
+                            "example": "Gift",
+                            "enum": [
+                              "Salary",
+                              "Real Estate",
+                              "Savings",
+                              "Gift",
+                              "Education Support",
+                              "Home Improvement"
+                            ]
+                          }
+                        }
+                      },
+                      {
+                        "title": "🇨🇦 Canada (CAD)",
+                        "type": "object",
+                        "required": [
+                          "currency",
+                          "account_number",
+                          "swift_code",
+                          "bank_name",
+                          "transit_code",
+                          "recipient_relationship",
+                          "remittance_purpose"
+                        ],
+                        "properties": {
+                          "currency": {
+                            "type": "string",
+                            "enum": [
+                              "CAD"
+                            ]
+                          },
+                          "account_number": {
+                            "type": "string",
+                            "description": "The bank account number (digits only)",
+                            "example": "23484432235"
+                          },
+                          "swift_code": {
+                            "type": "string",
+                            "description": "The bank's SWIFT/BIC code",
+                            "example": "TDOMCATTTOR"
+                          },
+                          "bank_name": {
+                            "type": "string",
+                            "description": "The name of the recipient's bank",
+                            "example": "TORONTO-DOMINION BANK"
+                          },
+                          "transit_code": {
+                            "type": "string",
+                            "description": "The Canadian 5-digit routing transit code",
+                            "example": "12345",
+                            "pattern": "^\\d{5}$"
+                          },
+                          "recipient_relationship": {
+                            "type": "string",
+                            "description": "The relationship that recipient has with sender",
+                            "example": "Self",
+                            "enum": [
+                              "Self",
+                              "Friend",
+                              "Employer",
+                              "Colleague",
+                              "Family",
+                              "Husband",
+                              "Wife",
+                              "Father",
+                              "Mother",
+                              "Son",
+                              "Daughter",
+                              "Brother",
+                              "Sister"
+                            ]
+                          },
+                          "remittance_purpose": {
+                            "type": "string",
+                            "description": "The purpose of the remittance",
+                            "example": "Gift",
+                            "enum": [
+                              "Salary",
+                              "Real Estate",
+                              "Savings",
+                              "Gift",
+                              "Education Support",
+                              "Home Improvement"
+                            ]
+                          }
+                        }
+                      },
+                      {
+                        "title": "🇬🇭 Ghana (GHS)",
+                        "oneOf": [
+                          {
+                            "title": "Mobile wallet",
+                            "type": "object",
+                            "required": [
+                              "currency",
+                              "recipient_phone_number"
+                            ],
+                            "properties": {
+                              "currency": {
+                                "type": "string",
+                                "enum": [
+                                  "GHS"
+                                ]
+                              },
+                              "is_mobile_wallet": {
+                                "type": "boolean",
+                                "enum": [
+                                  true
+                                ],
+                                "default": true,
+                                "description": "If true (default), funds are sent to a mobile wallet using recipient_phone_number. If false, funds are sent to a bank account using account_number and swift_code."
+                              },
+                              "recipient_phone_number": {
+                                "type": "string",
+                                "description": "The recipient's mobile money phone number",
+                                "example": "0241234567"
+                              },
+                              "third_party_details": {
+                                "type": "object",
+                                "description": "Details required for third party bank accounts",
+                                "required": [
+                                  "recipient_first_name",
+                                  "recipient_last_name"
+                                ],
+                                "properties": {
+                                  "recipient_first_name": {
+                                    "type": "string",
+                                    "description": "Beneficiary first name",
+                                    "example": "John"
+                                  },
+                                  "recipient_last_name": {
+                                    "type": "string",
+                                    "description": "Beneficiary last name",
+                                    "example": "Doe"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "title": "Bank account",
+                            "type": "object",
+                            "required": [
+                              "currency",
+                              "is_mobile_wallet",
+                              "account_number",
+                              "swift_code"
+                            ],
+                            "properties": {
+                              "currency": {
+                                "type": "string",
+                                "enum": [
+                                  "GHS"
+                                ]
+                              },
+                              "is_mobile_wallet": {
+                                "type": "boolean",
+                                "enum": [
+                                  false
+                                ],
+                                "description": "If true (default), funds are sent to a mobile wallet using recipient_phone_number. If false, funds are sent to a bank account using account_number and swift_code."
+                              },
+                              "account_number": {
+                                "type": "string",
+                                "description": "The bank account number, digits only",
+                                "example": "1234567890123"
+                              },
+                              "swift_code": {
+                                "type": "string",
+                                "description": "The bank's SWIFT/BIC code",
+                                "example": "GHCBGHACXXX"
+                              },
+                              "third_party_details": {
+                                "type": "object",
+                                "description": "Details required for third party bank accounts.",
+                                "required": [
+                                  "recipient_first_name",
+                                  "recipient_last_name"
+                                ],
+                                "properties": {
+                                  "recipient_first_name": {
+                                    "type": "string",
+                                    "description": "Beneficiary first name",
+                                    "example": "John"
+                                  },
+                                  "recipient_last_name": {
+                                    "type": "string",
+                                    "description": "Beneficiary last name",
+                                    "example": "Doe"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "title": "🇰🇪 Kenya (KES)",
+                        "oneOf": [
+                          {
+                            "title": "Mobile wallet",
+                            "type": "object",
+                            "required": [
+                              "currency",
+                              "recipient_phone_number"
+                            ],
+                            "properties": {
+                              "currency": {
+                                "type": "string",
+                                "enum": [
+                                  "KES"
+                                ]
+                              },
+                              "is_mobile_wallet": {
+                                "type": "boolean",
+                                "enum": [
+                                  true
+                                ],
+                                "default": true,
+                                "description": "If true (default), funds are sent to a mobile wallet using recipient_phone_number. If false, funds are sent to a bank account using account_number and swift_code."
+                              },
+                              "recipient_phone_number": {
+                                "type": "string",
+                                "description": "The recipient's mobile money phone number",
+                                "example": "0712345678"
+                              },
+                              "third_party_details": {
+                                "type": "object",
+                                "description": "Details required for third party bank accounts",
+                                "required": [
+                                  "recipient_first_name",
+                                  "recipient_last_name"
+                                ],
+                                "properties": {
+                                  "recipient_first_name": {
+                                    "type": "string",
+                                    "description": "Beneficiary first name",
+                                    "example": "John"
+                                  },
+                                  "recipient_last_name": {
+                                    "type": "string",
+                                    "description": "Beneficiary last name",
+                                    "example": "Doe"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "title": "Bank account",
+                            "type": "object",
+                            "required": [
+                              "currency",
+                              "is_mobile_wallet",
+                              "account_number",
+                              "swift_code"
+                            ],
+                            "properties": {
+                              "currency": {
+                                "type": "string",
+                                "enum": [
+                                  "KES"
+                                ]
+                              },
+                              "is_mobile_wallet": {
+                                "type": "boolean",
+                                "enum": [
+                                  false
+                                ],
+                                "description": "If true (default), funds are sent to a mobile wallet using recipient_phone_number. If false, funds are sent to a bank account using account_number and swift_code."
+                              },
+                              "account_number": {
+                                "type": "string",
+                                "description": "The bank account number, digits only",
+                                "example": "1234567890"
+                              },
+                              "swift_code": {
+                                "type": "string",
+                                "description": "The bank's SWIFT/BIC code",
+                                "example": "KCBLKENXXXX"
+                              },
+                              "third_party_details": {
+                                "type": "object",
+                                "description": "Details required for third party bank accounts.",
+                                "required": [
+                                  "recipient_first_name",
+                                  "recipient_last_name"
+                                ],
+                                "properties": {
+                                  "recipient_first_name": {
+                                    "type": "string",
+                                    "description": "Beneficiary first name",
+                                    "example": "John"
+                                  },
+                                  "recipient_last_name": {
+                                    "type": "string",
+                                    "description": "Beneficiary last name",
+                                    "example": "Doe"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "title": "🇬🇹 Guatemala (GTQ)",
+                        "type": "object",
+                        "required": [
+                          "currency",
+                          "account_number",
+                          "swift_code",
+                          "bank_name",
+                          "recipient_relationship",
+                          "remittance_purpose"
+                        ],
+                        "properties": {
+                          "currency": {
+                            "type": "string",
+                            "enum": [
+                              "GTQ"
+                            ]
+                          },
+                          "account_number": {
+                            "type": "string",
+                            "description": "The bank account number, digits only",
+                            "example": "0140291840"
+                          },
+                          "swift_code": {
+                            "type": "string",
+                            "description": "The bank's SWIFT code",
+                            "example": "INDLGTGC"
+                          },
+                          "bank_name": {
+                            "type": "string",
+                            "description": "The name of the recipient's bank",
+                            "example": "BANCO INDUSTRIAL, S.A."
+                          },
+                          "recipient_relationship": {
+                            "type": "string",
+                            "description": "The relationship that recipient has with sender",
+                            "example": "Self",
+                            "enum": [
+                              "Self",
+                              "Friend",
+                              "Employer",
+                              "Colleague",
+                              "Family",
+                              "Husband",
+                              "Wife",
+                              "Father",
+                              "Mother",
+                              "Son",
+                              "Daughter",
+                              "Brother",
+                              "Sister"
+                            ]
+                          },
+                          "remittance_purpose": {
+                            "type": "string",
+                            "description": "The purpose of the remittance",
+                            "example": "Gift",
+                            "enum": [
+                              "Salary",
+                              "Real Estate",
+                              "Savings",
+                              "Gift",
+                              "Education Support",
+                              "Home Improvement"
+                            ]
+                          },
+                          "third_party_details": {
+                            "type": "object",
+                            "description": "Required when `recipient_type` is `THIRD_PARTY`. Identifies the third-party recipient who owns this bank account.",
+                            "required": [
+                              "recipient_first_name",
+                              "recipient_last_name"
+                            ],
+                            "properties": {
+                              "recipient_first_name": {
+                                "type": "string",
+                                "description": "Recipient's first name (letters and common name punctuation only; must not contain digits)",
+                                "example": "John"
+                              },
+                              "recipient_last_name": {
+                                "type": "string",
+                                "description": "Recipient's last name (letters and common name punctuation only; must not contain digits)",
+                                "example": "Doe"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "uuid": {
+                      "type": "string",
+                      "example": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    "receiving_address": {
+                      "type": "string",
+                      "example": "0xf7571e12301E70aCb89D5ACf0258F55c88AD097f"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Body malformed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/body-malformed-error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/unauthorized-error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/parent-resource-not-found-error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unknown error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/unknown-error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
