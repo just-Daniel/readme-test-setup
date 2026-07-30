@@ -9,3 +9,4 @@ excerpt: >-
   Allows searching, getting the profile and sub-resources.
 hidden: false
 ---
+partner_code=xxx&partner_key=xxx
