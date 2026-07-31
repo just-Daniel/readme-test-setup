@@ -1,0 +1,42 @@
+openapi: 3.1.0
+info:
+  title: Repro
+  version: 1.0.0
+paths:
+  /v1/payment_method_configs:
+    post:
+      operationId: create_payment_method_config
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: >-
+                #/paths/~1v1~1payment_method_configs/post/responses/200/content/application~1json/schema/properties/data
+              required:
+                - platform_id
+                - idempotency_key
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      platform_id:
+                        type: string
+                        description: The unique platform identifier.
+                      platform:
+                        type: object
+                        properties:
+                          platform_id:
+                            $ref: >-
+                              #/paths/~1v1~1payment_method_configs/post/responses/200/content/application~1json/schema/properties/data/properties/platform_id
+                            readOnly: true
+                          name:
+                            type: string
+                            readOnly: true
+                      idempotency_key:
+                        type: string
