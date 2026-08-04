@@ -1,0 +1,94 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "SCIM $ref-in-example repro",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/scim/v2/Users/{id}": {
+      "get": {
+        "operationId": "getScimUser",
+        "summary": "Get SCIM user",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "SCIM user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Integrations.Scim.User"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Integrations.Scim.User": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "userName": {
+            "type": "string"
+          },
+          "active": {
+            "type": "boolean"
+          }
+        },
+        "example": {
+          "active": true,
+          "displayName": "Johnny Doe",
+          "emails": [
+            {
+              "primary": true,
+              "type": "work",
+              "value": "john.doe@example.com"
+            }
+          ],
+          "id": "123456",
+          "meta": {
+            "created": "2023-01-01T00:00:00Z",
+            "lastModified": "2023-01-01T00:00:00Z",
+            "resourceType": "User"
+          },
+          "name": {
+            "familyName": "Doe",
+            "formatted": "John Doe",
+            "givenName": "John",
+            "honorificPrefix": "Mr"
+          },
+          "nickName": "Johnny",
+          "schemas": [
+            "urn:ietf:params:scim:schemas:core:2.0:User",
+            "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"
+          ],
+          "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User": {
+            "department": "Engineering",
+            "employeeNumber": "EMP001",
+            "manager": {
+              "ref": "https://gateway.example.com/v1/scim/v2/Users/789012",
+              "displayName": "Jane Manager",
+              "value": "789012"
+            }
+          },
+          "userName": "john.doe@example.com"
+        }
+      }
+    }
+  }
+}
