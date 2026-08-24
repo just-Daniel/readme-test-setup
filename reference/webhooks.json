@@ -1,0 +1,2074 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Webhooks",
+    "version": "1.0.0",
+    "description": "Webhook events fired by the Appointedd platform"
+  },
+  "servers": [],
+  "components": {
+    "schemas": {},
+    "parameters": {}
+  },
+  "paths": {},
+  "webhooks": {
+    "BookingParticipant/Created": {
+      "post": {
+        "tags": [
+          "BookingParticipant"
+        ],
+        "description": "Webhook fired when a BookingParticipant is created",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "entity": {
+                    "type": "string",
+                    "enum": [
+                      "BookingParticipant"
+                    ],
+                    "description": "The entity type that triggered this webhook event"
+                  },
+                  "account": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The unique identifier for the account"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "The name of the account"
+                      },
+                      "slug": {
+                        "type": "string",
+                        "description": "The slug for the account"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "slug"
+                    ],
+                    "description": "The account associated with the booking participant"
+                  },
+                  "booking": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The unique identifier for the booking"
+                      },
+                      "startTime": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The start time of the booking"
+                      },
+                      "endTime": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The end time of the booking"
+                      },
+                      "price": {
+                        "anyOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "POA"
+                            ]
+                          }
+                        ],
+                        "description": "The price of the booking or 'POA' if price on application"
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": [
+                          "Pending",
+                          "Confirmed",
+                          "Declined",
+                          "Cancelled"
+                        ],
+                        "description": "The status of the booking"
+                      },
+                      "timezone": {
+                        "type": "string",
+                        "description": "The timezone of the booking"
+                      },
+                      "bookingReference": {
+                        "type": "number",
+                        "description": "The reference number for the booking"
+                      },
+                      "allowOnlineGroup": {
+                        "type": "boolean",
+                        "description": "Indicates if online group bookings are allowed"
+                      },
+                      "maxOccupancy": {
+                        "type": "number",
+                        "description": "The maximum occupancy for the booking"
+                      },
+                      "label": {
+                        "type": "string",
+                        "description": "The label for the booking"
+                      },
+                      "videoConferenceLink": {
+                        "type": "string",
+                        "description": "The link for the video conference"
+                      },
+                      "videoConferenceTypeName": {
+                        "type": "string",
+                        "description": "The type name of the video conference e.g. zoom, microsoft teams"
+                      },
+                      "location": {
+                        "type": "string",
+                        "description": "The location of the booking"
+                      },
+                      "created": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The creation date of the booking"
+                      },
+                      "lastModifiedSource": {
+                        "type": "string",
+                        "description": "The source of the last modification"
+                      },
+                      "updated": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The last update date of the booking"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "startTime",
+                      "endTime",
+                      "status",
+                      "timezone",
+                      "allowOnlineGroup",
+                      "maxOccupancy",
+                      "created"
+                    ],
+                    "description": "The booking associated with this booking participant"
+                  },
+                  "bookingParticipant": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The unique identifier for the booking participant"
+                      },
+                      "totalSpaces": {
+                        "type": "number",
+                        "description": "The total number of spaces for the booking participant"
+                      },
+                      "totalPrice": {
+                        "type": "number",
+                        "description": "The total price for the booking participant"
+                      },
+                      "status": {
+                        "type": "string",
+                        "description": "The status of the booking participant"
+                      },
+                      "source": {
+                        "type": "string",
+                        "description": "The created source of the booking participant"
+                      },
+                      "notes": {
+                        "type": "string",
+                        "description": "Optional notes for the booking participant"
+                      },
+                      "tier": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "The unique identifier for the tier"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "The name of the tier"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name"
+                        ]
+                      },
+                      "pricePoints": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "description": "The unique identifier for the price point"
+                            },
+                            "name": {
+                              "type": "string",
+                              "description": "The name of the price point"
+                            },
+                            "pricePerQuantity": {
+                              "type": "number",
+                              "description": "The price per quantity for the price point"
+                            },
+                            "spacesPerQuantity": {
+                              "type": "number",
+                              "description": "The spaces per quantity for the price point"
+                            },
+                            "quantity": {
+                              "type": "number",
+                              "description": "The quantity for the price point"
+                            }
+                          },
+                          "required": [
+                            "pricePerQuantity",
+                            "spacesPerQuantity",
+                            "quantity"
+                          ]
+                        }
+                      },
+                      "questions": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "description": "The unique identifier for the question"
+                            },
+                            "label": {
+                              "type": "string",
+                              "description": "The label for the question"
+                            },
+                            "value": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "boolean"
+                                },
+                                {
+                                  "type": "number"
+                                }
+                              ],
+                              "description": "The value for the question"
+                            }
+                          },
+                          "required": [
+                            "label"
+                          ]
+                        }
+                      },
+                      "locale": {
+                        "type": "string",
+                        "description": "The locale for the booking participant"
+                      },
+                      "cancellationUrl": {
+                        "type": "string",
+                        "description": "The URL for cancelling the booking participant"
+                      },
+                      "rescheduleUrl": {
+                        "type": "string",
+                        "description": "The URL for rescheduling the booking participant"
+                      },
+                      "created": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The creation date of the booking participant"
+                      },
+                      "updated": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The last update date of the booking participant"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "totalSpaces",
+                      "totalPrice",
+                      "status",
+                      "source",
+                      "locale",
+                      "created"
+                    ],
+                    "description": "The booking participant that triggered this webhook event"
+                  },
+                  "customer": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The unique identifier for the customer"
+                      },
+                      "firstName": {
+                        "type": "string",
+                        "description": "The first name of the customer"
+                      },
+                      "lastName": {
+                        "type": "string",
+                        "description": "The last name of the customer"
+                      },
+                      "email": {
+                        "type": "string",
+                        "description": "The email address of the customer"
+                      },
+                      "phone": {
+                        "type": "string",
+                        "description": "The phone number of the customer"
+                      },
+                      "mobile": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "description": "The mobile number of the customer"
+                      },
+                      "marketingOptIn": {
+                        "type": "boolean",
+                        "description": "Indicates if the customer has opted in for marketing"
+                      },
+                      "addressOne": {
+                        "type": "string",
+                        "description": "The first line of the customer's address"
+                      },
+                      "city": {
+                        "type": "string",
+                        "description": "The city of the customer's address"
+                      },
+                      "postcode": {
+                        "type": "string",
+                        "description": "The postcode of the customer's address"
+                      },
+                      "customFields": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "number"
+                            }
+                          ]
+                        },
+                        "description": "Custom CRM fields associated with the customer"
+                      },
+                      "ccEmails": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "CC email addresses associated with the customer"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "firstName",
+                      "lastName",
+                      "email",
+                      "marketingOptIn"
+                    ],
+                    "description": "The customer details for this booking participant"
+                  },
+                  "invoices": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "The unique identifier for the invoice"
+                        },
+                        "gateway": {
+                          "type": "string",
+                          "description": "The payment gateway used for the invoice"
+                        },
+                        "lines": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "description": {
+                                "type": "string",
+                                "description": "The description of the invoice line item"
+                              },
+                              "unitPrice": {
+                                "type": "number",
+                                "description": "The unit price of the invoice line item"
+                              },
+                              "quantity": {
+                                "type": "number",
+                                "minimum": 1,
+                                "description": "The quantity of the invoice line item"
+                              },
+                              "isDeposit": {
+                                "type": "boolean",
+                                "description": "Indicates if the invoice line item is a deposit"
+                              }
+                            },
+                            "required": [
+                              "description",
+                              "unitPrice",
+                              "quantity"
+                            ]
+                          }
+                        },
+                        "externalPaymentId": {
+                          "type": "string",
+                          "description": "The external payment ID associated with the invoice (e.g., Stripe or Square charge ID, or Adyen pspReference)"
+                        },
+                        "currency": {
+                          "type": "string",
+                          "description": "The currency of the invoice"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "Paid",
+                            "Pending",
+                            "Failed"
+                          ],
+                          "description": "The status of the invoice"
+                        },
+                        "created": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "The creation date of the invoice"
+                        },
+                        "updated": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "The last updated date of the invoice"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "lines",
+                        "created"
+                      ]
+                    },
+                    "description": "Invoices associated with this booking participant"
+                  },
+                  "rescheduleHistory": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "current": {
+                          "type": "object",
+                          "properties": {
+                            "bookingId": {
+                              "type": "string",
+                              "description": "The unique identifier for the booking"
+                            },
+                            "customerBookingId": {
+                              "type": "string",
+                              "description": "The unique identifier for the customer booking (booking participant)"
+                            },
+                            "startDate": {
+                              "type": "string",
+                              "format": "date-time",
+                              "description": "The start date of the booking"
+                            },
+                            "endDate": {
+                              "type": "string",
+                              "format": "date-time",
+                              "description": "The end date of the booking"
+                            },
+                            "resourceIds": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              },
+                              "description": "The unique identifiers for the resources associated with the booking"
+                            }
+                          },
+                          "required": [
+                            "bookingId",
+                            "customerBookingId",
+                            "startDate",
+                            "endDate",
+                            "resourceIds"
+                          ],
+                          "description": "The current booking details after rescheduling"
+                        },
+                        "previous": {
+                          "type": "object",
+                          "properties": {
+                            "bookingId": {
+                              "type": "string",
+                              "description": "The unique identifier for the previous booking"
+                            },
+                            "customerBookingId": {
+                              "type": "string",
+                              "description": "The unique identifier for the previous customer booking (booking participant)"
+                            },
+                            "startDate": {
+                              "type": "string",
+                              "format": "date-time",
+                              "description": "The start date of the previous booking"
+                            },
+                            "endDate": {
+                              "type": "string",
+                              "format": "date-time",
+                              "description": "The end date of the previous booking"
+                            },
+                            "resourceIds": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              },
+                              "description": "The unique identifiers for the resources associated with the previous booking"
+                            }
+                          },
+                          "required": [
+                            "bookingId",
+                            "customerBookingId",
+                            "startDate",
+                            "endDate",
+                            "resourceIds"
+                          ],
+                          "description": "The previous booking details before rescheduling"
+                        },
+                        "source": {
+                          "type": "string"
+                        },
+                        "created": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      },
+                      "required": [
+                        "current",
+                        "previous",
+                        "source",
+                        "created"
+                      ]
+                    },
+                    "description": "History of rescheduled bookings for this booking participant"
+                  },
+                  "resources": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "The unique identifier for the resource"
+                        },
+                        "firstName": {
+                          "type": "string",
+                          "description": "The first name of the resource"
+                        },
+                        "lastName": {
+                          "type": "string",
+                          "description": "The last name of the resource"
+                        },
+                        "email": {
+                          "type": "string",
+                          "description": "The email of the resource"
+                        }
+                      },
+                      "required": [
+                        "id"
+                      ]
+                    },
+                    "description": "Resources allocated to this booking"
+                  },
+                  "service": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The unique identifier for the service"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "The name of the service"
+                      },
+                      "category": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "The unique identifier for the service category"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "The name of the service category"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "category"
+                    ],
+                    "description": "The service being booked"
+                  },
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "Created"
+                    ]
+                  }
+                },
+                "required": [
+                  "entity",
+                  "account",
+                  "booking",
+                  "bookingParticipant",
+                  "customer",
+                  "invoices",
+                  "rescheduleHistory",
+                  "resources",
+                  "service",
+                  "action"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Webhook received successfully"
+          }
+        }
+      }
+    },
+    "BookingParticipant/Updated": {
+      "post": {
+        "tags": [
+          "BookingParticipant"
+        ],
+        "description": "Webhook fired when a BookingParticipant is updated",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "entity": {
+                    "type": "string",
+                    "enum": [
+                      "BookingParticipant"
+                    ],
+                    "description": "The entity type that triggered this webhook event"
+                  },
+                  "account": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The unique identifier for the account"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "The name of the account"
+                      },
+                      "slug": {
+                        "type": "string",
+                        "description": "The slug for the account"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "slug"
+                    ],
+                    "description": "The account associated with the booking participant"
+                  },
+                  "booking": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The unique identifier for the booking"
+                      },
+                      "startTime": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The start time of the booking"
+                      },
+                      "endTime": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The end time of the booking"
+                      },
+                      "price": {
+                        "anyOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "POA"
+                            ]
+                          }
+                        ],
+                        "description": "The price of the booking or 'POA' if price on application"
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": [
+                          "Pending",
+                          "Confirmed",
+                          "Declined",
+                          "Cancelled"
+                        ],
+                        "description": "The status of the booking"
+                      },
+                      "timezone": {
+                        "type": "string",
+                        "description": "The timezone of the booking"
+                      },
+                      "bookingReference": {
+                        "type": "number",
+                        "description": "The reference number for the booking"
+                      },
+                      "allowOnlineGroup": {
+                        "type": "boolean",
+                        "description": "Indicates if online group bookings are allowed"
+                      },
+                      "maxOccupancy": {
+                        "type": "number",
+                        "description": "The maximum occupancy for the booking"
+                      },
+                      "label": {
+                        "type": "string",
+                        "description": "The label for the booking"
+                      },
+                      "videoConferenceLink": {
+                        "type": "string",
+                        "description": "The link for the video conference"
+                      },
+                      "videoConferenceTypeName": {
+                        "type": "string",
+                        "description": "The type name of the video conference e.g. zoom, microsoft teams"
+                      },
+                      "location": {
+                        "type": "string",
+                        "description": "The location of the booking"
+                      },
+                      "created": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The creation date of the booking"
+                      },
+                      "lastModifiedSource": {
+                        "type": "string",
+                        "description": "The source of the last modification"
+                      },
+                      "updated": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The last update date of the booking"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "startTime",
+                      "endTime",
+                      "status",
+                      "timezone",
+                      "allowOnlineGroup",
+                      "maxOccupancy",
+                      "created"
+                    ],
+                    "description": "The booking associated with this booking participant"
+                  },
+                  "bookingParticipant": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The unique identifier for the booking participant"
+                      },
+                      "totalSpaces": {
+                        "type": "number",
+                        "description": "The total number of spaces for the booking participant"
+                      },
+                      "totalPrice": {
+                        "type": "number",
+                        "description": "The total price for the booking participant"
+                      },
+                      "status": {
+                        "type": "string",
+                        "description": "The status of the booking participant"
+                      },
+                      "source": {
+                        "type": "string",
+                        "description": "The created source of the booking participant"
+                      },
+                      "notes": {
+                        "type": "string",
+                        "description": "Optional notes for the booking participant"
+                      },
+                      "tier": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "The unique identifier for the tier"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "The name of the tier"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name"
+                        ]
+                      },
+                      "pricePoints": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "description": "The unique identifier for the price point"
+                            },
+                            "name": {
+                              "type": "string",
+                              "description": "The name of the price point"
+                            },
+                            "pricePerQuantity": {
+                              "type": "number",
+                              "description": "The price per quantity for the price point"
+                            },
+                            "spacesPerQuantity": {
+                              "type": "number",
+                              "description": "The spaces per quantity for the price point"
+                            },
+                            "quantity": {
+                              "type": "number",
+                              "description": "The quantity for the price point"
+                            }
+                          },
+                          "required": [
+                            "pricePerQuantity",
+                            "spacesPerQuantity",
+                            "quantity"
+                          ]
+                        }
+                      },
+                      "questions": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "description": "The unique identifier for the question"
+                            },
+                            "label": {
+                              "type": "string",
+                              "description": "The label for the question"
+                            },
+                            "value": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "boolean"
+                                },
+                                {
+                                  "type": "number"
+                                }
+                              ],
+                              "description": "The value for the question"
+                            }
+                          },
+                          "required": [
+                            "label"
+                          ]
+                        }
+                      },
+                      "locale": {
+                        "type": "string",
+                        "description": "The locale for the booking participant"
+                      },
+                      "cancellationUrl": {
+                        "type": "string",
+                        "description": "The URL for cancelling the booking participant"
+                      },
+                      "rescheduleUrl": {
+                        "type": "string",
+                        "description": "The URL for rescheduling the booking participant"
+                      },
+                      "created": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The creation date of the booking participant"
+                      },
+                      "updated": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The last update date of the booking participant"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "totalSpaces",
+                      "totalPrice",
+                      "status",
+                      "source",
+                      "locale",
+                      "created"
+                    ],
+                    "description": "The booking participant that triggered this webhook event"
+                  },
+                  "customer": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The unique identifier for the customer"
+                      },
+                      "firstName": {
+                        "type": "string",
+                        "description": "The first name of the customer"
+                      },
+                      "lastName": {
+                        "type": "string",
+                        "description": "The last name of the customer"
+                      },
+                      "email": {
+                        "type": "string",
+                        "description": "The email address of the customer"
+                      },
+                      "phone": {
+                        "type": "string",
+                        "description": "The phone number of the customer"
+                      },
+                      "mobile": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "description": "The mobile number of the customer"
+                      },
+                      "marketingOptIn": {
+                        "type": "boolean",
+                        "description": "Indicates if the customer has opted in for marketing"
+                      },
+                      "addressOne": {
+                        "type": "string",
+                        "description": "The first line of the customer's address"
+                      },
+                      "city": {
+                        "type": "string",
+                        "description": "The city of the customer's address"
+                      },
+                      "postcode": {
+                        "type": "string",
+                        "description": "The postcode of the customer's address"
+                      },
+                      "customFields": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "number"
+                            }
+                          ]
+                        },
+                        "description": "Custom CRM fields associated with the customer"
+                      },
+                      "ccEmails": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "CC email addresses associated with the customer"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "firstName",
+                      "lastName",
+                      "email",
+                      "marketingOptIn"
+                    ],
+                    "description": "The customer details for this booking participant"
+                  },
+                  "invoices": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "The unique identifier for the invoice"
+                        },
+                        "gateway": {
+                          "type": "string",
+                          "description": "The payment gateway used for the invoice"
+                        },
+                        "lines": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "description": {
+                                "type": "string",
+                                "description": "The description of the invoice line item"
+                              },
+                              "unitPrice": {
+                                "type": "number",
+                                "description": "The unit price of the invoice line item"
+                              },
+                              "quantity": {
+                                "type": "number",
+                                "minimum": 1,
+                                "description": "The quantity of the invoice line item"
+                              },
+                              "isDeposit": {
+                                "type": "boolean",
+                                "description": "Indicates if the invoice line item is a deposit"
+                              }
+                            },
+                            "required": [
+                              "description",
+                              "unitPrice",
+                              "quantity"
+                            ]
+                          }
+                        },
+                        "externalPaymentId": {
+                          "type": "string",
+                          "description": "The external payment ID associated with the invoice (e.g., Stripe or Square charge ID, or Adyen pspReference)"
+                        },
+                        "currency": {
+                          "type": "string",
+                          "description": "The currency of the invoice"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "Paid",
+                            "Pending",
+                            "Failed"
+                          ],
+                          "description": "The status of the invoice"
+                        },
+                        "created": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "The creation date of the invoice"
+                        },
+                        "updated": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "The last updated date of the invoice"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "lines",
+                        "created"
+                      ]
+                    },
+                    "description": "Invoices associated with this booking participant"
+                  },
+                  "rescheduleHistory": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "current": {
+                          "type": "object",
+                          "properties": {
+                            "bookingId": {
+                              "type": "string",
+                              "description": "The unique identifier for the booking"
+                            },
+                            "customerBookingId": {
+                              "type": "string",
+                              "description": "The unique identifier for the customer booking (booking participant)"
+                            },
+                            "startDate": {
+                              "type": "string",
+                              "format": "date-time",
+                              "description": "The start date of the booking"
+                            },
+                            "endDate": {
+                              "type": "string",
+                              "format": "date-time",
+                              "description": "The end date of the booking"
+                            },
+                            "resourceIds": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              },
+                              "description": "The unique identifiers for the resources associated with the booking"
+                            }
+                          },
+                          "required": [
+                            "bookingId",
+                            "customerBookingId",
+                            "startDate",
+                            "endDate",
+                            "resourceIds"
+                          ],
+                          "description": "The current booking details after rescheduling"
+                        },
+                        "previous": {
+                          "type": "object",
+                          "properties": {
+                            "bookingId": {
+                              "type": "string",
+                              "description": "The unique identifier for the previous booking"
+                            },
+                            "customerBookingId": {
+                              "type": "string",
+                              "description": "The unique identifier for the previous customer booking (booking participant)"
+                            },
+                            "startDate": {
+                              "type": "string",
+                              "format": "date-time",
+                              "description": "The start date of the previous booking"
+                            },
+                            "endDate": {
+                              "type": "string",
+                              "format": "date-time",
+                              "description": "The end date of the previous booking"
+                            },
+                            "resourceIds": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              },
+                              "description": "The unique identifiers for the resources associated with the previous booking"
+                            }
+                          },
+                          "required": [
+                            "bookingId",
+                            "customerBookingId",
+                            "startDate",
+                            "endDate",
+                            "resourceIds"
+                          ],
+                          "description": "The previous booking details before rescheduling"
+                        },
+                        "source": {
+                          "type": "string"
+                        },
+                        "created": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      },
+                      "required": [
+                        "current",
+                        "previous",
+                        "source",
+                        "created"
+                      ]
+                    },
+                    "description": "History of rescheduled bookings for this booking participant"
+                  },
+                  "resources": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "The unique identifier for the resource"
+                        },
+                        "firstName": {
+                          "type": "string",
+                          "description": "The first name of the resource"
+                        },
+                        "lastName": {
+                          "type": "string",
+                          "description": "The last name of the resource"
+                        },
+                        "email": {
+                          "type": "string",
+                          "description": "The email of the resource"
+                        }
+                      },
+                      "required": [
+                        "id"
+                      ]
+                    },
+                    "description": "Resources allocated to this booking"
+                  },
+                  "service": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The unique identifier for the service"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "The name of the service"
+                      },
+                      "category": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "The unique identifier for the service category"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "The name of the service category"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "category"
+                    ],
+                    "description": "The service being booked"
+                  },
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "Updated"
+                    ]
+                  }
+                },
+                "required": [
+                  "entity",
+                  "account",
+                  "booking",
+                  "bookingParticipant",
+                  "customer",
+                  "invoices",
+                  "rescheduleHistory",
+                  "resources",
+                  "service",
+                  "action"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Webhook received successfully"
+          }
+        }
+      }
+    },
+    "BookingParticipant/Cancelled": {
+      "post": {
+        "tags": [
+          "BookingParticipant"
+        ],
+        "description": "Webhook fired when a BookingParticipant is cancelled",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "entity": {
+                    "type": "string",
+                    "enum": [
+                      "BookingParticipant"
+                    ],
+                    "description": "The entity type that triggered this webhook event"
+                  },
+                  "account": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The unique identifier for the account"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "The name of the account"
+                      },
+                      "slug": {
+                        "type": "string",
+                        "description": "The slug for the account"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "slug"
+                    ],
+                    "description": "The account associated with the booking participant"
+                  },
+                  "booking": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The unique identifier for the booking"
+                      },
+                      "startTime": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The start time of the booking"
+                      },
+                      "endTime": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The end time of the booking"
+                      },
+                      "price": {
+                        "anyOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "POA"
+                            ]
+                          }
+                        ],
+                        "description": "The price of the booking or 'POA' if price on application"
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": [
+                          "Pending",
+                          "Confirmed",
+                          "Declined",
+                          "Cancelled"
+                        ],
+                        "description": "The status of the booking"
+                      },
+                      "timezone": {
+                        "type": "string",
+                        "description": "The timezone of the booking"
+                      },
+                      "bookingReference": {
+                        "type": "number",
+                        "description": "The reference number for the booking"
+                      },
+                      "allowOnlineGroup": {
+                        "type": "boolean",
+                        "description": "Indicates if online group bookings are allowed"
+                      },
+                      "maxOccupancy": {
+                        "type": "number",
+                        "description": "The maximum occupancy for the booking"
+                      },
+                      "label": {
+                        "type": "string",
+                        "description": "The label for the booking"
+                      },
+                      "videoConferenceLink": {
+                        "type": "string",
+                        "description": "The link for the video conference"
+                      },
+                      "videoConferenceTypeName": {
+                        "type": "string",
+                        "description": "The type name of the video conference e.g. zoom, microsoft teams"
+                      },
+                      "location": {
+                        "type": "string",
+                        "description": "The location of the booking"
+                      },
+                      "created": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The creation date of the booking"
+                      },
+                      "lastModifiedSource": {
+                        "type": "string",
+                        "description": "The source of the last modification"
+                      },
+                      "updated": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The last update date of the booking"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "startTime",
+                      "endTime",
+                      "status",
+                      "timezone",
+                      "allowOnlineGroup",
+                      "maxOccupancy",
+                      "created"
+                    ],
+                    "description": "The booking associated with this booking participant"
+                  },
+                  "bookingParticipant": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The unique identifier for the booking participant"
+                      }
+                    },
+                    "required": [
+                      "id"
+                    ],
+                    "description": "The id of the booking participant that triggered this cancelled event"
+                  },
+                  "customer": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The unique identifier for the customer"
+                      },
+                      "firstName": {
+                        "type": "string",
+                        "description": "The first name of the customer"
+                      },
+                      "lastName": {
+                        "type": "string",
+                        "description": "The last name of the customer"
+                      },
+                      "email": {
+                        "type": "string",
+                        "description": "The email address of the customer"
+                      },
+                      "phone": {
+                        "type": "string",
+                        "description": "The phone number of the customer"
+                      },
+                      "mobile": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "description": "The mobile number of the customer"
+                      },
+                      "marketingOptIn": {
+                        "type": "boolean",
+                        "description": "Indicates if the customer has opted in for marketing"
+                      },
+                      "addressOne": {
+                        "type": "string",
+                        "description": "The first line of the customer's address"
+                      },
+                      "city": {
+                        "type": "string",
+                        "description": "The city of the customer's address"
+                      },
+                      "postcode": {
+                        "type": "string",
+                        "description": "The postcode of the customer's address"
+                      },
+                      "customFields": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "number"
+                            }
+                          ]
+                        },
+                        "description": "Custom CRM fields associated with the customer"
+                      },
+                      "ccEmails": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "CC email addresses associated with the customer"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "firstName",
+                      "lastName",
+                      "email",
+                      "marketingOptIn"
+                    ],
+                    "description": "The customer details for this booking participant"
+                  },
+                  "resources": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "The unique identifier for the resource"
+                        },
+                        "firstName": {
+                          "type": "string",
+                          "description": "The first name of the resource"
+                        },
+                        "lastName": {
+                          "type": "string",
+                          "description": "The last name of the resource"
+                        },
+                        "email": {
+                          "type": "string",
+                          "description": "The email of the resource"
+                        }
+                      },
+                      "required": [
+                        "id"
+                      ]
+                    },
+                    "description": "Resources allocated to this booking"
+                  },
+                  "service": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The unique identifier for the service"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "The name of the service"
+                      },
+                      "category": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "The unique identifier for the service category"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "The name of the service category"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "category"
+                    ],
+                    "description": "The service being booked"
+                  },
+                  "rescheduleHistory": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "current": {
+                          "type": "object",
+                          "properties": {
+                            "bookingId": {
+                              "type": "string",
+                              "description": "The unique identifier for the booking"
+                            },
+                            "customerBookingId": {
+                              "type": "string",
+                              "description": "The unique identifier for the customer booking (booking participant)"
+                            },
+                            "startDate": {
+                              "type": "string",
+                              "format": "date-time",
+                              "description": "The start date of the booking"
+                            },
+                            "endDate": {
+                              "type": "string",
+                              "format": "date-time",
+                              "description": "The end date of the booking"
+                            },
+                            "resourceIds": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              },
+                              "description": "The unique identifiers for the resources associated with the booking"
+                            }
+                          },
+                          "required": [
+                            "bookingId",
+                            "customerBookingId",
+                            "startDate",
+                            "endDate",
+                            "resourceIds"
+                          ],
+                          "description": "The current booking details after rescheduling"
+                        },
+                        "previous": {
+                          "type": "object",
+                          "properties": {
+                            "bookingId": {
+                              "type": "string",
+                              "description": "The unique identifier for the previous booking"
+                            },
+                            "customerBookingId": {
+                              "type": "string",
+                              "description": "The unique identifier for the previous customer booking (booking participant)"
+                            },
+                            "startDate": {
+                              "type": "string",
+                              "format": "date-time",
+                              "description": "The start date of the previous booking"
+                            },
+                            "endDate": {
+                              "type": "string",
+                              "format": "date-time",
+                              "description": "The end date of the previous booking"
+                            },
+                            "resourceIds": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              },
+                              "description": "The unique identifiers for the resources associated with the previous booking"
+                            }
+                          },
+                          "required": [
+                            "bookingId",
+                            "customerBookingId",
+                            "startDate",
+                            "endDate",
+                            "resourceIds"
+                          ],
+                          "description": "The previous booking details before rescheduling"
+                        },
+                        "source": {
+                          "type": "string"
+                        },
+                        "created": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      },
+                      "required": [
+                        "current",
+                        "previous",
+                        "source",
+                        "created"
+                      ]
+                    },
+                    "description": "History of rescheduled bookings for this booking participant"
+                  },
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "Cancelled"
+                    ]
+                  }
+                },
+                "required": [
+                  "entity",
+                  "account",
+                  "booking",
+                  "bookingParticipant",
+                  "customer",
+                  "resources",
+                  "service",
+                  "rescheduleHistory",
+                  "action"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Webhook received successfully"
+          }
+        }
+      }
+    },
+    "Invoice/Paid": {
+      "post": {
+        "tags": [
+          "Invoice"
+        ],
+        "description": "Webhook fired when an Invoice is paid",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "entity": {
+                    "type": "string",
+                    "enum": [
+                      "Invoice"
+                    ]
+                  },
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "Paid"
+                    ]
+                  },
+                  "account": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The unique identifier for the account"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "The name of the account"
+                      },
+                      "slug": {
+                        "type": "string",
+                        "description": "The slug for the account"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "slug"
+                    ],
+                    "description": "The account associated with this invoice"
+                  },
+                  "bookingParticipants": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "The unique identifier for the booking participant"
+                        },
+                        "totalSpaces": {
+                          "type": "number",
+                          "description": "The total number of spaces for the booking participant"
+                        },
+                        "totalPrice": {
+                          "type": "number",
+                          "description": "The total price for the booking participant"
+                        },
+                        "status": {
+                          "type": "string",
+                          "description": "The status of the booking participant"
+                        },
+                        "source": {
+                          "type": "string",
+                          "description": "The created source of the booking participant"
+                        },
+                        "notes": {
+                          "type": "string",
+                          "description": "Optional notes for the booking participant"
+                        },
+                        "tier": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "description": "The unique identifier for the tier"
+                            },
+                            "name": {
+                              "type": "string",
+                              "description": "The name of the tier"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "name"
+                          ]
+                        },
+                        "pricePoints": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "description": "The unique identifier for the price point"
+                              },
+                              "name": {
+                                "type": "string",
+                                "description": "The name of the price point"
+                              },
+                              "pricePerQuantity": {
+                                "type": "number",
+                                "description": "The price per quantity for the price point"
+                              },
+                              "spacesPerQuantity": {
+                                "type": "number",
+                                "description": "The spaces per quantity for the price point"
+                              },
+                              "quantity": {
+                                "type": "number",
+                                "description": "The quantity for the price point"
+                              }
+                            },
+                            "required": [
+                              "pricePerQuantity",
+                              "spacesPerQuantity",
+                              "quantity"
+                            ]
+                          }
+                        },
+                        "questions": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "description": "The unique identifier for the question"
+                              },
+                              "label": {
+                                "type": "string",
+                                "description": "The label for the question"
+                              },
+                              "value": {
+                                "anyOf": [
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "boolean"
+                                  },
+                                  {
+                                    "type": "number"
+                                  }
+                                ],
+                                "description": "The value for the question"
+                              }
+                            },
+                            "required": [
+                              "label"
+                            ]
+                          }
+                        },
+                        "locale": {
+                          "type": "string",
+                          "description": "The locale for the booking participant"
+                        },
+                        "cancellationUrl": {
+                          "type": "string",
+                          "description": "The URL for cancelling the booking participant"
+                        },
+                        "rescheduleUrl": {
+                          "type": "string",
+                          "description": "The URL for rescheduling the booking participant"
+                        },
+                        "created": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "The creation date of the booking participant"
+                        },
+                        "updated": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "The last update date of the booking participant"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "totalSpaces",
+                        "totalPrice",
+                        "status",
+                        "source",
+                        "locale",
+                        "created"
+                      ]
+                    },
+                    "description": "Booking participants associated with this invoice"
+                  },
+                  "customer": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The unique identifier for the customer"
+                      },
+                      "firstName": {
+                        "type": "string",
+                        "description": "The first name of the customer"
+                      },
+                      "lastName": {
+                        "type": "string",
+                        "description": "The last name of the customer"
+                      },
+                      "email": {
+                        "type": "string",
+                        "description": "The email address of the customer"
+                      },
+                      "phone": {
+                        "type": "string",
+                        "description": "The phone number of the customer"
+                      },
+                      "mobile": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "description": "The mobile number of the customer"
+                      },
+                      "marketingOptIn": {
+                        "type": "boolean",
+                        "description": "Indicates if the customer has opted in for marketing"
+                      },
+                      "addressOne": {
+                        "type": "string",
+                        "description": "The first line of the customer's address"
+                      },
+                      "city": {
+                        "type": "string",
+                        "description": "The city of the customer's address"
+                      },
+                      "postcode": {
+                        "type": "string",
+                        "description": "The postcode of the customer's address"
+                      },
+                      "customFields": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "number"
+                            }
+                          ]
+                        },
+                        "description": "Custom CRM fields associated with the customer"
+                      },
+                      "ccEmails": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "CC email addresses associated with the customer"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "firstName",
+                      "lastName",
+                      "email",
+                      "marketingOptIn"
+                    ],
+                    "description": "The customer associated with this invoice"
+                  },
+                  "invoice": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The unique identifier for the invoice"
+                      },
+                      "gateway": {
+                        "type": "string",
+                        "description": "The payment gateway used for the invoice"
+                      },
+                      "lines": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "description": {
+                              "type": "string",
+                              "description": "The description of the invoice line item"
+                            },
+                            "unitPrice": {
+                              "type": "number",
+                              "description": "The unit price of the invoice line item"
+                            },
+                            "quantity": {
+                              "type": "number",
+                              "minimum": 1,
+                              "description": "The quantity of the invoice line item"
+                            },
+                            "isDeposit": {
+                              "type": "boolean",
+                              "description": "Indicates if the invoice line item is a deposit"
+                            }
+                          },
+                          "required": [
+                            "description",
+                            "unitPrice",
+                            "quantity"
+                          ]
+                        }
+                      },
+                      "externalPaymentId": {
+                        "type": "string",
+                        "description": "The external payment ID associated with the invoice (e.g., Stripe or Square charge ID, or Adyen pspReference)"
+                      },
+                      "currency": {
+                        "type": "string",
+                        "description": "The currency of the invoice"
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": [
+                          "Paid",
+                          "Pending",
+                          "Failed"
+                        ],
+                        "description": "The status of the invoice"
+                      },
+                      "created": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The creation date of the invoice"
+                      },
+                      "updated": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The last updated date of the invoice"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "lines",
+                      "created"
+                    ],
+                    "description": "The invoice that triggered this invoice paid webhook event"
+                  }
+                },
+                "required": [
+                  "entity",
+                  "action",
+                  "account",
+                  "bookingParticipants",
+                  "customer",
+                  "invoice"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Webhook received successfully"
+          }
+        }
+      }
+    }
+  }
+}
