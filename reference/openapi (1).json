@@ -26,9 +26,15 @@
               "schema": {
                 "type": "object",
                 "additionalProperties": false,
-                "description": "Use an empty body `{}`"
+                "default": {},
+                "description": "Send an empty JSON object."
               },
-              "example": {}
+              "examples": {
+                "emptyBody": {
+                  "summary": "Empty request body",
+                  "value": {}
+                }
+              }
             }
           },
           "required": true
