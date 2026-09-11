@@ -6,5 +6,5 @@ excerpt: >-
 
   Using views will allow relying on ochre-platform tools to setup content and
   its disposition.
-hidden: false
+hidden: true
 ---
