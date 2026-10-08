@@ -8,6 +8,7 @@
   "paths": {
     "/webhooks/{id}": {
       "put": {
+        "operationId": "com.ultraledger.webhook.api.WebhookController_update",
         "summary": "Update Webhook",
         "description": "Updates a webhook by its ID.",
         "tags": [
