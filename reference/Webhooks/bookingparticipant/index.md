@@ -1,4 +1,0 @@
----
-title: BookingParticipant
-hidden: false
----
