@@ -1,0 +1,432 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Webhook Service API",
+    "version": "1.0.0",
+    "description": "API documentation for webhook-service"
+  },
+  "paths": {
+    "/webhooks/{id}": {
+      "put": {
+        "summary": "Update Webhook",
+        "description": "Updates a webhook by its ID.",
+        "tags": [
+          "Webhooks"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the webhook to update",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/UUID"
+            }
+          },
+          {
+            "name": "X-Merchant-ID",
+            "in": "header",
+            "required": true,
+            "description": "UUID of the merchant",
+            "schema": {
+              "$ref": "#/components/schemas/UUID"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Webhook updated successfully"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookChangeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "JwtAuthentication": []
+          }
+        ]
+      }
+    },
+    "/webhooks": {
+      "get": {
+        "summary": "List Merchant Webhooks",
+        "description": "Retrieves a paginated list of webhooks for the current merchant.",
+        "tags": [
+          "Webhooks"
+        ],
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number for pagination",
+            "schema": {
+              "format": "int32",
+              "default": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of webhooks per page",
+            "schema": {
+              "format": "int32",
+              "default": 20,
+              "maximum": 200,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "Sort by a specific field",
+            "example": "merchantId,asc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Merchant-ID",
+            "in": "header",
+            "required": true,
+            "description": "UUID of the merchant",
+            "schema": {
+              "$ref": "#/components/schemas/UUID"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageWebhookResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "JwtAuthentication": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Create Webhook",
+        "description": "Creates a new webhook.",
+        "tags": [
+          "Webhooks"
+        ],
+        "responses": {
+          "200": {
+            "description": "Webhook created successfully"
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookChangeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "JwtAuthentication": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Merchant-ID",
+            "in": "header",
+            "required": true,
+            "description": "UUID of the merchant",
+            "schema": {
+              "$ref": "#/components/schemas/UUID"
+            }
+          }
+        ]
+      }
+    },
+    "/webhooks/entries": {
+      "get": {
+        "summary": "List Merchant Webhook Entries",
+        "description": "Retrieves a paginated list of webhook entries for the current merchant based on the provided filter criteria.",
+        "tags": [
+          "Webhooks"
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter by entry status",
+            "schema": {
+              "$ref": "#/components/schemas/EntryStatus"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Filter by webhook type",
+            "schema": {
+              "$ref": "#/components/schemas/WebhookType"
+            }
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number for pagination",
+            "schema": {
+              "format": "int32",
+              "default": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of entries per page",
+            "schema": {
+              "format": "int32",
+              "default": 20,
+              "maximum": 200,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "Sort by a specific field",
+            "example": "createdDate,asc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Merchant-ID",
+            "in": "header",
+            "required": true,
+            "description": "UUID of the merchant",
+            "schema": {
+              "$ref": "#/components/schemas/UUID"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageWebhookEntryResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "JwtAuthentication": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "WebhookEntryResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/UUID"
+          },
+          "type": {
+            "$ref": "#/components/schemas/WebhookType"
+          },
+          "status": {
+            "$ref": "#/components/schemas/EntryStatus"
+          },
+          "content": {}
+        }
+      },
+      "Money": {
+        "description": "Monetary amount",
+        "type": "object",
+        "properties": {
+          "currency": {
+            "$ref": "#/components/schemas/CurrencyUnit"
+          },
+          "value": {
+            "type": "number"
+          }
+        }
+      },
+      "CurrencyUnit": {
+        "description": "Currency unit",
+        "type": "string",
+        "example": "EUR"
+      },
+      "WebhookChangeRequest": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "description": "The URL of the webhook",
+            "type": "string"
+          },
+          "types": {
+            "description": "A set of webhook types\n`TRANSACTION_INITIATED`, `TRANSACTION_WAITING_FOR_CANCELLATION`, `TRANSACTION_FAILED`, `TRANSACTION_COMPLETED`, `TRANSACTION_PROCESSING`",
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "PageWebhookResponse": {
+        "type": "object",
+        "properties": {
+          "pageNumber": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "pageSize": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WebhookResponse"
+            }
+          }
+        }
+      },
+      "NumberValue": {
+        "type": "number"
+      },
+      "PageWebhookEntryResponse": {
+        "type": "object",
+        "properties": {
+          "pageNumber": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "pageSize": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WebhookEntryResponse"
+            }
+          }
+        }
+      },
+      "WebhookType": {
+        "enum": [
+          "TRANSACTION_INITIATED",
+          "TRANSACTION_WAITING_FOR_CANCELLATION",
+          "TRANSACTION_FAILED",
+          "TRANSACTION_COMPLETED",
+          "TRANSACTION_PROCESSING"
+        ],
+        "type": "string"
+      },
+      "WebhookResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/UUID"
+          },
+          "tenantId": {
+            "$ref": "#/components/schemas/UUID"
+          },
+          "merchantId": {
+            "$ref": "#/components/schemas/UUID"
+          },
+          "url": {
+            "type": "string"
+          },
+          "types": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WebhookType"
+            }
+          }
+        }
+      },
+      "EntryStatus": {
+        "enum": [
+          "SUCCESSFUL",
+          "FAILED",
+          "CANCELLED"
+        ],
+        "type": "string"
+      },
+      "UUID": {
+        "format": "uuid",
+        "pattern": "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}",
+        "type": "string",
+        "example": "5def2f43-2c81-4230-85b2-c8a62f7460c9"
+      }
+    },
+    "securitySchemes": {
+      "JwtAuthentication": {
+        "type": "http",
+        "description": "JWT authentication",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "https://localhost:28081"
+    }
+  ]
+}
