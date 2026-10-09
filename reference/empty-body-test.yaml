@@ -1,0 +1,101 @@
+openapi: 3.0.3
+info:
+  title: Empty Request Body Reproduction
+  version: 1.0.0
+  description: Test empty object and array examples in ReadMe API Explorer.
+servers:
+  - url: https://httpbin.org
+paths:
+  /post:
+    post:
+      summary: Send empty object
+      operationId: sendEmptyObject
+      tags:
+        - Empty object
+      description: Verify that the literal empty object is shown and sent.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              description: 'Expected body: {}'
+            example: {}
+      responses:
+        '200':
+          description: Echo response
+    parameters: []
+  /anything/empty-array:
+    post:
+      summary: Send empty array
+      operationId: sendEmptyArray
+      tags:
+        - Empty array
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+            example: []
+      responses:
+        '200':
+          description: Echo response
+  /anything/nested-empty:
+    post:
+      summary: Send nested empty values
+      operationId: sendNestedEmpty
+      tags:
+        - Nested values
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                emptyObject:
+                  type: object
+                  additionalProperties: false
+                emptyArray:
+                  type: array
+                  items:
+                    type: string
+              required:
+                - emptyObject
+                - emptyArray
+            example:
+              emptyObject: {}
+              emptyArray: []
+      responses:
+        '200':
+          description: Echo response
+  /anything/non-empty:
+    post:
+      summary: Send non-empty values (control)
+      operationId: sendNonEmpty
+      tags:
+        - Control
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                values:
+                  type: array
+                  items:
+                    type: string
+            example:
+              name: test
+              values:
+                - one
+      responses:
+        '200':
+          description: Echo response
