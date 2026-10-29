@@ -471,6 +471,8 @@ paths:
                   description: >-
                     Toda transação possui o transaction_id, ele é utilizado para
                     identificar a transação em questão.
+                name:
+                  type: string
             examples:
               New Example:
                 summary: New Example
