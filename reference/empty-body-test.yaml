@@ -479,6 +479,9 @@ paths:
                   token: ZKSRNZGN8VW3MWN68UX8DDMDJR578N9772YU2FHABDEXl
                   status: canceled
                   transaction_id: ARC83YKF5TZ1XU50
+              New Example 1:
+                summary: New Example 1
+                value: {}
       x-readme: {}
   /transaction/status/:
     post:
