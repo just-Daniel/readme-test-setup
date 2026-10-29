@@ -1,4 +1,0 @@
----
-title: Control
-hidden: false
----

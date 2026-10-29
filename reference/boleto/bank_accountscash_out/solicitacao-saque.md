@@ -1,6 +1,6 @@
 ---
 api:
   file: empty-body-test.yaml
-  operationId: sendNestedEmpty
+  operationId: solicitacao-saque
 hidden: false
 ---

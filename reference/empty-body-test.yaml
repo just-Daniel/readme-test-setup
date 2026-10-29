@@ -1,101 +1,1351 @@
-openapi: 3.0.3
+openapi: 3.1.0
 info:
-  title: Empty Request Body Reproduction
-  version: 1.0.0
-  description: Test empty object and array examples in ReadMe API Explorer.
+  title: boleto
+  version: '1.3'
 servers:
-  - url: https://httpbin.org
+  - url: https://api.paghiper.com
+components:
+  securitySchemes: {}
+security:
+  - {}
 paths:
-  /post:
+  /transaction/create/:
     post:
-      summary: Send empty object
-      operationId: sendEmptyObject
-      tags:
-        - Empty object
-      description: Verify that the literal empty object is shown and sent.
+      summary: Emissão de boleto bancário PAGHIPER
+      description: ''
+      operationId: gerar-boleto
       requestBody:
-        required: true
         content:
           application/json:
             schema:
               type: object
-              additionalProperties: false
-              description: 'Expected body: {}'
-            example: {}
-      responses:
-        '200':
-          description: Echo response
-    parameters: []
-  /anything/empty-array:
-    post:
-      summary: Send empty array
-      operationId: sendEmptyArray
-      tags:
-        - Empty array
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                type: string
-            example: []
-      responses:
-        '200':
-          description: Echo response
-  /anything/nested-empty:
-    post:
-      summary: Send nested empty values
-      operationId: sendNestedEmpty
-      tags:
-        - Nested values
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                emptyObject:
-                  type: object
-                  additionalProperties: false
-                emptyArray:
-                  type: array
-                  items:
-                    type: string
               required:
-                - emptyObject
-                - emptyArray
-            example:
-              emptyObject: {}
-              emptyArray: []
+                - apiKey
+                - order_id
+                - payer_email
+                - payer_name
+                - payer_cpf_cnpj
+                - days_due_date
+                - type_bank_slip
+                - items
+              properties:
+                apiKey:
+                  type: string
+                  description: >-
+                    Campo composto de números, letras, traços e hífen.<br>Sempre
+                    começa por <strong>apk_</strong><br><br> Exemplo:
+                    apk_48040241-OqCWOKczcjutZaFRSfTlVBDpHFXpkdzz<br> <br>
+                    Utilizado para identificar o vendedor
+                order_id:
+                  type: string
+                  description: >-
+                    <strong>Código de referencia da venda</strong><br><br>Define
+                    um código para referenciar o pagamento.<br>Útil para
+                    vincular o pagamento a um pedido criado pelo sistema do
+                    lojista.<br><br>Recomendamos que seja um código único para
+                    cada transação.
+                payer_email:
+                  type: string
+                  description: e-mail valido do cliente pagador
+                payer_name:
+                  type: string
+                  description: Nome ou Razão social do cliente pagador
+                payer_cpf_cnpj:
+                  type: string
+                  description: >-
+                    CPF ou CNPJ do pagador de preferencia apenas os números do
+                    cpf ou cnpj
+                payer_phone:
+                  type: integer
+                  description: >-
+                    Número de telefone ou celular do cliente Exemplo: 1140638785
+                    Sempre informar o DDD + Número
+                payer_street:
+                  type: string
+                  description: >-
+                    <strong>Endereço</strong> do cliente
+                    pagador.<br><br>Exemplo: Av Brigadeiro Faria Lima
+                payer_number:
+                  type: integer
+                  description: >-
+                    <strong>Número do endereço</strong> do cliente
+                    pagador<br><br>Exemplo: 1461
+                payer_complement:
+                  type: string
+                  description: >-
+                    <strong>Complemento do endereço</strong> do cliente
+                    pagador<br><br>Exemplo: Torre Sul 4º Andar
+                payer_district:
+                  type: string
+                  description: >-
+                    <strong>Bairro do cliente</strong> pagador<br><br>Exemplo:
+                    Jardim Paulistano
+                payer_city:
+                  type: string
+                  description: >-
+                    <strong>Cidade</strong> do cliente pagador<br><br>Exemplo:
+                    São Paulo
+                payer_state:
+                  type: string
+                  description: >-
+                    <strong>Estado</strong> do cliente pagador<br><br>Exemplo:
+                    SP Deve ser representado pela sigla de cada estado
+                payer_zip_code:
+                  type: integer
+                  description: >-
+                    <strong>CEP</strong> do cliente pagador<br><br>Exemplo:
+                    01452002
+                days_due_date:
+                  type: integer
+                  description: >-
+                    <strong>Dias corridos até o vencimento<br><br>Exemplo:
+                    4</strong><br>O número representa diferença de dias entre a
+                    data da requisição e a data de vencimento.<br><br>A
+                    diferença entre as datas:<br>Data requisição:
+                    2017-07-01<br>Data do vencimento:
+                    2017-07-05<br><br>days_due_date: 4<br><br> Por padrão o
+                    valor maximo é de 400 dias, caso necessite emitir boleto com
+                    prazo superior a 400 dias entre em contato através do e-mail
+                    suporte@paghiper.com
+                type_bank_slip:
+                  type: string
+                  description: >-
+                    <strong>Formato do boleto bancário</strong><br><br>  <table
+                    class="especificacoesmini">   <thead>     <tr>      
+                    <th>esperado</th>       <th>significado</th>     </tr>  
+                    </thead>    <tbody>     <tr>       <td>boletoA4</td>      
+                    <td>Boleto do tamanho<br>de uma folha A4 </td>    
+                    </tr>        <tr>       <td>boletoCarne</td>      
+                    <td>Boleto em tamanho<br>carne, onde é<br>possível imprimir
+                    até<br>três boletos por folha A4</td>     </tr>   </tbody>
+                    </table> <br><br>Comentário: o formato mais popular é o
+                    boletoA4
+                notification_url:
+                  type: string
+                  description: >-
+                    <strong>URL de retorno automático de
+                    dados</strong><br>Endereço da página onde o PagHiper enviará
+                    o POST com as informações da transação. <br>Note que, este
+                    campo tem prioridade sobre a url que estiver configurada no
+                    painel PagHiper.<br><br>Qualquer alteração de status de uma
+                    transação, será está url que iremos notificar através de um
+                    post
+                discount_cents:
+                  type: integer
+                  description: >-
+                    <strong>Valor total do desconto da compra em
+                    centavos</strong><br><br>Exemplo, em um desconto aplicado de
+                    R$ 11,58 reais, deve ser informado: 1158 (total de
+                    centavos).<br><br>Se o desconto for aplicado em porcentagem,
+                    a sua aplicação deverá realizar o calculo e nos informar
+                    apenas o valor já calculado em centavos.
+                shipping_price_cents:
+                  type: integer
+                  description: >-
+                    <strong>Valor total do frete em
+                    centavos</strong><br><br>Exemplo: o frete custa R$ 15,99,
+                    deve ser informado: 1599 (total em centavos)
+                shipping_methods:
+                  type: string
+                  description: >-
+                    <strong>Método de entrega</strong><br><br>Exemplo: SEDEX,
+                    SEDEX10, PAC, TRANSPORTADORA, MOTOBOY, RETIRADA NO LOCAL,
+                    etc.
+                partners_id:
+                  type: string
+                  description: >-
+                    <strong>Id do parceiro</strong><br><br>Útil apenas para
+                    integração de plataformas parceiras. Na maioria dos casos,
+                    esse campo deve ser ignorado.
+                number_ntfiscal:
+                  type: integer
+                  description: >-
+                    <strong>Número da nota fiscal</strong> Se informado
+                    <strong>123456</strong>, exibira o número da nota fiscal no
+                    boleto bancário na caixa de descrição da seguinte forma:
+                    “Referente a nota fiscal número: 123456”
+                fixed_description:
+                  type: boolean
+                  description: >-
+                    <strong>Frase fixa</strong><br><br>Frase pré-configurada no
+                    painel do PagHiper,<br> esta frase passa por uma pré analise
+                    antes de ser exibida nos boletos.<br><br><table
+                    class="especificacoesmini">   <thead>     <tr>      
+                    <th>esperado</th>       <th>significado</th>     </tr>  
+                    </thead>    <tbody>     <tr>       <td>true</td>      
+                    <td>Exibira a frase na caixa de descrição do boleto</td>    
+                    </tr>        <tr>       <td>false</td>       <td>Nenhuma
+                    frase pré-configurada</td>     </tr>   </tbody> </table>
+                seller_description:
+                  type: string
+                  description: >-
+                    <strong>Frase variável do vendedor</strong><br><br> Texto
+                    que irá variar de acordo com cada boleto em específico,
+                    podendo colocar informações que remetam ao pedido/ serviço
+                    adquirido pelo cliente.<br><br>  A frase variável será
+                    exibida no corpo do boleto bancário, no campo onde traz
+                    informações sobre os prazos de pagamento do boleto.<br><br> 
+                    A frase será exibida no seguinte formato: “<strong>Texto do
+                    vendedor</strong>: (conteúdo da frase variável
+                    aqui)”<br><br>  Obs.: A informação “<strong>Texto do
+                    vendedor</strong>” é permanente, não sendo retirada ao
+                    acrescentar uma frase variável no boleto.<br><br>  Tamanho
+                    máximo de 85 caracteres.<br>  <br>
+                late_payment_fine:
+                  type: integer
+                  description: >-
+                    <strong>Percentual da multa</strong><br><br> O percentual
+                    máximo autorizado é de 2%, de acordo artigo 52, parágrafo
+                    primeiro do Código de Defesa do Consumidor, Lei
+                    8.078/90<br><br> Exemplo:<br><br> multa de 2% deve ser
+                    enviado o valor: 2<br><br> Qualquer valor acima do máximo
+                    autorizado será levado em consideração 2% = 2<br><br> Aceito
+                    apenas números inteiros: 1 e 2
+                per_day_interest:
+                  type: boolean
+                  description: >-
+                    <strong>Juros por atraso</strong> <br />Aplicar 1% de juros
+                    máximo ao mês, esse percentual será cobrado
+                    proporcionalmente aos dias de atraso.<br><br> Dividindo 1%
+                    por 30 dias = 0,033% por dia de atraso.<br><br> <table
+                    class="especificacoesmini"> <thead> <tr> <th>esperado</th>
+                    <th>significado</th> </tr> </thead> <tbody> <tr>
+                    <td>true</td> <td>Aplicará o juros de 1% ao mês por
+                    atraso.</td> </tr> <tr> <td>false</td> <td>Nenhum juro será
+                    aplicado.</td> </tr> </tbody> </table>
+                early_payment_discounts_days:
+                  type: integer
+                  description: >-
+                    Número de dias em que o pagamento pode ser realizado com
+                    antecedência recebendo o desconto extra.<br><br>
+                    <strong>Exemplo:</strong> O valor do boleto é R$ 100,00 e
+                    será concedido um desconto extra caso o pagador realize o
+                    pagamento com até 5 dias antes da data do vencimento. Neste
+                    caso deve ser enviado o número 5 simbolizando o número
+                    máximo de dias de antecedência.<br><br>Nota: Este campo não
+                    pode ser utilizado, se o valor informado ser maior que o
+                    valor do campo days_due_date (vencimento).
+                early_payment_discounts_cents:
+                  type: integer
+                  description: >-
+                    Valor do desconto em centavos que será aplicado caso o
+                    pagamento ocorra de forma antecipada.<br><br> Exemplo: O
+                    valor do boleto é R$100,00, porem, caso seja pago com
+                    antecedência mínima de 5 dias antes da data do vencimento,
+                    será concedido um desconto extra de R$5,00.<br><br> Neste
+                    caso, o valor a ser enviado será o número 500, valor em
+                    centavos, que representará o desconto extra pelo pagamento
+                    antecipado.<br><br> Se o desconto extra pelo pagamento
+                    antecipado for aplicado em porcentagem, a sua aplicação
+                    deverá realizar o cálculo e nos informar apenas o valor já
+                    calculado em centavos.
+                open_after_day_due:
+                  type: integer
+                  description: >-
+                    Número máximo de dias em que o boleto poderá ser pago
+                    <strong>após o vencimento</strong>.  (Prática comum para
+                    quem opta por cobrar juros e multas).<br><br>  Neste campo
+                    será aceito, qualquer número maior ou igual a 2, e menor ou
+                    igual a 90.<br><br>  Exemplo:<br> Se optar em receber após o
+                    vencimento por até 15 dias, deverá ser enviado o número 15,
+                    e a frase será exibida no boleto da seguinte forma: “Não
+                    receber após 15 dias do vencimento.”<br><br>  Recomendamos o
+                    uso deste campo apenas se existir o interesse em permitir
+                    que o pagador realize o pagamento fora do prazo de
+                    vencimento. Ele é útil para se trabalhar em conjunto com a
+                    aplicação de juros e multas.<br><br>
+                items:
+                  type: array
+                  items:
+                    properties:
+                      item_id:
+                        type: string
+                        description: >-
+                          Código do item Útil para identificar, por exemplo, o
+                          código do produto. Caso não deseje utilizar esse
+                          campo, enviar o número: 1
+                      description:
+                        type: string
+                        description: >-
+                          Descrição do item Útil para identificar o nome do
+                          produto ou serviço.
+                      quantity:
+                        type: integer
+                        description: >-
+                          Quantidade do item Define a quantidade de cada item.
+                          Utilizado para calcular o valor total da transação.
+                          deve ser enviado numero inteiro igual ou maior que 1
+                        format: int32
+                      price_cents:
+                        type: integer
+                        description: >-
+                          Valor unitário do item em centavos Define o valor
+                          unitário de cada item. Exemplo: Determinado item tem o
+                          preço definido em R$ 1.901,95, deverá ser informado:
+                          190195 (total em centavos)
+                        format: int32
+                    required:
+                      - item_id
+                      - description
+                      - quantity
+                      - price_cents
+                    type: object
       responses:
         '200':
-          description: Echo response
-  /anything/non-empty:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  create_request:
+                    type: object
+                    properties:
+                      result:
+                        type: string
+                        example: reject
+                      response_message:
+                        type: string
+                        example: apiKey não informada ou invalida
+                      http_code:
+                        type: integer
+                        example: 200
+                        default: 0
+              examples:
+                Reject:
+                  summary: Reject
+                  value:
+                    create_request:
+                      result: reject
+                      response_message: apiKey não informada ou invalida
+                      http_code: 200
+          description: Reject
+        '201':
+          description: '201'
+          content:
+            application/json:
+              examples:
+                Success:
+                  value: |-
+                    {
+                    "create_request":
+                     {
+                      "result":"success",
+                      "response_message":"transacao criada",
+                      "transaction_id":"HF97T5SH2ZQNLF6Z",
+                      "created_date":"2017-07-20 20:46:57",
+                      "value_cents":"18507",
+                      "status":"pending",
+                      "order_id":"32330335",
+                      "due_date":"2017-07-27",
+                      "bank_slip":{
+                          "digitable_line":"34191.76304 03906.270248 61514.190000 9 72330000017012",
+                          "url_slip":"https://www.paghiper.com/checkout/boleto/180068c7/HF97T5SH2ZQNLF6Z/30039",
+                          "url_slip_pdf":"https://www.paghiper.com/checkout/boleto/180068c7/HF97T5SH2ZQNLF6Z/30039/pdf",
+                          "bar_code_number_to_image":"34199723300000170121763003906270246151419000"
+                                  },
+                      "http_code":"201"
+                     }
+                    }
+                  summary: Success
+              schema:
+                type: object
+                properties:
+                  create_request:
+                    type: object
+                    properties:
+                      result:
+                        type: string
+                        example: success
+                      response_message:
+                        type: string
+                        example: transacao criada
+                      transaction_id:
+                        type: string
+                        example: HF97T5SH2ZQNLF6Z
+                      created_date:
+                        type: string
+                        example: '2017-07-20 20:46:57'
+                      value_cents:
+                        type: string
+                        example: '18507'
+                      status:
+                        type: string
+                        example: pending
+                      order_id:
+                        type: string
+                        example: '32330335'
+                      due_date:
+                        type: string
+                        example: '2017-07-27'
+                      bank_slip:
+                        type: object
+                        properties:
+                          digitable_line:
+                            type: string
+                            example: >-
+                              34191.76304 03906.270248 61514.190000 9
+                              72330000017012
+                          url_slip:
+                            type: string
+                            example: >-
+                              https://www.paghiper.com/checkout/boleto/180068c7/HF97T5SH2ZQNLF6Z/30039
+                          url_slip_pdf:
+                            type: string
+                            example: >-
+                              https://www.paghiper.com/checkout/boleto/180068c7/HF97T5SH2ZQNLF6Z/30039/pdf
+                          bar_code_number_to_image:
+                            type: string
+                            example: '34199723300000170121763003906270246151419000'
+                      http_code:
+                        type: string
+                        example: '201'
+        4XX:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  create_request:
+                    type: object
+                    properties:
+                      result:
+                        type: string
+                        example: reject
+                      response_message:
+                        type: string
+                        example: Request method must be POST!
+                      http_code:
+                        type: integer
+                        example: 405
+                        default: 0
+              examples:
+                Client Error:
+                  summary: Client Error
+                  value:
+                    create_request:
+                      result: reject
+                      response_message: Request method must be POST!
+                      http_code: 405
+          description: Client Error
+  /transaction/cancel/:
     post:
-      summary: Send non-empty values (control)
-      operationId: sendNonEmpty
-      tags:
-        - Control
+      summary: Cancelamento de boleto bancário
+      description: >-
+        Essa função é apenas com os boletos que ainda não foram pagos. Após o
+        vencimento do boleto, o mesmo será cancelado automaticamente pela
+        PAGHIPER após 4 dias corridos.
+      operationId: cancelamento-boleto-exemplo
       requestBody:
-        required: true
         content:
           application/json:
             schema:
               type: object
+              required:
+                - token
+                - apiKey
+                - status
+                - transaction_id
               properties:
-                name:
+                token:
                   type: string
-                values:
-                  type: array
-                  items:
-                    type: string
-            example:
-              name: test
-              values:
-                - one
+                  description: >-
+                    Token individual para cada vendedor. Ele é utilizado para
+                    validar a solicitação e não deve ser compartilhado com
+                    terceiros.<br><br>Para  obter o
+                    token:<br>https://www.paghiper.com/painel/token/
+                apiKey:
+                  type: string
+                  description: >-
+                    Campo composto de números, letras, traços e hífen.<br>Sempre
+                    começa por <strong>apk_</strong><br><br> Exemplo:
+                    apk_48040241-OqCWOKczcjutZaFRSfTlVBDpHFXpkdzz<br> <br>
+                    Utilizado para identificar o vendedor
+                status:
+                  type: string
+                  description: >-
+                    Deve ser enviada a palavra: canceled Utilizado para
+                    confirmar o status solicitado.
+                  default: canceled
+                transaction_id:
+                  type: string
+                  description: >-
+                    Toda transação possui o transaction_id, ele é utilizado para
+                    identificar a transação em questão.
+            examples:
+              New Example:
+                summary: New Example
+                value:
+                  apiKey: apk_12345678-OqCWOKczcjutZaFRSfTlVBDpHFXpkdzz
+                  token: ZKSRNZGN8VW3MWN68UX8DDMDJR578N9772YU2FHABDEXl
+                  status: canceled
+                  transaction_id: ARC83YKF5TZ1XU50
+      x-readme: {}
+  /transaction/status/:
+    post:
+      summary: Consulta de status do boleto
+      description: >-
+        A consulta irá retornar o status atual do pedido e a data da última
+        alteração de status.
+      operationId: status-do-boleto
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+                - apiKey
+                - transaction_id
+              properties:
+                token:
+                  type: string
+                  description: >-
+                    Token individual para cada vendedor. Ele é utilizado para
+                    validar a solicitação e não deve ser compartilhado com
+                    terceiros.<br><br>Para  obter o
+                    token:<br>https://www.paghiper.com/painel/token/
+                apiKey:
+                  type: string
+                  description: >-
+                    Campo composto de números, letras, traços e hífen.<br>Sempre
+                    começa por <strong>apk_</strong><br><br> Exemplo:
+                    apk_48040241-OqCWOKczcjutZaFRSfTlVBDpHFXpkdzz<br> <br>
+                    Utilizado para identificar o vendedor
+                transaction_id:
+                  type: string
+                  description: >-
+                    Toda transação possui o transaction_id, ele é utilizado para
+                    identificar a transação em questão.
       responses:
         '200':
-          description: Echo response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status_request:
+                    type: object
+                    properties:
+                      result:
+                        type: string
+                        example: reject
+                      response_message:
+                        type: string
+                        example: transaction_id não informada ou inválida
+                      http_code:
+                        type: integer
+                        example: 200
+                        default: 0
+              examples:
+                Reject:
+                  summary: Reject
+                  value:
+                    status_request:
+                      result: reject
+                      response_message: transaction_id não informada ou inválida
+                      http_code: 200
+          description: OK
+        '201':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status_request:
+                    type: object
+                    properties:
+                      result:
+                        type: string
+                        example: success
+                      response_message:
+                        type: string
+                        example: transacao encontrada
+                      order_id:
+                        type: string
+                        example: '9995'
+                      status:
+                        type: string
+                        example: canceled
+                      status_date:
+                        type: string
+                        example: '2026-10-28 12:11:46'
+                      due_date:
+                        type: string
+                        example: '2026-10-28'
+                      value_cents:
+                        type: integer
+                        example: 300
+                        default: 0
+                      open_after_day_due:
+                        type: integer
+                        example: 2
+                        default: 0
+                      bank_slip:
+                        type: object
+                        properties:
+                          digitable_line:
+                            type: string
+                            example: >-
+                              34191.76106 04487.160246 61514.190000 3
+                              72180000002000
+                          url_slip:
+                            type: string
+                            example: >-
+                              https://www.paghiper.com/checkout/boleto/jadcea7a6mca7rae9l0a5t7ecs6t2e26b50398f102af80e8974705c49b87301eb30e84cf49812933a4bde109ca30546e9tcs7e4t7eiaoe022udafibmeo4t0abg/11J0AUC4A5VPETRD/123456789
+                          url_slip_pdf:
+                            type: string
+                            example: >-
+                              https://www.paghiper.com/checkout/boleto/jadcea7a6mca7rae9l0a5t7ecs6t2e26b50398f102af80e8974705c49b87301eb30e84cf49812933a4bde109ca30546e9tcs7e4t7eiaoe022udafibmeo4t0abg/11J0AUC4A5VPETRD/123456789/pdf
+                      http_code:
+                        type: integer
+                        example: 201
+                        default: 0
+              examples:
+                Created:
+                  summary: Created
+                  value:
+                    status_request:
+                      result: success
+                      response_message: transacao encontrada
+                      order_id: '9995'
+                      status: canceled
+                      status_date: '2026-10-28 12:11:46'
+                      due_date: '2026-10-28'
+                      value_cents: 300
+                      open_after_day_due: 2
+                      bank_slip:
+                        digitable_line: '34191761060448716024661514190000372180000002000'
+                        url_slip: >-
+                          https://www.paghiper.com/checkout/boleto/jadcea7a6mca7rae9l0a5t7ecs6t2e26b50398f102af80e8974705c49b87301eb30e84cf49812933a4bde109ca30546e9tcs7e4t7eiaoe022udafibmeo4t0abg/BPV661O7AVLORCN5/123456789
+                        url_slip_pdf: >-
+                          https://www.paghiper.com/checkout/boleto/jadcea7a6mca7rae9l0a5t7ecs6t2e26b50398f102af80e8974705c49b87301eb30e84cf49812933a4bde109ca30546e9tcs7e4t7eiaoe022udafibmeo4t0abg/BPV661O7AVLORCN5/123456789/pdf
+                      http_code: 201
+          description: Created
+        4XX:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status_request:
+                    type: object
+                    properties:
+                      result:
+                        type: string
+                        example: reject
+                      response_message:
+                        type: string
+                        example: Request method must be POST!
+                      http_code:
+                        type: integer
+                        example: 405
+                        default: 0
+              examples:
+                Client Error:
+                  summary: Client Error
+                  value:
+                    status_request:
+                      result: reject
+                      response_message: Request method must be POST!
+                      http_code: 405
+          description: Client Error
+  /transaction/notification/:
+    post:
+      summary: Notificações automática de status (Retorno automático)
+      description: ''
+      operationId: notificacoes-automatica-de-status-retorno-automatico
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - apiKey
+                - token
+                - transaction_id
+                - notification_id
+              properties:
+                apiKey:
+                  type: string
+                  description: >-
+                    Campo composto de números, letras, traços e hífen.<br>Sempre
+                    começa por <strong>apk_</strong><br><br> Exemplo:
+                    apk_48040241-OqCWOKczcjutZaFRSfTlVBDpHFXpkdzz<br> <br>
+                    Utilizado para identificar o vendedor
+                token:
+                  type: string
+                  description: >-
+                    Token individual para cada vendedor. Ele é utilizado para
+                    validar a solicitação e não deve ser compartilhado com
+                    terceiros.<br><br>Para  obter o
+                    token:<br>https://www.paghiper.com/painel/token/
+                transaction_id:
+                  type: string
+                  description: >-
+                    Toda transação possui o transaction_id, ele é utilizado para
+                    identificar a transação em questão.
+                notification_id:
+                  type: string
+                  description: Código único utilizado para identificar a notificação.
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+  /transaction/list/:
+    post:
+      summary: Listar transações via API
+      description: ''
+      operationId: listar-transacoes-via-api-exemplo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - apiKey
+                - token
+              properties:
+                apiKey:
+                  type: string
+                  description: >-
+                    Campo composto de números, letras, traços e hífen.<br>Sempre
+                    começa por <strong>apk_</strong><br><br> Exemplo:
+                    apk_48040241-OqCWOKczcjutZaFRSfTlVBDpHFXpkdzz<br> <br>
+                    Utilizado para identificar o vendedor
+                token:
+                  type: string
+                  description: >-
+                    Token individual para cada vendedor. Ele é utilizado para
+                    validar a solicitação e não deve ser compartilhado com
+                    terceiros.<br><br>Para  obter o
+                    token:<br>https://www.paghiper.com/painel/token/
+                status:
+                  type: string
+                  description: "Listar as transa&ccedil;&otilde;es de acordo com o seu status atual<br /><br /> Esperado:<table class=\"especificacoesmini\"> <thead> <tr> <th>status</th> <th>significado</th> </tr> </thead> <tbody> <tr> <td>pending</td> <td>aguardando</td> </tr>   <tr> <td>reserved</td>   <td>reservado <a target=\"_blank\" href=\"https://atendimento.paghiper.com/hc/pt-br/articles/360016177713\">(Como Funciona ?)</a></td> \t</tr> \t <tr> <td>canceled</td> <td>cancelado</td> </tr> <tr> <td>paid</td> <td>aprovado e completo</td> </tr> <tr> <td>processing</td> <td>analise</td> </tr> <tr> <td>refunded</td> <td>estornado</td> </tr> </table> </tbody>"
+                initial_date:
+                  type: string
+                  description: >-
+                    Data inicial do filtro <br /><br />Exemplo esperado <br
+                    />2018-01-01 <br /><br />Caso n&atilde;o seja enviado esse
+                    par&acirc;metro, ser&aacute; utilizado os &uacute;ltimos 90
+                    dias. <br /><br />Verifique as orienta&ccedil;&otilde;es do
+                    par&acirc;metro: <br /><strong>filter_date</strong>
+                  format: date
+                final_date:
+                  type: string
+                  description: >-
+                    Data inicial do filtro <br /><br />Exemplo esperado <br
+                    />2018-01-01 <br /><br />Caso n&atilde;o seja enviado esse
+                    par&acirc;metro, ser&aacute; utilizado a data
+                    atual.&nbsp;<br /><br />Verifique as
+                    orienta&ccedil;&otilde;es do par&acirc;metro: <br
+                    /><strong>filter_date</strong>
+                  format: date
+                filter_date:
+                  type: string
+                  description: >-
+                    * Campo obrigat&oacute;rio caso utilize o
+                    <strong>initial_date</strong> e <strong>final_date</strong>
+                    <br />Este par&acirc;metro tem a fun&ccedil;&atilde;o de
+                    filtrar a busca de datas por:<br /><br />&bull; Data em que
+                    a transa&ccedil;&atilde;o foi criada,<br /> &bull; Data em
+                    que a transa&ccedil;&atilde;o foi paga<br />ou<br />&bull;
+                    Data em que vence a transa&ccedil;&atilde;o<br /><br
+                    />Esperado:<br><br><table class="especificacoesmini">
+                    <thead> <tr> <th>op&ccedil;&otilde;es</th>
+                    <th>significado</th> </tr> </thead> <tbody> <tr>
+                    <td>create_date</td> <td>Data da cria&ccedil;&atilde;o</td>
+                    </tr> <tr> <td>paid_date</td> <td>Data do pagamento</td>
+                    </tr> <tr> <td>due_date</td> <td>Data do vencimento</td>
+                    </tr> </tbody> </table>
+                due_date:
+                  type: string
+                  description: >-
+                    Data de vencimento do boleto <br><br>Exemplo esperado
+                    2018-01-17  <br><br>Utilizado apenas para listar boletos que
+                    irão vencer em uma determinada data.
+                  format: date
+                payer_cpf_cnpj:
+                  type: string
+                  description: >-
+                    <strong>CPF ou CNPJ do pagador</strong><br /><br
+                    />&Uacute;til para buscar os pedidos/boleto de um cliente
+                    especifico através do CPF ou CNPJ
+                order_id:
+                  type: string
+                  description: >-
+                    <strong>C&oacute;digo de refer&ecirc;ncia da
+                    venda</strong><br /><br /> C&oacute;digo para referenciar o
+                    pagamento ou o n&uacute;mero do pedido <br /><br
+                    />&Uacute;til para buscar o pagamento de um pedido criado
+                    pelo sistema do lojista, caso o n&uacute;mero do pedido
+                    tenha v&iacute;nculo com este par&acirc;metro.
+                value_cents:
+                  type: integer
+                  description: >-
+                    Possibilidade de buscar pelo valor da
+                    transa&ccedil;&atilde;o<br /><br /> Valor unit&aacute;rio em
+                    centavos<br /> Exemplo:Filtrar transa&ccedil;&otilde;es com
+                    o valor de R$ 1.000,00 (mil reais), dever&aacute; ser
+                    informado: 100000 (total em centavos)
+                  format: int32
+                value_cents_filter:
+                  type: string
+                  description: >-
+                    Deve ser utilizado apenas em conjunto com o par&acirc;metro:
+                    <strong>value_cents</strong> <br><br>O uso desse
+                    par&acirc;metro auxiliaria por exemplo a listar todas as
+                    transa&ccedil;&otilde;es de valores menores ou iguais (
+                    &lt;= ) &aacute; R$ 1000,00 (mil reais). <br><br>Esperado:
+                    <br><br> <table class="especificacoesmini"> <thead> <tr>
+                    <th>s&iacute;mbolo</th> <th>significado</th> </tr> </thead>
+                    <tbody> <tr> <td>=</td> <td>Igual</td> </tr> <tr>
+                    <td>&gt;=</td> <td>Maior igual</td> </tr> <tr>
+                    <td>&lt;=</td> <td>Menor igual</td> </tr> <tr> <td>&gt;</td>
+                    <td>Maior</td> </tr> <tr> <td>&lt;</td> <td>Menor</td> </tr>
+                    </tbody> </table>
+                limit:
+                  type: integer
+                  description: >-
+                    Limita o n&uacute;mero m&aacute;ximo de
+                    transa&ccedil;&otilde;es retornadas a no m&aacute;ximo 100
+                    registro.<br><br /> Esperado: <br><strong>1 a
+                    100</strong><br /><br> Esse par&acirc;metro &eacute;
+                    &uacute;til para pagina&ccedil;&atilde;o
+                  format: int32
+                page:
+                  type: integer
+                  description: >-
+                    necess&aacute;rio quando se deseja realizar
+                    pagina&ccedil;&atilde;o dos resultados. <br><br>Esperado:
+                    <br><strong>1 a 999</strong>
+                  format: int32
+      responses:
+        '200':
+          description: reject
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    transaction_list_request:
+                      result: reject
+                      response_message: filter_date requerido inválido
+                      http_code: 200
+              schema:
+                type: object
+                properties:
+                  transaction_list_request:
+                    type: object
+                    properties:
+                      result:
+                        type: string
+                        default: rejected
+                      response_message:
+                        type: string
+                        default: '{{paran}} requerido inválido'
+                      http_code:
+                        type: number
+                        default: '200'
+                required:
+                  - transaction_list_request
+        '201':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  transaction_list_request:
+                    type: object
+                    properties:
+                      result:
+                        type: string
+                        default: success
+                      response_message:
+                        type: string
+                        default: lista encontrada
+                      current_page:
+                        type: number
+                        default: '1'
+                      total_page:
+                        type: number
+                        default: '1'
+                      transaction_list:
+                        type: array
+                        items:
+                          properties:
+                            transaction_id:
+                              type: string
+                              default: 10Q1W2E3R4T5Y678
+                            order_id:
+                              type: string
+                              default: '0001'
+                            status:
+                              type: string
+                              default: pending
+                            status_date:
+                              type: string
+                              format: date-time
+                              default: '2026-10-28 12:11:46'
+                            due_date:
+                              type: string
+                              default: '2026-10-28'
+                            value_cents:
+                              type: number
+                              description: ''
+                              default: '300'
+                            discount_cents:
+                              type: number
+                              default: '0'
+                            value_fee_cents:
+                              type: number
+                              default: '239'
+                            payer_email:
+                              type: string
+                              default: payer_email@paghiper.com
+                            payer_name:
+                              type: string
+                              default: Joao teste
+                            payer_cpf_cnpj:
+                              type: string
+                              default: '12345678901'
+                            payer_phone:
+                              type: string
+                              default: '1140638785'
+                            create_date:
+                              type: string
+                              default: '2026-10-28 12:11:45'
+                              format: date-time
+                            paid_date:
+                              type: string
+                              default: ' '
+                            value_cents_paid:
+                              type: number
+                              default: '0'
+                            late_payment_fine:
+                              type: string
+                              default: '0'
+                            per_day_interest:
+                              type: string
+                              default: '0'
+                            early_payment_discounts_days:
+                              type: string
+                              default: 'null'
+                              description: null se nao definido na emissao
+                            early_payment_discounts_cents:
+                              type: string
+                              description: null se nao definido na emissao
+                              default: 'null'
+                            open_after_day_due:
+                              type: string
+                              default: '2'
+                            bank_slip:
+                              type: object
+                              properties:
+                                digitable_line:
+                                  type: string
+                                  default: >-
+                                    03312345678998765432112345678998765432112345600
+                                url_slip:
+                                  type: string
+                                  default: >-
+                                    https://www.paghiper.com/checkout/boleto/123c456f789d98766544321f12324566789398f102af80e8974705c49b87301eb30e84cf49812933a4bde109ca30546597c87c4aqpramno2jklcfghiedef0abc/11S0EUJ4K46P8T26/12345678
+                                url_slip_pdf:
+                                  type: string
+                                  default: >-
+                                    https://www.paghiper.com/checkout/boleto/123c456f789d98766544321f12324566789398f102af80e8974705c49b87301eb30e84cf49812933a4bde109ca30546597c87c4aqpramno2jklcfghiedef0abc/11S0EUJ4K46P8T26/12345678/pdf
+                            items:
+                              type: array
+                              items:
+                                properties:
+                                  item_id:
+                                    type: string
+                                    default: '1'
+                                  description:
+                                    type: string
+                                    default: teste
+                                  quantity:
+                                    type: number
+                                    default: '1'
+                                  price_cents:
+                                    type: number
+                                    default: '300'
+                                type: object
+                          type: object
+                      http_code:
+                        type: number
+                        default: '201'
+                required:
+                  - transaction_list_request
+              examples:
+                Created:
+                  summary: Created
+                  value:
+                    transaction_list_request:
+                      result: success
+                      response_message: lista encontrada
+                      current_page: 1
+                      total_page: 1
+                      transaction_list:
+                        - transaction_id: 11J0AUC4A5VPETRD
+                          order_id: '9995'
+                          status: canceled
+                          status_date: '2026-10-28 12:11:46'
+                          due_date: '2026-10-28'
+                          value_cents: 300
+                          discount_cents: 0
+                          value_fee_cents: 239
+                          payer_email: payer_emaile@paghiper.com
+                          payer_name: teste
+                          payer_cpf_cnpj: '12345678901'
+                          payer_phone: null
+                          create_date: '2026-10-28 11:45:31'
+                          paid_date: ''
+                          value_cents_paid: 0
+                          late_payment_fine: 0
+                          per_day_interest: 0
+                          early_payment_discounts_days: null
+                          early_payment_discounts_cents: null
+                          open_after_day_due: '2'
+                          bank_slip:
+                            digitable_line: '0331234567899876543211234567899876543211234567890'
+                            url_slip: >-
+                              https://www.paghiper.com/checkout/boleto/jadcea7a6mca7rae9l0a5t7ecs6t2e26b50398f102af80e8974705c49b87301eb30e84cf49812933a4bde109ca30546e9tcs7e4t7eiaoe022udafibmeo4t0abg/11J0AUC4A5VPETRD/123456789
+                            url_slip_pdf: >-
+                              https://www.paghiper.com/checkout/boleto/jadcea7a6mca7rae9l0a5t7ecs6t2e26b50398f102af80e8974705c49b87301eb30e84cf49812933a4bde109ca30546e9tcs7e4t7eiaoe022udafibmeo4t0abg/11J0AUC4A5VPETRD/123456789/pdf
+                          items:
+                            - item_id: '1'
+                              description: teste
+                              quantity: 1
+                              price_cents: 300
+                      http_code: 201
+        4XX:
+          description: Payload Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  transaction_list_request:
+                    type: object
+                    properties:
+                      result:
+                        type: string
+                        default: reject
+                      response_message:
+                        type: string
+                        default: Received content contained invalid JSON
+                        enum:
+                          - Request method must be POST
+                          - 'Content type must be: application/json'
+                          - Received content contained invalid JSON
+                          - token ou apiKey inválidos
+                      http_code:
+                        type: number
+                        default: '415'
+                required:
+                  - transaction_list_request
+  /transaction/multiple_bank_slip/:
+    post:
+      summary: Múltiplos boletos em único PDF
+      description: ''
+      operationId: multiplos-boletos-unico-pdf
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - apiKey
+                - token
+                - transactions
+                - type_bank_slip
+              properties:
+                apiKey:
+                  type: string
+                  description: >-
+                    Campo composto de números, letras, traços e hífen.<br>Sempre
+                    começa por <strong>apk_</strong><br><br> Exemplo:
+                    apk_4125241-OqCWOKczcjutZaFRSfTlVBDpHFXpkdzz<br> <br>
+                    Utilizado para identificar o vendedor
+                token:
+                  type: string
+                  description: >-
+                    Token individual para cada vendedor. Ele é utilizado para
+                    validar a solicitação e não deve ser compartilhado com
+                    terceiros.<br><br>Para  obter o
+                    token:<br>https://www.paghiper.com/painel/token/
+                transactions:
+                  type: array
+                  description: >-
+                    Lista das transações que deseja adicionar ao PDF, vale
+                    lembrar que serão adicionados somente transações com status
+                    "Aguardando"<br> Limite de 40 titulos por requisição.
+                  items:
+                    type: string
+                type_bank_slip:
+                  type: string
+                  description: >-
+                    Formato dos boletos no PDF, 'boletoA4' => para boleto em
+                    formato A4, <br> e boletoCarne => para boletos em formato
+                    Carnê , 3 por pagina
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+  /bank_accounts/cash_out/:
+    post:
+      summary: Solicitação de saque via API
+      description: >-
+        O Saque via API esta disponível apenas para contas que já tiveram ao
+        menos um saque liquidado manualmente.
+      operationId: solicitacao-saque
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - apiKey
+                - token
+                - bank_account_id
+              properties:
+                apiKey:
+                  type: string
+                  description: >-
+                    Campo composto de números, letras, traços e hífen.<br>Sempre
+                    começa por <strong>apk_</strong><br><br> Exemplo:
+                    apk_48040241-OqCWOKczcjutZaFRSfTlVBDpHFXpkdzz<br> <br>
+                    Utilizado para identificar o vendedor
+                token:
+                  type: string
+                  description: >-
+                    Token individual para cada vendedor. Ele é utilizado para
+                    validar a solicitação e não deve ser compartilhado com
+                    terceiros.<br><br>Para  obter o
+                    token:<br>https://www.paghiper.com/painel/token/
+                bank_account_id:
+                  type: integer
+                  description: >-
+                    id da conta bancaria cadastrada na PagHiper.<br><br>Para
+                    consultar o bank_account_id deve utilizar a requisição de
+                    listagem de contas bancarias.
+                  format: int32
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+  /bank_accounts/list/:
+    post:
+      summary: Lista contas bancárias para saque via API
+      description: >-
+        Para a conta aparecer nesta listagem de contas via API, é necessário ter
+        feito ao menos um saque manual no painel, para esta conta.
+      operationId: lista-contas-bancarias-para-saque
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+                - apiKey
+              properties:
+                token:
+                  type: string
+                  description: >-
+                    Token individual para cada vendedor. Ele é utilizado para
+                    validar a solicitação e não deve ser compartilhado com
+                    terceiros.<br><br>Para  obter o
+                    token:<br>https://www.paghiper.com/painel/token/
+                apiKey:
+                  type: string
+                  description: >-
+                    Campo composto de números, letras, traços e hífen.<br>Sempre
+                    começa por <strong>apk_</strong><br><br> Exemplo:
+                    apk_48040241-OqCWOKczcjutZaFRSfTlVBDpHFXpkdzz<br> <br>
+                    Utilizado para identificar o vendedor
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+  /bank_accounts/balance/:
+    post:
+      summary: Consultar Saldo via API
+      description: >-
+        O Saque via API esta disponível apenas para contas que já tiveram ao
+        menos um saque liquidado manualmente.
+      operationId: consultar-saldo-via-api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - apiKey
+                - token
+              properties:
+                apiKey:
+                  type: string
+                  description: >-
+                    Campo composto de números, letras, traços e hífen.<br>Sempre
+                    começa por <strong>apk_</strong><br><br> Exemplo:
+                    apk_48040241-OqCWOKczcjutZaFRSfTlVBDpHFXpkdzz<br> <br>
+                    Utilizado para identificar o vendedor
+                token:
+                  type: string
+                  description: >-
+                    Token individual para cada vendedor. Ele é utilizado para
+                    validar a solicitação e não deve ser compartilhado com
+                    terceiros.<br><br>Para  obter o
+                    token:<br>https://www.paghiper.com/painel/token/
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+  /invoice/list/:
+    post:
+      summary: Lista de notas fiscais emitidas pela PAGHIPER
+      description: ''
+      operationId: lista-notas-fiscais-exemplo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - apiKey
+                - token
+              properties:
+                apiKey:
+                  type: string
+                  description: >-
+                    Campo composto de números, letras, traços e hífen.<br>Sempre
+                    começa por <strong>apk_</strong><br><br> Exemplo:
+                    apk_41542241-OqCWOKczcjutZaFRSfTlVBDpHFXpkdzz<br> <br>
+                    Utilizado para identificar o vendedor
+                token:
+                  type: string
+                  description: >-
+                    Token individual para cada vendedor. Ele é utilizado para
+                    validar a solicitação e não deve ser compartilhado com
+                    terceiros.<br><br>Para  obter o
+                    token:<br>https://www.paghiper.com/painel/token/
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+x-readme:
+  headers: []
+  explorer-enabled: true
+  proxy-enabled: true
+x-readme-fauxas: true

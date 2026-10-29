@@ -1,6 +1,6 @@
 ---
 api:
   file: empty-body-test.yaml
-  operationId: sendEmptyObject
+  operationId: status-do-boleto
 hidden: false
 ---

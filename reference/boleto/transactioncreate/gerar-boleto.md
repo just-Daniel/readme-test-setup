@@ -1,6 +1,6 @@
 ---
 api:
   file: empty-body-test.yaml
-  operationId: sendEmptyArray
+  operationId: gerar-boleto
 hidden: false
 ---

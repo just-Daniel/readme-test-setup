@@ -1,6 +1,6 @@
 ---
 api:
   file: empty-body-test.yaml
-  operationId: sendNonEmpty
+  operationId: cancelamento-boleto-exemplo
 hidden: false
 ---
