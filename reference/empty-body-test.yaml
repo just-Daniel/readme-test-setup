@@ -1277,6 +1277,18 @@ paths:
                     validar a solicitação e não deve ser compartilhado com
                     terceiros.<br><br>Para  obter o
                     token:<br>https://www.paghiper.com/painel/token/
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                test:
+                  type: number
+                  format: double
+              required:
+                - name
+                - test
       responses:
         '200':
           description: '200'
