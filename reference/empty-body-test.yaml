@@ -1286,6 +1286,8 @@ paths:
                 test:
                   type: number
                   format: double
+                  minimum: 0
+                  maximum: 1000000
               required:
                 - name
                 - test
