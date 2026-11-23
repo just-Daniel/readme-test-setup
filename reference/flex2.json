@@ -1,31 +1,163 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Repro: required object missing from example",
+    "title": "TabaPay APIs",
+    "description": "TabaPay Resource and Service Operations",
     "version": "1.0.0",
-    "description": "Two identical endpoints with the same example. Only difference: `signers` is in root `required` in B. In `signers` only `signer1` is required; `signer2` is optional. Select the `Individual` example on both and compare the request body."
+    "license": {
+      "name": "All rights reserved"
+    }
   },
   "servers": [
     {
-      "url": "https://example.com"
+      "url": "https://test",
+      "description": "TabaPay APIs",
+      "variables": {
+        "FQDN": {
+          "default": "FQDN",
+          "description": "Contact [TabaPay Support](https://tabapay.zendesk.com/hc/en-us/requests/new) for the Fully Qualified Domain Name you should be using."
+        },
+        "PORT": {
+          "default": "PORT",
+          "description": "Ensure you have the capability to access the PORT TabaPay specifies in your credentials file."
+        }
+      }
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "x-readme": {
+    "explorer-enabled": false,
+    "proxy-enabled": true
+  },
+  "tags": [
+    {
+      "name": "User",
+      "description": "This resource represents a Client's User."
     }
   ],
   "paths": {
-    "/a-signers-optional": {
+    "/v2/clients/{ClientID}/users": {
       "post": {
-        "operationId": "aSignersOptional",
-        "summary": "A: signers NOT required",
+        "tags": [
+          "User"
+        ],
+        "summary": "Create User",
+        "description": "Creates a user for the client/subclient.\n\n Request to enable at [TabaPay Support](https://tabapay.zendesk.com/hc/en-us/requests/new#/) or [help@tabapay.com](mailto:help@tabapay.com)",
+        "operationId": "createuser",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ClientID"
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/userA"
+                "$ref": "#/components/schemas/userCreate"
               },
               "examples": {
                 "Individual": {
                   "value": {
+                    "referenceID": "1234UniqueRefID",
                     "type": "NaturalPerson",
-                    "email": "user@example.com"
+                    "name": {
+                      "individual": {
+                        "first": "Samwise",
+                        "middle": "Sam",
+                        "last": "Gamgee"
+                      }
+                    },
+                    "email": "user@example.com",
+                    "phone": {
+                      "countryCode": "1",
+                      "number": "5555555555"
+                    },
+                    "address": {
+                      "line1": "123 Street",
+                      "city": "San Francisco",
+                      "state": "CA",
+                      "zipcode": "94103",
+                      "country": "840"
+                    },
+                    "dateOfBirth": "19990131",
+                    "identification": {
+                      "type": "SSN",
+                      "number": "243353678"
+                    }
+                  }
+                },
+                "Business": {
+                  "value": {
+                    "referenceID": "1kdev05126",
+                    "type": "LLC",
+                    "name": {
+                      "company": {
+                        "legal": "Acme Holdings LLC",
+                        "dba": "Acme"
+                      }
+                    },
+                    "email": "ops@acme.example",
+                    "phone": {
+                      "countryCode": "1",
+                      "number": "5555550100"
+                    },
+                    "address": {
+                      "line1": "1 Market Street",
+                      "city": "San Francisco",
+                      "state": "CA",
+                      "zipcode": "94105",
+                      "country": "840"
+                    },
+                    "url": "https://acme.example",
+                    "identification": {
+                      "type": "EIN",
+                      "number": "123456789"
+                    },
+                    "stateOfFormation": "DE",
+                    "registrationType": "LLC",
+                    "authorizedSigners": {
+                      "authorizedSigner1": {
+                        "name": {
+                          "first": "Ada",
+                          "last": "Lovelace"
+                        },
+                        "email": "ada@acme.example",
+                        "dateOfBirth": "19851201",
+                        "address": {
+                          "line1": "2 Market Street",
+                          "city": "San Francisco",
+                          "state": "CA",
+                          "zipcode": "94105"
+                        }
+                      }
+                    },
+                    "controlPerson": {
+                      "name": {
+                        "first": "Grace",
+                        "last": "Hopper"
+                      },
+                      "email": "grace@acme.example",
+                      "dateOfBirth": "19061209",
+                      "identification": {
+                        "type": "NationalID",
+                        "country": "124",
+                        "number": "AB123456"
+                      }
+                    },
+                    "businessOwners": {
+                      "businessOwner1": {
+                        "name": {
+                          "first": "Alan",
+                          "last": "Turing"
+                        },
+                        "email": "alan@acme.example",
+                        "dateOfBirth": "19120623"
+                      }
+                    }
                   }
                 }
               }
@@ -34,35 +166,29 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/b-signers-required": {
-      "post": {
-        "operationId": "bSignersRequired",
-        "summary": "B: signers required",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/userB"
-              },
-              "examples": {
-                "Individual": {
-                  "value": {
-                    "type": "NaturalPerson",
-                    "email": "user@example.com"
-                  }
+            "description": "User created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/createUserResponse"
+                },
+                "example": {
+                  "SC": 200,
+                  "EC": "0",
+                  "userID": "22CharacterTabaPayID12"
                 }
               }
             }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
+          },
+          "207": {
+            "description": "One or more failures occurred while processing the Request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiResponseSCEC"
+                }
+              }
+            }
           }
         }
       }
@@ -70,83 +196,489 @@
   },
   "components": {
     "schemas": {
-      "person": {
+      "namefml": {
+        "type": "object",
+        "description": "Name including `first`, `middle`, `last`.\n\n`first` and `last` are required, and `middle` is optional*",
+        "required": [
+          "first"
+        ],
+        "properties": {
+          "first": {
+            "type": "string",
+            "description": "First Name",
+            "pattern": "^[ a-zA-Z0-9_-]+$"
+          },
+          "middle": {
+            "type": "string",
+            "description": "Middle Name",
+            "pattern": "^[ a-zA-Z0-9_-]+$"
+          },
+          "last": {
+            "type": "string",
+            "description": "Last Name",
+            "pattern": "^[ a-zA-Z0-9_-]+$"
+          }
+        }
+      },
+      "address": {
+        "type": "object",
+        "description": "Address",
+        "required": [
+          "line1",
+          "city",
+          "state",
+          "zipcode"
+        ],
+        "properties": {
+          "line1": {
+            "$ref": "#/components/schemas/line1"
+          },
+          "line2": {
+            "$ref": "#/components/schemas/line2"
+          },
+          "city": {
+            "$ref": "#/components/schemas/city"
+          },
+          "state": {
+            "$ref": "#/components/schemas/state"
+          },
+          "zipcode": {
+            "$ref": "#/components/schemas/zipcode"
+          },
+          "country": {
+            "$ref": "#/components/schemas/country"
+          }
+        }
+      },
+      "phone": {
+        "type": "object",
+        "required": [
+          "number"
+        ],
+        "description": "Phone *object*",
+        "properties": {
+          "countryCode": {
+            "type": "string",
+            "description": "1-3 digit Country Calling Code\n\n*Optional.* Default is `1`.",
+            "pattern": "^[0-9]{3}$",
+            "example": "1"
+          },
+          "number": {
+            "type": "string",
+            "description": "Phone Number.\n\nFor phone numbers with `countryCode` equal to `1` (or blank), provide a 10-digit phone number. For all `countryCodes`, other than `1`, a 4-14 digit phone number is accepted.",
+            "pattern": "^[0-9]{4,14}$",
+            "example": "5555555555"
+          }
+        }
+      },
+      "line1": {
+        "type": "string",
+        "description": "Address Line 1",
+        "pattern": "^[ a-zA-Z0-9._-]+$"
+      },
+      "line2": {
+        "type": "string",
+        "description": "Address Line 2\n\n*Optional*",
+        "pattern": "^[ a-zA-Z0-9._-]+$"
+      },
+      "city": {
+        "type": "string",
+        "description": "City",
+        "pattern": "^[ a-zA-Z0-9_-]+$"
+      },
+      "state": {
+        "type": "string",
+        "description": "State Code\n\n[State Code](https://developers.tabapay.com/reference/us-state-codes#/) must be a valid 2-character code if `country` is [840](https://developers.tabapay.com/reference/country-codes#/) or [Canadian 2-char code](https://developers.tabapay.com/reference/canadian-province-codes#/) if [124](https://developers.tabapay.com/reference/country-codes#/).",
+        "pattern": "^[ a-zA-Z0-9_-]+$"
+      },
+      "zipcode": {
+        "type": "string",
+        "description": "Zip Code\n\nIf `country` is `840`, `zipcode` must be 5 or 9 digits.\nIf country is `124`, `zipcode` must be in the *A1A 1A1* format.\nZip codes from other countries will not be checked.",
+        "pattern": "^[ a-zA-Z0-9_-]+$"
+      },
+      "country": {
+        "type": "string",
+        "description": "[Country Code](https://developers.tabapay.com/reference/country-codes#/)\n\n*Optional. Default is `840`*",
+        "pattern": "^[0-9]{3}$",
+        "example": "840"
+      },
+      "SC": {
+        "type": "integer",
+        "description": "[HTTP Status Code](https://developers.tabapay.com/reference/http-status-codes#/)"
+      },
+      "EC": {
+        "type": "string",
+        "description": "Internal Error Code. This is used to help TabaPay team members trace an error."
+      },
+      "EM": {
+        "type": "string",
+        "description": "Short description of the error if an error occurred."
+      },
+      "apiResponseSCEC": {
+        "type": "object",
+        "properties": {
+          "SC": {
+            "$ref": "#/components/schemas/SC"
+          },
+          "EC": {
+            "$ref": "#/components/schemas/EC"
+          }
+        }
+      },
+      "businessOwner": {
+        "type": "object",
+        "description": "Additional individuals that own at least 25% of the entity.",
+        "required": [
+          "name",
+          "dateOfBirth"
+        ],
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/namefml"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "description": "Date of birth with the format: YYYYMMDD. Owner must be at least 18 years old."
+          }
+        }
+      },
+      "createUserResponse": {
+        "type": "object",
+        "properties": {
+          "SC": {
+            "$ref": "#/components/schemas/SC"
+          },
+          "EC": {
+            "$ref": "#/components/schemas/EC"
+          },
+          "EM": {
+            "$ref": "#/components/schemas/EM"
+          },
+          "userID": {
+            "$ref": "#/components/schemas/tpUserID"
+          }
+        }
+      },
+      "userCreate": {
+        "type": "object",
+        "required": [
+          "referenceID",
+          "type",
+          "name",
+          "email",
+          "authorizedSigners"
+        ],
+        "properties": {
+          "referenceID": {
+            "$ref": "#/components/schemas/tpReferenceID"
+          },
+          "type": {
+            "$ref": "#/components/schemas/companyType"
+          },
+          "name": {
+            "$ref": "#/components/schemas/userName"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Valid Email Address"
+          },
+          "phone": {
+            "$ref": "#/components/schemas/phone"
+          },
+          "address": {
+            "$ref": "#/components/schemas/address"
+          },
+          "dateOfBirth": {
+            "$ref": "#/components/schemas/tpDateYYYYMMDD"
+          },
+          "dateOfFormation": {
+            "$ref": "#/components/schemas/tpDateYYYYMMDD"
+          },
+          "identification": {
+            "$ref": "#/components/schemas/userIdentification"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Company or personal website.",
+            "example": "https://example.com"
+          },
+          "stateOfFormation": {
+            "type": "string",
+            "description": "State or jurisdiction where the company was formed. Use 2-letter [State Code](https://developers.tabapay.com/reference/us-state-codes#/)\n\n For company types only",
+            "example": "DE"
+          },
+          "registrationType": {
+            "type": "string",
+            "description": "Company registration type. Only applicable to company types."
+          },
+          "authorizedSigners": {
+            "type": "object",
+            "description": "Individuals authorized to act on behalf of the company. Required for company types.",
+            "required": [
+              "authorizedSigner1"
+            ],
+            "properties": {
+              "authorizedSigner1": {
+                "$ref": "#/components/schemas/userPerson"
+              },
+              "authorizedSigner2": {
+                "$ref": "#/components/schemas/userPerson"
+              },
+              "authorizedSigner3": {
+                "$ref": "#/components/schemas/userPerson"
+              },
+              "authorizedSigner4": {
+                "$ref": "#/components/schemas/userPerson"
+              }
+            }
+          },
+          "controlPerson": {
+            "$ref": "#/components/schemas/userPerson"
+          },
+          "businessOwners": {
+            "type": "object",
+            "description": "Individuals that own at least 25% of the entity, or the largest owner if no one owns at least 25%.\n**Note: If you plan to add/remove/modify any owner information in the future, you will need re-submit all existing information to the update SubClient API. It is recommend that you store the owner information for this purpose.**",
+            "properties": {
+              "businessOwner1": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/businessOwner"
+                  },
+                  {
+                    "properties": {
+                      "identification": {
+                        "$ref": "#/components/schemas/userIdentification"
+                      }
+                    }
+                  }
+                ]
+              },
+              "businessOwner2": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/businessOwner"
+                  },
+                  {
+                    "properties": {
+                      "identification": {
+                        "$ref": "#/components/schemas/userIdentification"
+                      }
+                    }
+                  }
+                ]
+              },
+              "businessOwner3": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/businessOwner"
+                  },
+                  {
+                    "properties": {
+                      "identification": {
+                        "$ref": "#/components/schemas/userIdentification"
+                      }
+                    }
+                  }
+                ]
+              },
+              "businessOwner4": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/businessOwner"
+                  },
+                  {
+                    "properties": {
+                      "identification": {
+                        "$ref": "#/components/schemas/userIdentification"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "tpReferenceID": {
+        "type": "string",
+        "description": "Client-defined reference identifier",
+        "minLength": 1,
+        "maxLength": 15,
+        "pattern": "^[A-Za-z0-9._-]+$"
+      },
+      "tpUserID": {
+        "type": "string",
+        "description": "TabaPay 22 character user identifier",
+        "pattern": "^[A-Za-z0-9]{22}$",
+        "example": "22CharacterTabaPayID12"
+      },
+      "tpDateYYYYMMDD": {
+        "type": "string",
+        "description": "Date in YYYYMMDD format",
+        "pattern": "^[0-9]{8}$",
+        "example": "19990131"
+      },
+      "userNameIndividual": {
+        "type": "object",
+        "required": [
+          "first",
+          "last"
+        ],
+        "properties": {
+          "first": {
+            "type": "string",
+            "description": "First name"
+          },
+          "middle": {
+            "type": "string",
+            "description": "Middle name"
+          },
+          "last": {
+            "type": "string",
+            "description": "Last name"
+          },
+          "suffix": {
+            "type": "string",
+            "maxLength": 50
+          }
+        }
+      },
+      "userNameCompany": {
+        "type": "object",
+        "required": [
+          "legal"
+        ],
+        "properties": {
+          "legal": {
+            "type": "string",
+            "description": "Legal name"
+          },
+          "dba": {
+            "type": "string",
+            "description": "Doing Business As (DBA)"
+          }
+        }
+      },
+      "userName": {
+        "type": "object",
+        "properties": {
+          "individual": {
+            "$ref": "#/components/schemas/userNameIndividual"
+          },
+          "company": {
+            "$ref": "#/components/schemas/userNameCompany"
+          }
+        },
+        "description": "For type NaturalPerson use name.individual; otherwise use name.company."
+      },
+      "userIdentification": {
+        "type": "object",
+        "required": [
+          "type",
+          "number"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "SSN",
+              "GovernmentID",
+              "Passport",
+              "EIN"
+            ]
+          },
+          "number": {
+            "type": "string",
+            "description": "A unique ID number issued by a government or organization."
+          }
+        }
+      },
+      "userPerson": {
         "type": "object",
         "required": [
           "name"
         ],
         "properties": {
           "name": {
-            "type": "object",
-            "properties": {
-              "first": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "first"
-            ]
-          }
-        }
-      },
-      "signers": {
-        "type": "object",
-        "required": [
-          "signer1"
-        ],
-        "properties": {
-          "signer1": {
-            "$ref": "#/components/schemas/person"
+            "$ref": "#/components/schemas/namefml"
           },
-          "signer2": {
-            "$ref": "#/components/schemas/person"
+          "dateOfBirth": {
+            "$ref": "#/components/schemas/tpDateYYYYMMDD"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "phone": {
+            "$ref": "#/components/schemas/phone"
+          },
+          "address": {
+            "$ref": "#/components/schemas/address"
+          },
+          "identification": {
+            "$ref": "#/components/schemas/userPersonIdentification"
           }
         }
       },
-      "userA": {
+      "userPersonIdentification": {
         "type": "object",
-        "required": [
-          "type",
-          "email"
-        ],
         "properties": {
           "type": {
             "type": "string",
             "enum": [
-              "NaturalPerson",
-              "LLC"
+              "SSN",
+              "SSN4",
+              "NationalID",
+              "Passport",
+              "GovernmentID"
             ]
           },
-          "email": {
-            "type": "string"
+          "number": {
+            "type": "string",
+            "description": "Identification number."
           },
-          "signers": {
-            "$ref": "#/components/schemas/signers"
+          "country": {
+            "type": "string",
+            "description": "3-digit country code."
           }
         }
       },
-      "userB": {
-        "type": "object",
-        "required": [
-          "type",
-          "email",
-          "signers"
-        ],
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": [
-              "NaturalPerson",
-              "LLC"
-            ]
-          },
-          "email": {
-            "type": "string"
-          },
-          "signers": {
-            "$ref": "#/components/schemas/signers"
-          }
+      "companyType": {
+        "type": "string",
+        "description": "Legal structure of the business or individual",
+        "enum": [
+          "LLC",
+          "LLP",
+          "C-Corp",
+          "S-Corp",
+          "SoleProprietor",
+          "Nonprofit",
+          "Charitable",
+          "NaturalPerson",
+          "Other"
+        ]
+      }
+    },
+    "parameters": {
+      "ClientID": {
+        "name": "ClientID",
+        "in": "path",
+        "description": "22-character <<glossary:ClientID>>. Ask [TabaPay Support](https://tabapay.zendesk.com/hc/en-us/requests/new) if you need to specify a <<glossary:SubClientID>>.",
+        "required": true,
+        "style": "simple",
+        "explode": false,
+        "schema": {
+          "type": "string"
         }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }
