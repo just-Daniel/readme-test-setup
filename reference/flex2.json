@@ -11,17 +11,7 @@
   "servers": [
     {
       "url": "https://test.tabapay.com",
-      "description": "TabaPay APIs",
-      "variables": {
-        "FQDN": {
-          "default": "FQDN",
-          "description": "Contact [TabaPay Support](https://tabapay.zendesk.com/hc/en-us/requests/new) for the Fully Qualified Domain Name you should be using."
-        },
-        "PORT": {
-          "default": "PORT",
-          "description": "Ensure you have the capability to access the PORT TabaPay specifies in your credentials file."
-        }
-      }
+      "description": "TabaPay APIs"
     }
   ],
   "security": [
@@ -166,29 +156,7 @@
         },
         "responses": {
           "200": {
-            "description": "User created.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/createUserResponse"
-                },
-                "example": {
-                  "SC": 200,
-                  "EC": "0",
-                  "userID": "22CharacterTabaPayID12"
-                }
-              }
-            }
-          },
-          "207": {
-            "description": "One or more failures occurred while processing the Request.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/apiResponseSCEC"
-                }
-              }
-            }
+            "description": "User created."
           }
         }
       }
@@ -302,29 +270,6 @@
         "pattern": "^[0-9]{3}$",
         "example": "840"
       },
-      "SC": {
-        "type": "integer",
-        "description": "[HTTP Status Code](https://developers.tabapay.com/reference/http-status-codes#/)"
-      },
-      "EC": {
-        "type": "string",
-        "description": "Internal Error Code. This is used to help TabaPay team members trace an error."
-      },
-      "EM": {
-        "type": "string",
-        "description": "Short description of the error if an error occurred."
-      },
-      "apiResponseSCEC": {
-        "type": "object",
-        "properties": {
-          "SC": {
-            "$ref": "#/components/schemas/SC"
-          },
-          "EC": {
-            "$ref": "#/components/schemas/EC"
-          }
-        }
-      },
       "businessOwner": {
         "type": "object",
         "description": "Additional individuals that own at least 25% of the entity.",
@@ -339,23 +284,6 @@
           "dateOfBirth": {
             "type": "string",
             "description": "Date of birth with the format: YYYYMMDD. Owner must be at least 18 years old."
-          }
-        }
-      },
-      "createUserResponse": {
-        "type": "object",
-        "properties": {
-          "SC": {
-            "$ref": "#/components/schemas/SC"
-          },
-          "EC": {
-            "$ref": "#/components/schemas/EC"
-          },
-          "EM": {
-            "$ref": "#/components/schemas/EM"
-          },
-          "userID": {
-            "$ref": "#/components/schemas/tpUserID"
           }
         }
       },
@@ -507,12 +435,6 @@
         "minLength": 1,
         "maxLength": 15,
         "pattern": "^[A-Za-z0-9._-]+$"
-      },
-      "tpUserID": {
-        "type": "string",
-        "description": "TabaPay 22 character user identifier",
-        "pattern": "^[A-Za-z0-9]{22}$",
-        "example": "22CharacterTabaPayID12"
       },
       "tpDateYYYYMMDD": {
         "type": "string",
