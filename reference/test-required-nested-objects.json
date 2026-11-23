@@ -1,9 +1,9 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Test: required nested objects",
+    "title": "Test: required nested objects v2",
     "version": "1.0.0",
-    "description": "Two identical endpoints. The only difference: in A the nested person schema has `required: [\"name\"]`, in B it does not. Pick the `Individual` example on both and compare the generated request body."
+    "description": "A/B: nested required vs not. C: authorizedSigners required at root. D: A with Try It disabled. E: exact TabaPay schema. F: E with Try It disabled. Pick the Individual example on each and compare the request body."
   },
   "servers": [
     {
@@ -79,6 +79,178 @@
             "description": "OK"
           }
         }
+      }
+    },
+    "/c-root-required": {
+      "post": {
+        "operationId": "createUserRootRequired",
+        "summary": "C: authorizedSigners required at root (like TabaPay)",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/userCreateRootRequired"
+              },
+              "examples": {
+                "Individual": {
+                  "value": {
+                    "referenceID": "1234UniqueRefID",
+                    "type": "NaturalPerson",
+                    "name": {
+                      "first": "Samwise",
+                      "last": "Gamgee"
+                    },
+                    "email": "user@example.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/d-explorer-disabled": {
+      "post": {
+        "operationId": "createUserExplorerDisabled",
+        "summary": "D: same as A, but Try It disabled (like TabaPay)",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/userCreateWithRequired"
+              },
+              "examples": {
+                "Individual": {
+                  "value": {
+                    "referenceID": "1234UniqueRefID",
+                    "type": "NaturalPerson",
+                    "name": {
+                      "first": "Samwise",
+                      "last": "Gamgee"
+                    },
+                    "email": "user@example.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "x-explorer-enabled": false
+      }
+    },
+    "/e-tabapay-schema": {
+      "post": {
+        "operationId": "createUserTabaPaySchema",
+        "summary": "E: exact TabaPay userCreate schema + their Individual example",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/tp_userCreate"
+              },
+              "examples": {
+                "Individual": {
+                  "value": {
+                    "referenceID": "1234UniqueRefID",
+                    "type": "NaturalPerson",
+                    "name": {
+                      "individual": {
+                        "first": "Samwise",
+                        "middle": "Sam",
+                        "last": "Gamgee"
+                      }
+                    },
+                    "email": "user@example.com",
+                    "phone": {
+                      "countryCode": "1",
+                      "number": "5555555555"
+                    },
+                    "address": {
+                      "line1": "123 Street",
+                      "city": "San Francisco",
+                      "state": "CA",
+                      "zipcode": "94103",
+                      "country": "840"
+                    },
+                    "dateOfBirth": "19990131",
+                    "identification": {
+                      "type": "SSN",
+                      "number": "243353678"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/f-tabapay-schema-explorer-disabled": {
+      "post": {
+        "operationId": "createUserTabaPayExplorerDisabled",
+        "summary": "F: exact TabaPay schema, Try It disabled (closest to their setup)",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/tp_userCreate"
+              },
+              "examples": {
+                "Individual": {
+                  "value": {
+                    "referenceID": "1234UniqueRefID",
+                    "type": "NaturalPerson",
+                    "name": {
+                      "individual": {
+                        "first": "Samwise",
+                        "middle": "Sam",
+                        "last": "Gamgee"
+                      }
+                    },
+                    "email": "user@example.com",
+                    "phone": {
+                      "countryCode": "1",
+                      "number": "5555555555"
+                    },
+                    "address": {
+                      "line1": "123 Street",
+                      "city": "San Francisco",
+                      "state": "CA",
+                      "zipcode": "94103",
+                      "country": "840"
+                    },
+                    "dateOfBirth": "19990131",
+                    "identification": {
+                      "type": "SSN",
+                      "number": "243353678"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "x-explorer-enabled": false
       }
     }
   },
@@ -208,6 +380,471 @@
           },
           "controlPerson": {
             "$ref": "#/components/schemas/personWithoutRequired"
+          }
+        }
+      },
+      "tp_namefml": {
+        "type": "object",
+        "description": "Name including `first`, `middle`, `last`.\n\n`first` and `last` are required, and `middle` is optional*",
+        "required": [
+          "first"
+        ],
+        "properties": {
+          "first": {
+            "type": "string",
+            "description": "First Name",
+            "pattern": "^[ a-zA-Z0-9_-]+$"
+          },
+          "middle": {
+            "type": "string",
+            "description": "Middle Name",
+            "pattern": "^[ a-zA-Z0-9_-]+$"
+          },
+          "last": {
+            "type": "string",
+            "description": "Last Name",
+            "pattern": "^[ a-zA-Z0-9_-]+$"
+          }
+        }
+      },
+      "tp_tpDateYYYYMMDD": {
+        "type": "string",
+        "description": "Date in YYYYMMDD format",
+        "pattern": "^[0-9]{8}$",
+        "example": "19990131"
+      },
+      "tp_companyType": {
+        "type": "string",
+        "description": "Legal structure of the business or individual",
+        "enum": [
+          "LLC",
+          "LLP",
+          "C-Corp",
+          "S-Corp",
+          "SoleProprietor",
+          "Nonprofit",
+          "Charitable",
+          "NaturalPerson",
+          "Other"
+        ]
+      },
+      "tp_address": {
+        "type": "object",
+        "description": "Address",
+        "required": [
+          "line1",
+          "city",
+          "state",
+          "zipcode"
+        ],
+        "properties": {
+          "line1": {
+            "$ref": "#/components/schemas/tp_line1"
+          },
+          "line2": {
+            "$ref": "#/components/schemas/tp_line2"
+          },
+          "city": {
+            "$ref": "#/components/schemas/tp_city"
+          },
+          "state": {
+            "$ref": "#/components/schemas/tp_state"
+          },
+          "zipcode": {
+            "$ref": "#/components/schemas/tp_zipcode"
+          },
+          "country": {
+            "$ref": "#/components/schemas/tp_country"
+          }
+        }
+      },
+      "tp_tpReferenceID": {
+        "type": "string",
+        "description": "Client-defined reference identifier",
+        "minLength": 1,
+        "maxLength": 15,
+        "pattern": "^[A-Za-z0-9._-]+$"
+      },
+      "tp_businessOwner": {
+        "type": "object",
+        "description": "Additional individuals that own at least 25% of the entity.",
+        "required": [
+          "name",
+          "dateOfBirth"
+        ],
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/tp_namefml"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "description": "Date of birth with the format: YYYYMMDD. Owner must be at least 18 years old."
+          }
+        }
+      },
+      "tp_line1": {
+        "type": "string",
+        "description": "Address Line 1",
+        "pattern": "^[ a-zA-Z0-9._-]+$"
+      },
+      "tp_zipcode": {
+        "type": "string",
+        "description": "Zip Code\n\nIf `country` is `840`, `zipcode` must be 5 or 9 digits.\nIf country is `124`, `zipcode` must be in the *A1A 1A1* format.\nZip codes from other countries will not be checked.",
+        "pattern": "^[ a-zA-Z0-9_-]+$"
+      },
+      "tp_userPersonIdentification": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "SSN",
+              "SSN4",
+              "NationalID",
+              "Passport",
+              "GovernmentID"
+            ]
+          },
+          "number": {
+            "type": "string",
+            "description": "Identification number."
+          },
+          "country": {
+            "type": "string",
+            "description": "3-digit country code."
+          }
+        }
+      },
+      "tp_userCreate": {
+        "type": "object",
+        "required": [
+          "referenceID",
+          "type",
+          "name",
+          "email",
+          "authorizedSigners"
+        ],
+        "properties": {
+          "referenceID": {
+            "$ref": "#/components/schemas/tp_tpReferenceID"
+          },
+          "type": {
+            "$ref": "#/components/schemas/tp_companyType"
+          },
+          "name": {
+            "$ref": "#/components/schemas/tp_userName"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Valid Email Address"
+          },
+          "phone": {
+            "$ref": "#/components/schemas/tp_phone"
+          },
+          "address": {
+            "$ref": "#/components/schemas/tp_address"
+          },
+          "dateOfBirth": {
+            "$ref": "#/components/schemas/tp_tpDateYYYYMMDD"
+          },
+          "dateOfFormation": {
+            "$ref": "#/components/schemas/tp_tpDateYYYYMMDD"
+          },
+          "identification": {
+            "$ref": "#/components/schemas/tp_userIdentification"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Company or personal website.",
+            "example": "https://example.com"
+          },
+          "stateOfFormation": {
+            "type": "string",
+            "description": "State or jurisdiction where the company was formed. Use 2-letter [State Code](https://developers.tabapay.com/reference/us-state-codes#/)\n\n For company types only",
+            "example": "DE"
+          },
+          "registrationType": {
+            "type": "string",
+            "description": "Company registration type. Only applicable to company types."
+          },
+          "authorizedSigners": {
+            "type": "object",
+            "description": "Individuals authorized to act on behalf of the company. Required for company types.",
+            "required": [
+              "authorizedSigner1"
+            ],
+            "properties": {
+              "authorizedSigner1": {
+                "$ref": "#/components/schemas/tp_userPerson"
+              },
+              "authorizedSigner2": {
+                "$ref": "#/components/schemas/tp_userPerson"
+              },
+              "authorizedSigner3": {
+                "$ref": "#/components/schemas/tp_userPerson"
+              },
+              "authorizedSigner4": {
+                "$ref": "#/components/schemas/tp_userPerson"
+              }
+            }
+          },
+          "controlPerson": {
+            "$ref": "#/components/schemas/tp_userPerson"
+          },
+          "businessOwners": {
+            "type": "object",
+            "description": "Individuals that own at least 25% of the entity, or the largest owner if no one owns at least 25%.\n**Note: If you plan to add/remove/modify any owner information in the future, you will need re-submit all existing information to the update SubClient API. It is recommend that you store the owner information for this purpose.**",
+            "properties": {
+              "businessOwner1": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/tp_businessOwner"
+                  },
+                  {
+                    "properties": {
+                      "identification": {
+                        "$ref": "#/components/schemas/tp_userIdentification"
+                      }
+                    }
+                  }
+                ]
+              },
+              "businessOwner2": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/tp_businessOwner"
+                  },
+                  {
+                    "properties": {
+                      "identification": {
+                        "$ref": "#/components/schemas/tp_userIdentification"
+                      }
+                    }
+                  }
+                ]
+              },
+              "businessOwner3": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/tp_businessOwner"
+                  },
+                  {
+                    "properties": {
+                      "identification": {
+                        "$ref": "#/components/schemas/tp_userIdentification"
+                      }
+                    }
+                  }
+                ]
+              },
+              "businessOwner4": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/tp_businessOwner"
+                  },
+                  {
+                    "properties": {
+                      "identification": {
+                        "$ref": "#/components/schemas/tp_userIdentification"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "tp_phone": {
+        "type": "object",
+        "required": [
+          "number"
+        ],
+        "description": "Phone *object*",
+        "properties": {
+          "countryCode": {
+            "type": "string",
+            "description": "1-3 digit Country Calling Code\n\n*Optional.* Default is `1`.",
+            "pattern": "^[0-9]{3}$",
+            "example": "1"
+          },
+          "number": {
+            "type": "string",
+            "description": "Phone Number.\n\nFor phone numbers with `countryCode` equal to `1` (or blank), provide a 10-digit phone number. For all `countryCodes`, other than `1`, a 4-14 digit phone number is accepted.",
+            "pattern": "^[0-9]{4,14}$",
+            "example": "5555555555"
+          }
+        }
+      },
+      "tp_userIdentification": {
+        "type": "object",
+        "required": [
+          "type",
+          "number"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "SSN",
+              "GovernmentID",
+              "Passport",
+              "EIN"
+            ]
+          },
+          "number": {
+            "type": "string",
+            "description": "A unique ID number issued by a government or organization."
+          }
+        }
+      },
+      "tp_city": {
+        "type": "string",
+        "description": "City",
+        "pattern": "^[ a-zA-Z0-9_-]+$"
+      },
+      "tp_userName": {
+        "type": "object",
+        "properties": {
+          "individual": {
+            "$ref": "#/components/schemas/tp_userNameIndividual"
+          },
+          "company": {
+            "$ref": "#/components/schemas/tp_userNameCompany"
+          }
+        },
+        "description": "For type NaturalPerson use name.individual; otherwise use name.company."
+      },
+      "tp_state": {
+        "type": "string",
+        "description": "State Code\n\n[State Code](https://developers.tabapay.com/reference/us-state-codes#/) must be a valid 2-character code if `country` is [840](https://developers.tabapay.com/reference/country-codes#/) or [Canadian 2-char code](https://developers.tabapay.com/reference/canadian-province-codes#/) if [124](https://developers.tabapay.com/reference/country-codes#/).",
+        "pattern": "^[ a-zA-Z0-9_-]+$"
+      },
+      "tp_userNameIndividual": {
+        "type": "object",
+        "required": [
+          "first",
+          "last"
+        ],
+        "properties": {
+          "first": {
+            "type": "string",
+            "description": "First name"
+          },
+          "middle": {
+            "type": "string",
+            "description": "Middle name"
+          },
+          "last": {
+            "type": "string",
+            "description": "Last name"
+          },
+          "suffix": {
+            "type": "string",
+            "maxLength": 50
+          }
+        }
+      },
+      "tp_country": {
+        "type": "string",
+        "description": "[Country Code](https://developers.tabapay.com/reference/country-codes#/)\n\n*Optional. Default is `840`*",
+        "pattern": "^[0-9]{3}$",
+        "example": "840"
+      },
+      "tp_userPerson": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/tp_namefml"
+          },
+          "dateOfBirth": {
+            "$ref": "#/components/schemas/tp_tpDateYYYYMMDD"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "phone": {
+            "$ref": "#/components/schemas/tp_phone"
+          },
+          "address": {
+            "$ref": "#/components/schemas/tp_address"
+          },
+          "identification": {
+            "$ref": "#/components/schemas/tp_userPersonIdentification"
+          }
+        }
+      },
+      "tp_line2": {
+        "type": "string",
+        "description": "Address Line 2\n\n*Optional*",
+        "pattern": "^[ a-zA-Z0-9._-]+$"
+      },
+      "tp_userNameCompany": {
+        "type": "object",
+        "required": [
+          "legal"
+        ],
+        "properties": {
+          "legal": {
+            "type": "string",
+            "description": "Legal name"
+          },
+          "dba": {
+            "type": "string",
+            "description": "Doing Business As (DBA)"
+          }
+        }
+      },
+      "userCreateRootRequired": {
+        "type": "object",
+        "required": [
+          "referenceID",
+          "type",
+          "name",
+          "email",
+          "authorizedSigners"
+        ],
+        "properties": {
+          "referenceID": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "NaturalPerson",
+              "LLC"
+            ]
+          },
+          "name": {
+            "$ref": "#/components/schemas/name"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "authorizedSigners": {
+            "type": "object",
+            "description": "Optional on the parent level.",
+            "properties": {
+              "authorizedSigner1": {
+                "$ref": "#/components/schemas/personWithRequired"
+              },
+              "authorizedSigner2": {
+                "$ref": "#/components/schemas/personWithRequired"
+              }
+            },
+            "required": [
+              "authorizedSigner1"
+            ]
+          },
+          "controlPerson": {
+            "$ref": "#/components/schemas/personWithRequired"
           }
         }
       }
