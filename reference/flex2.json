@@ -519,9 +519,6 @@
       },
       "userPerson": {
         "type": "object",
-        "required": [
-          "name"
-        ],
         "properties": {
           "name": {
             "$ref": "#/components/schemas/namefml"
