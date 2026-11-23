@@ -1,6 +1,6 @@
 ---
 api:
   file: flex2.json
-  operationId: createuser
+  operationId: aSignersOptional
 hidden: false
 ---
