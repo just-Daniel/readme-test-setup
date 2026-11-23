@@ -1,0 +1,216 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Test: required nested objects",
+    "version": "1.0.0",
+    "description": "Two identical endpoints. The only difference: in A the nested person schema has `required: [\"name\"]`, in B it does not. Pick the `Individual` example on both and compare the generated request body."
+  },
+  "servers": [
+    {
+      "url": "https://example.com"
+    }
+  ],
+  "x-readme": {
+    "explorer-enabled": true,
+    "proxy-enabled": true
+  },
+  "paths": {
+    "/users-with-required": {
+      "post": {
+        "operationId": "createUserWithRequired",
+        "summary": "A: nested name IS required",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/userCreateWithRequired"
+              },
+              "examples": {
+                "Individual": {
+                  "value": {
+                    "referenceID": "1234UniqueRefID",
+                    "type": "NaturalPerson",
+                    "name": {
+                      "first": "Samwise",
+                      "last": "Gamgee"
+                    },
+                    "email": "user@example.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/users-without-required": {
+      "post": {
+        "operationId": "createUserWithoutRequired",
+        "summary": "B: nested name is NOT required",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/userCreateWithoutRequired"
+              },
+              "examples": {
+                "Individual": {
+                  "value": {
+                    "referenceID": "1234UniqueRefID",
+                    "type": "NaturalPerson",
+                    "name": {
+                      "first": "Samwise",
+                      "last": "Gamgee"
+                    },
+                    "email": "user@example.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "name": {
+        "type": "object",
+        "required": [
+          "first"
+        ],
+        "properties": {
+          "first": {
+            "type": "string"
+          },
+          "last": {
+            "type": "string"
+          }
+        }
+      },
+      "personWithRequired": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/name"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          }
+        }
+      },
+      "personWithoutRequired": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/name"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          }
+        }
+      },
+      "userCreateWithRequired": {
+        "type": "object",
+        "required": [
+          "referenceID",
+          "type",
+          "name",
+          "email"
+        ],
+        "properties": {
+          "referenceID": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "NaturalPerson",
+              "LLC"
+            ]
+          },
+          "name": {
+            "$ref": "#/components/schemas/name"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "authorizedSigners": {
+            "type": "object",
+            "description": "Optional on the parent level.",
+            "properties": {
+              "authorizedSigner1": {
+                "$ref": "#/components/schemas/personWithRequired"
+              },
+              "authorizedSigner2": {
+                "$ref": "#/components/schemas/personWithRequired"
+              }
+            }
+          },
+          "controlPerson": {
+            "$ref": "#/components/schemas/personWithRequired"
+          }
+        }
+      },
+      "userCreateWithoutRequired": {
+        "type": "object",
+        "required": [
+          "referenceID",
+          "type",
+          "name",
+          "email"
+        ],
+        "properties": {
+          "referenceID": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "NaturalPerson",
+              "LLC"
+            ]
+          },
+          "name": {
+            "$ref": "#/components/schemas/name"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "authorizedSigners": {
+            "type": "object",
+            "description": "Optional on the parent level.",
+            "properties": {
+              "authorizedSigner1": {
+                "$ref": "#/components/schemas/personWithoutRequired"
+              },
+              "authorizedSigner2": {
+                "$ref": "#/components/schemas/personWithoutRequired"
+              }
+            }
+          },
+          "controlPerson": {
+            "$ref": "#/components/schemas/personWithoutRequired"
+          }
+        }
+      }
+    }
+  }
+}
