@@ -1,0 +1,153 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Repro: required object missing from example",
+    "version": "1.0.0",
+    "description": "Two identical endpoints with the same example. Only difference: `signers` is in root `required` in B. In `signers` only `signer1` is required; `signer2` is optional. Select the `Individual` example on both and compare the request body."
+  },
+  "servers": [
+    {
+      "url": "https://example.com"
+    }
+  ],
+  "paths": {
+    "/a-signers-optional": {
+      "post": {
+        "operationId": "aSignersOptional",
+        "summary": "A: signers NOT required",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/userA"
+              },
+              "examples": {
+                "Individual": {
+                  "value": {
+                    "type": "NaturalPerson",
+                    "email": "user@example.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/b-signers-required": {
+      "post": {
+        "operationId": "bSignersRequired",
+        "summary": "B: signers required",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/userB"
+              },
+              "examples": {
+                "Individual": {
+                  "value": {
+                    "type": "NaturalPerson",
+                    "email": "user@example.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "person": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "object",
+            "properties": {
+              "first": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "first"
+            ]
+          }
+        }
+      },
+      "signers": {
+        "type": "object",
+        "required": [
+          "signer1"
+        ],
+        "properties": {
+          "signer1": {
+            "$ref": "#/components/schemas/person"
+          },
+          "signer2": {
+            "$ref": "#/components/schemas/person"
+          }
+        }
+      },
+      "userA": {
+        "type": "object",
+        "required": [
+          "type",
+          "email"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "NaturalPerson",
+              "LLC"
+            ]
+          },
+          "email": {
+            "type": "string"
+          },
+          "signers": {
+            "$ref": "#/components/schemas/signers"
+          }
+        }
+      },
+      "userB": {
+        "type": "object",
+        "required": [
+          "type",
+          "email",
+          "signers"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "NaturalPerson",
+              "LLC"
+            ]
+          },
+          "email": {
+            "type": "string"
+          },
+          "signers": {
+            "$ref": "#/components/schemas/signers"
+          }
+        }
+      }
+    }
+  }
+}
